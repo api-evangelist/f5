@@ -96,9 +96,9 @@ apis:
     properties:
       - type: Documentation
         url: https://docs.cloud.f5.com/docs-v2/api/
-      - type: API Reference
+      - type: APIReference
         url: https://docs.cloud.f5.com/docs-v2/api-reference
-      - type: Getting Started
+      - type: GettingStarted
         url: https://docs.cloud.f5.com/docs-v2/platform/concepts
 common:
   - type: Website
