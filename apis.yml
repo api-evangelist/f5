@@ -101,6 +101,8 @@ apis:
       - type: GettingStarted
         url: https://docs.cloud.f5.com/docs-v2/platform/concepts
 common:
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/f5
   - type: Website
     url: https://www.f5.com
   - type: Products
