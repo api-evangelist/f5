@@ -1,0 +1,263 @@
+openapi: 3.1.0
+info:
+  title: F5 BIG-IP iControl REST API
+  description: |
+    iControl REST is the JSON/HTTP management interface for F5 BIG-IP
+    devices. It exposes the BIG-IP configuration tree under the
+    /mgmt/tm/ namespace so any TMSH-addressable object (LTM, GTM, net,
+    security, sys, etc.) can be created, retrieved, updated, and deleted
+    over HTTPS. Authentication uses HTTP Basic over TLS or a token
+    obtained from /mgmt/shared/authn/login.
+  version: "1.0.0"
+  contact:
+    name: F5 CloudDocs
+    url: https://clouddocs.f5.com/api/icontrol-rest/
+servers:
+  - url: https://{bigip}
+    description: BIG-IP management address
+    variables:
+      bigip:
+        default: bigip.example.com
+        description: Hostname or management IP of the BIG-IP device
+paths:
+  /mgmt/shared/authn/login:
+    post:
+      summary: Obtain an authentication token
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username, password, loginProviderName]
+              properties:
+                username: { type: string }
+                password: { type: string }
+                loginProviderName:
+                  type: string
+                  default: tmos
+      responses:
+        "200":
+          description: Token issued
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: object
+                    properties:
+                      token: { type: string }
+                      timeout: { type: integer }
+  /mgmt/tm/ltm/virtual:
+    get:
+      summary: List virtual servers
+      operationId: listVirtuals
+      responses:
+        "200": { description: Virtual server collection }
+    post:
+      summary: Create a virtual server
+      operationId: createVirtual
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Virtual' }
+      responses:
+        "200": { description: Virtual created }
+  /mgmt/tm/ltm/virtual/{name}:
+    parameters:
+      - $ref: '#/components/parameters/ObjectName'
+    get:
+      summary: Get a virtual server
+      operationId: getVirtual
+      responses:
+        "200": { description: Virtual }
+    put:
+      summary: Replace a virtual server
+      operationId: replaceVirtual
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Virtual' }
+      responses:
+        "200": { description: Replaced }
+    patch:
+      summary: Partially update a virtual server
+      operationId: patchVirtual
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200": { description: Updated }
+    delete:
+      summary: Delete a virtual server
+      operationId: deleteVirtual
+      responses:
+        "200": { description: Deleted }
+  /mgmt/tm/ltm/pool:
+    get:
+      summary: List pools
+      operationId: listPools
+      responses:
+        "200": { description: Pool collection }
+    post:
+      summary: Create a pool
+      operationId: createPool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Pool' }
+      responses:
+        "200": { description: Pool created }
+  /mgmt/tm/ltm/pool/{name}:
+    parameters:
+      - $ref: '#/components/parameters/ObjectName'
+    get:
+      summary: Get a pool
+      operationId: getPool
+      responses:
+        "200": { description: Pool }
+    put:
+      summary: Replace a pool
+      operationId: replacePool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/Pool' }
+      responses:
+        "200": { description: Replaced }
+    patch:
+      summary: Partially update a pool
+      operationId: patchPool
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200": { description: Updated }
+    delete:
+      summary: Delete a pool
+      operationId: deletePool
+      responses:
+        "200": { description: Deleted }
+  /mgmt/tm/ltm/pool/{name}/members:
+    parameters:
+      - $ref: '#/components/parameters/ObjectName'
+    get:
+      summary: List members of a pool
+      operationId: listPoolMembers
+      responses:
+        "200": { description: Member collection }
+    post:
+      summary: Add a member to a pool
+      operationId: addPoolMember
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200": { description: Member added }
+  /mgmt/tm/ltm/node:
+    get:
+      summary: List nodes
+      operationId: listNodes
+      responses:
+        "200": { description: Node collection }
+    post:
+      summary: Create a node
+      operationId: createNode
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { type: object }
+      responses:
+        "200": { description: Node created }
+  /mgmt/tm/ltm/node/{name}:
+    parameters:
+      - $ref: '#/components/parameters/ObjectName'
+    get:
+      summary: Get a node
+      operationId: getNode
+      responses:
+        "200": { description: Node }
+    delete:
+      summary: Delete a node
+      operationId: deleteNode
+      responses:
+        "200": { description: Deleted }
+  /mgmt/tm/ltm/profile/http:
+    get:
+      summary: List HTTP profiles
+      operationId: listHttpProfiles
+      responses:
+        "200": { description: Profile collection }
+  /mgmt/tm/sys/version:
+    get:
+      summary: Get system software version
+      operationId: getSystemVersion
+      responses:
+        "200": { description: Version info }
+components:
+  parameters:
+    ObjectName:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: |
+        Object name. Use the tilde-partition-tilde-name notation when
+        addressing objects in non-Common partitions, e.g. ~Common~http.
+  schemas:
+    Virtual:
+      type: object
+      properties:
+        name: { type: string }
+        partition: { type: string, default: Common }
+        destination: { type: string, description: "address:port, e.g. 10.0.0.1:80" }
+        ipProtocol: { type: string, default: tcp }
+        pool: { type: string }
+        profiles:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              context: { type: string }
+    Pool:
+      type: object
+      properties:
+        name: { type: string }
+        partition: { type: string, default: Common }
+        loadBalancingMode: { type: string, default: round-robin }
+        monitor: { type: string }
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              name: { type: string }
+              address: { type: string }
+  securitySchemes:
+    Basic:
+      type: http
+      scheme: basic
+      description: HTTP Basic auth using a BIG-IP administrative user.
+    Token:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token obtained from /mgmt/shared/authn/login.
+security:
+  - Basic: []
+  - Token: []
