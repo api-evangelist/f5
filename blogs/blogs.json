@@ -2,6 +2,13 @@
   "repo": "f5",
   "feeds": [
     {
+      "source": "https://www.f5.com/company/blog",
+      "feed_url": "https://www.f5.com/company/blog",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    },
+    {
       "source": "https://github.com/F5Networks",
       "feed_url": "https://github.com/F5Networks",
       "title": "",
@@ -9,6 +16,6 @@
       "method": "none"
     }
   ],
-  "fetched": "2026-06-01T23:35:02Z",
-  "post_count": 0
+  "post_count": 5,
+  "fetched": "2026-06-14T20:42:17Z"
 }

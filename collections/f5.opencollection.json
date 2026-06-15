@@ -1,0 +1,380 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "F5 BIG-IP iControl REST API",
+    "version": "1.0.0"
+  },
+  "request": {
+    "auth": {
+      "type": "basic",
+      "username": "{{username}}",
+      "password": "{{password}}"
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Obtain an authentication token",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://{bigip}/mgmt/shared/authn/login",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Obtain an authentication token"
+    },
+    {
+      "info": {
+        "name": "List virtual servers",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual"
+      },
+      "docs": "List virtual servers"
+    },
+    {
+      "info": {
+        "name": "Create a virtual server",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Create a virtual server"
+    },
+    {
+      "info": {
+        "name": "Get a virtual server",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Get a virtual server"
+    },
+    {
+      "info": {
+        "name": "Replace a virtual server",
+        "type": "http"
+      },
+      "http": {
+        "method": "PUT",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Replace a virtual server"
+    },
+    {
+      "info": {
+        "name": "Partially update a virtual server",
+        "type": "http"
+      },
+      "http": {
+        "method": "PATCH",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Partially update a virtual server"
+    },
+    {
+      "info": {
+        "name": "Delete a virtual server",
+        "type": "http"
+      },
+      "http": {
+        "method": "DELETE",
+        "url": "https://{bigip}/mgmt/tm/ltm/virtual/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Delete a virtual server"
+    },
+    {
+      "info": {
+        "name": "List pools",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool"
+      },
+      "docs": "List pools"
+    },
+    {
+      "info": {
+        "name": "Create a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Create a pool"
+    },
+    {
+      "info": {
+        "name": "Get a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Get a pool"
+    },
+    {
+      "info": {
+        "name": "Replace a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "PUT",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Replace a pool"
+    },
+    {
+      "info": {
+        "name": "Partially update a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "PATCH",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Partially update a pool"
+    },
+    {
+      "info": {
+        "name": "Delete a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "DELETE",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Delete a pool"
+    },
+    {
+      "info": {
+        "name": "List members of a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name/members",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "List members of a pool"
+    },
+    {
+      "info": {
+        "name": "Add a member to a pool",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://{bigip}/mgmt/tm/ltm/pool/:name/members",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ],
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Add a member to a pool"
+    },
+    {
+      "info": {
+        "name": "List nodes",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/node"
+      },
+      "docs": "List nodes"
+    },
+    {
+      "info": {
+        "name": "Create a node",
+        "type": "http"
+      },
+      "http": {
+        "method": "POST",
+        "url": "https://{bigip}/mgmt/tm/ltm/node",
+        "body": {
+          "type": "json",
+          "data": "{}"
+        }
+      },
+      "docs": "Create a node"
+    },
+    {
+      "info": {
+        "name": "Get a node",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/node/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Get a node"
+    },
+    {
+      "info": {
+        "name": "Delete a node",
+        "type": "http"
+      },
+      "http": {
+        "method": "DELETE",
+        "url": "https://{bigip}/mgmt/tm/ltm/node/:name",
+        "params": [
+          {
+            "name": "name",
+            "value": "",
+            "type": "path",
+            "description": "Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+          }
+        ]
+      },
+      "docs": "Delete a node"
+    },
+    {
+      "info": {
+        "name": "List HTTP profiles",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/ltm/profile/http"
+      },
+      "docs": "List HTTP profiles"
+    },
+    {
+      "info": {
+        "name": "Get system software version",
+        "type": "http"
+      },
+      "http": {
+        "method": "GET",
+        "url": "https://{bigip}/mgmt/tm/sys/version"
+      },
+      "docs": "Get system software version"
+    }
+  ],
+  "bundled": true
+}

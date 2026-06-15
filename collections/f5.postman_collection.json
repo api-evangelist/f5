@@ -1,0 +1,2241 @@
+{
+  "item": [
+    {
+      "id": "6562a4d6-77fe-450e-8810-bd7c60d00768",
+      "name": "Obtain an authentication token",
+      "request": {
+        "name": "Obtain an authentication token",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "shared",
+            "authn",
+            "login"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"loginProviderName\": \"tmos\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "4bfc1daf-7c62-49a2-860c-d18ad608869e",
+          "name": "Token issued",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "shared",
+                "authn",
+                "login"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"<string>\",\n  \"password\": \"<string>\",\n  \"loginProviderName\": \"tmos\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": "{\n  \"token\": {\n    \"token\": \"string\",\n    \"timeout\": 3646\n  }\n}",
+          "cookie": [],
+          "_postman_previewlanguage": "json"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "24f35782-bed6-4852-8d99-66046cdd042f",
+      "name": "List virtual servers",
+      "request": {
+        "name": "List virtual servers",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "07b4b20f-2643-4ef5-b961-b6d2529425c4",
+          "name": "Virtual server collection",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "cf766db1-979a-4732-9cf7-73fad3cae251",
+      "name": "Create a virtual server",
+      "request": {
+        "name": "Create a virtual server",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"destination\": \"<string>\",\n  \"ipProtocol\": \"tcp\",\n  \"pool\": \"<string>\",\n  \"profiles\": [\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "671f704c-7de1-4302-9980-99892abdb487",
+          "name": "Virtual created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"destination\": \"<string>\",\n  \"ipProtocol\": \"tcp\",\n  \"pool\": \"<string>\",\n  \"profiles\": [\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2c50ab92-d26b-4b58-aaab-1874068b5316",
+      "name": "Get a virtual server",
+      "request": {
+        "name": "Get a virtual server",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "294d0d44-2b07-43a4-8f4e-a74085ffbc27",
+          "name": "Virtual",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "8f59dc74-2d7b-49a9-9d20-436227b78392",
+      "name": "Replace a virtual server",
+      "request": {
+        "name": "Replace a virtual server",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "PUT",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"destination\": \"<string>\",\n  \"ipProtocol\": \"tcp\",\n  \"pool\": \"<string>\",\n  \"profiles\": [\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "b4d6305d-2e98-4f40-b238-4cff389d0ef1",
+          "name": "Replaced",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"destination\": \"<string>\",\n  \"ipProtocol\": \"tcp\",\n  \"pool\": \"<string>\",\n  \"profiles\": [\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"context\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2c949384-a3ad-46bd-9e01-749a14730fe4",
+      "name": "Partially update a virtual server",
+      "request": {
+        "name": "Partially update a virtual server",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "PATCH",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "<object>",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "981cffc4-99db-4f12-91ae-9f44636654f7",
+          "name": "Updated",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "b9fc5cf9-cafe-456e-a220-a03267fa26f7",
+      "name": "Delete a virtual server",
+      "request": {
+        "name": "Delete a virtual server",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "virtual",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "87c0576f-bde7-4b8e-8b29-d01667f69153",
+          "name": "Deleted",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "virtual",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "DELETE",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "9a4c530a-5255-4174-b3aa-1b76026bfc02",
+      "name": "List pools",
+      "request": {
+        "name": "List pools",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "1fa9173b-0dd4-4377-8772-3de2f24873d1",
+          "name": "Pool collection",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "90658e1c-c68e-4558-a3cb-82f813bfba00",
+      "name": "Create a pool",
+      "request": {
+        "name": "Create a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"loadBalancingMode\": \"round-robin\",\n  \"monitor\": \"<string>\",\n  \"members\": [\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "62649666-9a79-4923-b5c9-9bfa64b3925a",
+          "name": "Pool created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"loadBalancingMode\": \"round-robin\",\n  \"monitor\": \"<string>\",\n  \"members\": [\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "d09b80e2-c363-42bb-95b0-c4e7827f91b1",
+      "name": "Get a pool",
+      "request": {
+        "name": "Get a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "a70f4916-a660-4e5c-afb3-fd25083865cb",
+          "name": "Pool",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2677b092-6f90-4eb9-86dd-e56004ff17a1",
+      "name": "Replace a pool",
+      "request": {
+        "name": "Replace a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "PUT",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"loadBalancingMode\": \"round-robin\",\n  \"monitor\": \"<string>\",\n  \"members\": [\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  ]\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "e5d469bd-749b-404e-853a-dcd12f5a65a1",
+          "name": "Replaced",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "PUT",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"<string>\",\n  \"partition\": \"Common\",\n  \"loadBalancingMode\": \"round-robin\",\n  \"monitor\": \"<string>\",\n  \"members\": [\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    },\n    {\n      \"name\": \"<string>\",\n      \"address\": \"<string>\"\n    }\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3d0c5c13-e405-4644-9d21-edbf26c30384",
+      "name": "Partially update a pool",
+      "request": {
+        "name": "Partially update a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "PATCH",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "<object>",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "6478557a-c8bb-4184-a2c7-ae288fad9b11",
+          "name": "Updated",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "PATCH",
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3dd1132b-e074-4c40-bd66-256b60bc04ac",
+      "name": "Delete a pool",
+      "request": {
+        "name": "Delete a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "02f66a67-eded-4765-96ae-00e8c6087c8e",
+          "name": "Deleted",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "DELETE",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "3b67b6f7-56bb-4ea9-838f-40869dd28000",
+      "name": "List members of a pool",
+      "request": {
+        "name": "List members of a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name",
+            "members"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "612fabfd-0983-4b71-89ab-b1869ce6848b",
+          "name": "Member collection",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name",
+                "members"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "268bc0d0-c3a9-49ea-b946-4864d752c0fd",
+      "name": "Add a member to a pool",
+      "request": {
+        "name": "Add a member to a pool",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "pool",
+            ":name",
+            "members"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "<object>",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "4cb607f0-5b2d-4517-9d89-b4440d3591ea",
+          "name": "Member added",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "pool",
+                ":name",
+                "members"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "fba38b6f-51b9-4148-bc11-652e17444a8c",
+      "name": "List nodes",
+      "request": {
+        "name": "List nodes",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "node"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "61e6a3f8-8029-44d7-a14f-09bc16ea2899",
+          "name": "Node collection",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "node"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "e9ee5f9f-7fa1-45d2-8040-30b9f0696fec",
+      "name": "Create a node",
+      "request": {
+        "name": "Create a node",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "node"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "method": "POST",
+        "auth": null,
+        "body": {
+          "mode": "raw",
+          "raw": "<object>",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "response": [
+        {
+          "id": "c0b69233-b7d0-41bf-9226-5251db07565e",
+          "name": "Node created",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "node"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "POST",
+            "body": {
+              "mode": "raw",
+              "raw": "<object>",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "a0399751-07e1-4df0-9823-b1dd43721b95",
+      "name": "Get a node",
+      "request": {
+        "name": "Get a node",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "node",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "0f7fb7ed-9f96-482e-970c-35de66e77e8e",
+          "name": "Node",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "node",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "5b6771eb-bc18-44f9-ac26-a4769c60ba02",
+      "name": "Delete a node",
+      "request": {
+        "name": "Delete a node",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "node",
+            ":name"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "disabled": false,
+              "type": "any",
+              "value": "<string>",
+              "key": "name",
+              "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+            },
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "DELETE",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "1b428ee1-71e7-4b44-9547-1a6cffc14a49",
+          "name": "Deleted",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "node",
+                ":name"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<string>",
+                  "key": "name",
+                  "description": "(Required) Object name. Use the tilde-partition-tilde-name notation when\naddressing objects in non-Common partitions, e.g. ~Common~http.\n"
+                },
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "DELETE",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "39acf9d6-93e5-4a37-b2f8-eecfa0a8a0ec",
+      "name": "List HTTP profiles",
+      "request": {
+        "name": "List HTTP profiles",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "ltm",
+            "profile",
+            "http"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "064db85c-d318-4e46-a460-b2eba12fd7c9",
+          "name": "Profile collection",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "ltm",
+                "profile",
+                "http"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    },
+    {
+      "id": "2183e827-8e30-47b8-8c26-cd92fc79dad0",
+      "name": "Get system software version",
+      "request": {
+        "name": "Get system software version",
+        "description": {},
+        "url": {
+          "path": [
+            "mgmt",
+            "tm",
+            "sys",
+            "version"
+          ],
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "query": [],
+          "variable": [
+            {
+              "description": "Hostname or management IP of the BIG-IP device",
+              "type": "any",
+              "value": "{{bigip}}",
+              "key": "bigip"
+            }
+          ]
+        },
+        "method": "GET",
+        "auth": null
+      },
+      "response": [
+        {
+          "id": "8696926e-2453-4c4c-a883-121c076aa953",
+          "name": "Version info",
+          "originalRequest": {
+            "url": {
+              "path": [
+                "mgmt",
+                "tm",
+                "sys",
+                "version"
+              ],
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "description": "Hostname or management IP of the BIG-IP device",
+                  "type": "any",
+                  "value": "{{bigip}}",
+                  "key": "bigip"
+                }
+              ]
+            },
+            "header": [
+              {
+                "description": {
+                  "content": "Added as a part of security scheme: basic",
+                  "type": "text/plain"
+                },
+                "key": "Authorization",
+                "value": "Basic <credentials>"
+              }
+            ],
+            "method": "GET",
+            "body": {}
+          },
+          "status": "OK",
+          "code": 200,
+          "header": [
+            {
+              "key": "Content-Type",
+              "value": "text/plain"
+            }
+          ],
+          "body": "",
+          "cookie": [],
+          "_postman_previewlanguage": "text"
+        }
+      ],
+      "event": [],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      }
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "description": {
+        "content": "Hostname or management IP of the BIG-IP device",
+        "type": "text/plain"
+      },
+      "type": "any",
+      "value": "bigip.example.com",
+      "key": "bigip"
+    },
+    {
+      "type": "string",
+      "value": "https://{{bigip}}",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "username",
+        "value": "{{basicAuthUsername}}"
+      },
+      {
+        "key": "password",
+        "value": "{{basicAuthPassword}}"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6884620a-1a38-474a-92a2-abb1fdb38166",
+    "name": "F5 BIG-IP iControl REST API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "iControl REST is the JSON/HTTP management interface for F5 BIG-IP\ndevices. It exposes the BIG-IP configuration tree under the\n/mgmt/tm/ namespace so any TMSH-addressable object (LTM, GTM, net,\nsecurity, sys, etc.) can be created, retrieved, updated, and deleted\nover HTTPS. Authentication uses HTTP Basic over TLS or a token\nobtained from /mgmt/shared/authn/login.\n\n\nContact Support:\n Name: F5 CloudDocs",
+      "type": "text/plain"
+    }
+  }
+}
