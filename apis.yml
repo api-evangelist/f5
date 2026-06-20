@@ -10,7 +10,7 @@ description: >-
   and API delivery, NGINX for cloud-native delivery and security across modern
   apps and Kubernetes, and F5 Distributed Cloud Services for SaaS-based
   delivery, security, and networking across multicloud environments.
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/f5/refs/heads/main/apis.yml
 created: '2025-02-12'
 modified: '2026-04-28'
@@ -35,7 +35,7 @@ apis:
       data-plane traffic manipulation, and TMSH scripting for control-plane
       automation. BIG-IQ provides centralized management for BIG-IP devices
       through its own well-documented REST API.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://clouddocs.f5.com/api/
     tags:
       - Applications
@@ -62,7 +62,7 @@ apis:
       automation capabilities exposed through REST APIs for instance
       management, configuration, and observability across distributed
       deployments.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://docs.nginx.com/
     tags:
       - Applications
@@ -86,7 +86,7 @@ apis:
       platform exposes a comprehensive REST API for managing tenants, virtual
       sites, load balancers, WAF policies, bot defense, API security, DDoS
       protection, and CDN configurations from a single control plane.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://docs.cloud.f5.com/docs-v2/api/
     tags:
       - Multicloud
