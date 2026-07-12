@@ -1,0 +1,14 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://trust.f5.com/
+url: https://trust.f5.com/
+certifications:
+- PCI DSS
+- GDPR
+evidence:
+- source: https://trust.f5.com/
+  keywords:
+  - pci dss
+  - trust center
+  - gdpr

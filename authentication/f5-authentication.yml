@@ -1,0 +1,23 @@
+generated: '2026-07-11'
+method: derived
+source: openapi/f5-openapi.yml
+summary:
+  types:
+  - apiKey
+  - http
+  api_key_in:
+  - header
+schemes:
+- name: Basic
+  type: http
+  scheme: basic
+  description: HTTP Basic auth using a BIG-IP administrative user.
+  sources:
+  - openapi/f5-openapi.yml
+- name: Token
+  type: apiKey
+  in: header
+  parameter: X-F5-Auth-Token
+  description: Token obtained from /mgmt/shared/authn/login.
+  sources:
+  - openapi/f5-openapi.yml

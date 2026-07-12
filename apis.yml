@@ -101,6 +101,12 @@ apis:
       - type: GettingStarted
         url: https://docs.cloud.f5.com/docs-v2/platform/concepts
 common:
+  - type: TrustCenter
+    url: security/f5-trust-center.yml
+  - type: DomainSecurity
+    url: security/f5-domain-security.yml
+  - type: Authentication
+    url: authentication/f5-authentication.yml
   - type: LinkedIn
     url: https://www.linkedin.com/company/f5
   - type: Website
