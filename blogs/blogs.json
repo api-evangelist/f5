@@ -2,13 +2,14 @@
   "repo": "f5",
   "feeds": [
     {
-      "source": "https://www.f5.com/company/blog",
-      "feed_url": "",
-      "saved": 6,
-      "method": "agent-scrape"
+      "source": "https://github.com/F5Networks",
+      "feed_url": "https://github.com/F5Networks",
+      "title": "",
+      "saved": 0,
+      "method": "none"
     }
   ],
-  "post_count": 17,
-  "fetched": "2026-06-27T12:40:36Z",
+  "post_count": 24,
+  "fetched": "2026-07-11T11:50:51Z",
   "agent_pulled": "2026-06-27"
 }
