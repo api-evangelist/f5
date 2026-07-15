@@ -101,6 +101,8 @@ apis:
       - type: GettingStarted
         url: https://docs.cloud.f5.com/docs-v2/platform/concepts
 common:
+  - type: AgenticAccess
+    url: agentic-access/f5-agentic-access.yml
   - type: TrustCenter
     url: security/f5-trust-center.yml
   - type: DomainSecurity
