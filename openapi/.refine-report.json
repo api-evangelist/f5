@@ -1,0 +1,14 @@
+{
+  "provider": "f5",
+  "sources": [
+    "f5-mgmt-api-openapi.yml"
+  ],
+  "outputs": [
+    "f5-mgmt-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [],
+  "skipped": []
+}
