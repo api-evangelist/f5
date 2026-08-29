@@ -10,6 +10,17 @@ description: >-
   and API delivery, NGINX for cloud-native delivery and security across modern
   apps and Kubernetes, and F5 Distributed Cloud Services for SaaS-based
   delivery, security, and networking across multicloud environments.
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - openapi
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: freemium
   onboarding: self-serve
