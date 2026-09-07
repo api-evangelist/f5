@@ -1,13 +1,13 @@
-generated: '2026-07-11'
+generated: '2026-09-07'
 method: searched
 probe: true
-source: https://trust.f5.com/
-url: https://trust.f5.com/
+source: https://www.f5.com/company/trust-center/compliance
+url: https://www.f5.com/company/trust-center/compliance
 certifications:
 - PCI DSS
 - GDPR
 evidence:
-- source: https://trust.f5.com/
+- source: https://www.f5.com/company/trust-center/compliance
   keywords:
   - pci dss
   - trust center

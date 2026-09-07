@@ -1,0 +1,71 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for F5 BIG-IP Application Services Templates (FAST)
+  version: 1.0.0
+extends: ../openapi/f5-big-ip-fast-openapi.yml
+x-provenance:
+  generated: '2026-09-07'
+  method: generated
+  source: Generated from the harvested contract openapi/f5-big-ip-fast-openapi.yml plus the repo artifacts
+    it feeds. The underlying spec was fetched verbatim from https://github.com/F5Networks/f5-appsvcs-templates/blob/master/docs/openapi.yml
+    on 2026-09-07 and is NOT modified by this overlay.
+  target_title: F5 BIG-IP Application Services Templates API
+  target_version: 1.26.0
+actions:
+- target: $.info
+  description: Record where this contract was harvested from and which repo artifacts describe its runtime
+    semantics.
+  update:
+    x-apievangelist:
+      provider: F5
+      providerId: f5
+      harvested: '2026-09-07'
+      harvested_from: https://github.com/F5Networks/f5-appsvcs-templates/blob/master/docs/openapi.yml
+      repository: https://github.com/F5Networks/f5-appsvcs-templates
+      artifacts:
+        conventions: ../conventions/f5-conventions.yml
+        errors: ../errors/f5-problem-types.yml
+        authentication: ../authentication/f5-authentication.yml
+        lifecycle: ../lifecycle/f5-lifecycle.yml
+        conformance: ../conformance/f5-conformance.yml
+        data_model: ../data-model/f5-data-model.yml
+        rate_limits: ../rate-limits/f5-rate-limits.yml
+        packages: ../packages/f5-packages.yml
+- target: $.info
+  description: State the real base URL model. These are customer-hosted control planes; the declared server
+    is a placeholder, not a reachable host.
+  update:
+    x-base-url-model:
+      model: customer-hosted
+      effective_base: https://{bigip}/mgmt/shared/fast
+      note: The caller supplies the host. No F5-operated endpoint serves this API.
+- target: $.info
+  description: Summarise the authentication the provider documents, which this contract does not fully
+    declare.
+  update:
+    x-authentication-note: HTTP Basic over TLS against a BIG-IP administrative user, or the X-F5-Auth-Token
+      header.
+- target: $.info
+  description: Point at the derived error catalog and note what the contract omits.
+  update:
+    x-error-note: FAST declares 400/404/422/500 with FastResponse* schemas but no enumerated error-code
+      vocabulary.
+- target: $.info
+  description: Integration notes an agent needs that are not expressible in the contract itself.
+  update:
+    x-integration-notes:
+    - The declared server is http://localhost:8100/mgmt/shared/fast — the BIG-IP restnoded loopback used
+      during development. The real base is the caller's own BIG-IP over HTTPS.
+    - POST /render returns the AS3 declaration a template WOULD produce without deploying it — FAST's
+      rehearsal step.
+    - FAST deploys through AS3, so an AS3-level ?age restore is the practical undo for a FAST-created
+      application.
+- target: $.info
+  description: Record the measured absence of rate-limit signalling so a consumer does not go looking
+    for headers that are never sent.
+  update:
+    x-rate-limit-signalling:
+      headers: []
+      status_on_exhaustion: null
+      note: No rate-limit header or 429 response is declared in this contract, and F5 publishes no limits
+        for its own APIs. See ../rate-limits/f5-rate-limits.yml.

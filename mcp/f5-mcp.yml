@@ -1,0 +1,263 @@
+specification: API Commons MCPServer
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: derived
+status: candidate
+source: >-
+  SEARCH found no first-party F5 MCP server. Probed POST tools/list against https://mcp.f5.com/mcp
+  and https://mcp.nginx.com/mcp (both failed to resolve, curl exit 000), https://my.f5.com/mcp
+  (404) and https://docs.nginx.com/mcp (405 — but a control POST to a nonexistent path on the same
+  host also returns 405, so that is the static host's method handling, not an MCP endpoint).
+  Enumerated the F5Networks and f5devcentral GitHub organizations: the only MCP repository is
+  f5devcentral/waf-mcp-remote, which is a WAF-aware PROXY that converts WAF block pages into valid
+  JSON-RPC SSE error events — infrastructure for other people's MCP traffic, not a server exposing
+  F5's own APIs. The "F5 XC MCP Server" named in press coverage resolves to individual community
+  repositories (gavinw2006/F5_XC_MCP_Server, robinmordasiewicz/f5xc-*), not to an F5-published
+  artifact. The tool list below is DERIVED from the operations declared in the four first-party
+  contracts in openapi/ and is a candidate design, not something F5 ships.
+description: >-
+  F5 publishes no MCP server for its own APIs. It is worth being precise about this, because F5
+  talks about MCP a great deal — BIG-IP has an MCP traffic profile for load-balancing other
+  people's MCP traffic, NGINX advertises MCP traffic visibility, and F5 Insight offers MCP
+  integration for LLM chat. All of that is F5 handling MCP as a data-plane protocol. None of it is
+  an agent being able to configure F5 by calling an F5-hosted MCP endpoint, and the two are
+  routinely conflated. The candidate tool list here maps what such a server would expose if F5
+  built one, grounded entirely in operationIds that exist in the harvested contracts.
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: unknown
+  verified: probed
+  note: >-
+    mode is none because nobody ships a server. No endpoint URL is recorded, guessed or inferred —
+    a guessed MCP path that happened to return 200 would read as a verified agent surface, which
+    is the worst possible outcome for this artifact.
+related_f5_mcp_work:
+  - name: BIG-IP Model Context Protocol profile
+    kind: data-plane
+    url: https://techdocs.f5.com/en-us/bigip-21-0-0/big-ip-local-traffic-management-profiles-reference/model-context-protocol.html
+    note: A BIG-IP LTM profile for load-balancing and inspecting MCP traffic. F5 in front of
+      someone else's MCP server.
+  - name: f5devcentral/waf-mcp-remote
+    kind: proxy
+    url: https://github.com/f5devcentral/waf-mcp-remote
+    note: Converts WAF block pages into valid JSON-RPC SSE error events so an MCP client sees a
+      protocol error rather than an HTML page. Useful, and still not a server over F5's APIs.
+  - name: F5 Insight for ADSP
+    kind: assistant
+    note: F5's own analytics assistant with MCP/LLM integration, announced March 2026. Consumes
+      MCP; does not expose F5's management APIs as MCP tools to third-party agents.
+candidate_tools:
+  - name: nginx_get_status
+    rest: [getNginx]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+    description: Read NGINX Plus version, build, address, generation and load timestamp.
+  - name: nginx_list_api_versions
+    rest: [getAPIEndpoints]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+    description: List the API versions this NGINX Plus build supports — the correct first call.
+  - name: nginx_list_http_upstreams
+    rest: [getHttpUpstreams]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_get_http_upstream
+    rest: [getHttpUpstreamName, getHttpUpstreamServers]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_add_upstream_server
+    rest: [postHttpUpstreamServer]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    reversible_by: nginx_remove_upstream_server
+    caution: >-
+      Requires `api write=on;` in the serving location or returns 405 MethodDisabled. Fails 400
+      UpstreamStatic on a statically configured upstream. Not idempotent — a replay returns 409
+      EntryExists rather than converging.
+  - name: nginx_update_upstream_server
+    rest: [patchHttpUpstreamPeer]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    caution: Server IDs are assigned by NGINX and are not stable across a configuration reload.
+  - name: nginx_remove_upstream_server
+    rest: [deleteHttpUpstreamServer]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+  - name: nginx_drain_upstream_server
+    rest: [patchHttpUpstreamPeer]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    description: Set drain=true on a peer to bleed connections off before removal.
+  - name: nginx_get_keyval
+    rest: [getHttpKeyvalZoneKeysValues, getHttpKeyvalZones]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_set_keyval
+    rest: [postHttpKeyvalZoneData, patchHttpKeyvalZoneKeyValue]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    caution: POST creates and returns 409 KeyvalKeyExists on an existing key; PATCH updates. Only
+      one key per call.
+  - name: nginx_get_server_zone_stats
+    rest: [getHttpServerZones, getHttpServerZone]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_get_cache_stats
+    rest: [getHttpCaches, getHttpCacheZone]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_get_ssl_stats
+    rest: [getSsl]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+  - name: nginx_get_license
+    rest: [getLicense]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: read
+    description: NGINX Plus R33+ requires a JWT licence; this reports its state.
+  - name: nginx_reset_zone_stats
+    rest: [deleteHttpServerZoneStat, deleteHttpLocationZoneStat, deleteHttpCacheZoneStat, deleteHttpUpstreamStat]
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    caution: Destructive and irreversible — resets counters with no undo. Should require
+      human-in-the-loop.
+  - name: as3_get_declaration
+    rest: []
+    path: GET /declare
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: read
+    description: Read the current AS3 declaration. Supports ?show=base|full|expanded,
+      ?filterClass and ?age=0-15 for prior declarations.
+    note: AS3 declares no operationId on any operation, so rest[] is empty and the binding is by
+      method+path. That is a real gap in F5's contract, not a gap in this mapping.
+  - name: as3_list_declaration_history
+    rest: []
+    path: GET /declare?age=list
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: read
+    description: List retained prior declarations with their ages — the reversibility index.
+  - name: as3_validate_declaration
+    rest: []
+    path: POST /declare?controls.dryRun=true
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: read
+    description: >-
+      Run a declaration through every validation check without deploying it. The safest possible
+      first call for an agent that is about to change an application delivery configuration.
+  - name: as3_deploy_declaration
+    rest: []
+    path: POST /declare
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: write
+    reversible_by: as3_restore_declaration
+    caution: >-
+      Converges the device to the declaration — anything not in the declaration is REMOVED from
+      the tenants it covers. Prefer ?async=true and poll GET /task; AS3 returns 503 while another
+      declaration is in flight.
+  - name: as3_restore_declaration
+    rest: []
+    path: GET /declare?age={n} then POST /declare
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: write
+    description: Retrieve a prior declaration (age 0-15) and re-deploy it — the documented undo.
+  - name: as3_delete_application
+    rest: []
+    path: DELETE /declare/{tenant}/applications/{application}
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: write
+    caution: Supports controls.dryRun, so the teardown can be rehearsed first.
+  - name: as3_get_task
+    rest: []
+    path: GET /task
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: read
+  - name: as3_get_info
+    rest: []
+    path: GET /info
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: read
+    description: AS3 version plus schemaCurrent/schemaMinimum — read before assuming a class exists.
+  - name: fast_list_applications
+    rest: [getFASTApplications]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+  - name: fast_get_application
+    rest: [getFASTApplication]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+  - name: fast_create_application
+    rest: [postFASTApplications]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: write
+    reversible_by: fast_delete_application
+  - name: fast_update_application
+    rest: [updateFASTApplication, putFASTApplications]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: write
+  - name: fast_delete_application
+    rest: [deleteFASTApplication, deleteFASTApplications]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: write
+  - name: fast_list_templates
+    rest: [getFASTTemplates, getFASTTemplateSets]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+  - name: fast_get_template
+    rest: [getFASTTemplateBySetAndTemplateName]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+    description: Returns the template's parameter schema — the input contract for creating an app.
+  - name: fast_render_template
+    rest: [postFASTRender]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+    description: >-
+      Render a template with parameters and return the AS3 declaration it WOULD deploy, without
+      deploying it. FAST's equivalent of a dry run, and the right rehearsal step before
+      fast_create_application.
+  - name: fast_get_task
+    rest: [getFASTTaskById, getFASTTasks]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: read
+  - name: fast_install_templateset
+    rest: [postFASTTemplateSets, postFASTOffboxTemplates]
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: write
+  - name: do_get_status
+    rest: [getMostRecentTask]
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: read
+  - name: do_apply_declaration
+    rest: [postDeclaration]
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: write
+    caution: >-
+      Onboards the device — licensing, VLANs, self-IPs, provisioning. Can restart services and
+      break management connectivity. Highest-consequence write in the estate; must require
+      human-in-the-loop.
+  - name: do_get_original_config
+    rest: [getConfig, getAllConfigs]
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: read
+    description: Retrieve the device's stored pre-onboarding configuration.
+  - name: do_inspect_current_config
+    rest: [getInspect]
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: read
+  - name: do_get_task
+    rest: [getTask, getAllTasks]
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: read
+coverage:
+  candidate_tools: 38
+  rest_operations_available: 119
+  specs_mapped: 4
+  note: >-
+    119 operations across the four contracts (NGINX Plus 71, FAST 26, AS3 13, DO 9). The candidate
+    tools collapse read/list pairs and stat-reset variants, which is why the tool count is lower
+    than the operation count.

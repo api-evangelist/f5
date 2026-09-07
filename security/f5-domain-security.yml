@@ -1,4 +1,4 @@
-generated: '2026-07-11'
+generated: '2026-09-07'
 method: probed
 source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
 hosts:
@@ -16,18 +16,18 @@ hosts:
 - host: docs.nginx.com
   https: true
   tls_version: TLSv1.3
-  cert_expires: Oct 13 23:59:59 2026 GMT
+  cert_expires: Feb 25 23:59:59 2027 GMT
   hsts: false
 domains:
 - domain: f5.com
   dnssec: false
   caa:
+  - 0 issue "letsencrypt.org"
+  - 0 issue "pki.goog"
   - 0 issue "sectigo.com"
   - 0 iodef "mailto:dnsadmin@f5.com"
   - 0 issue "amazon.com"
   - 0 issue "comodoca.com"
-  - 0 issue "digicert.com"
-  - 0 issue "entrust.net"
   spf: true
   dmarc: true
   dmarc_policy: reject
@@ -36,4 +36,4 @@ domains:
   caa: []
   spf: true
   dmarc: true
-  dmarc_policy: none
+  dmarc_policy: reject

@@ -1,0 +1,149 @@
+specification: API Commons CLI
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: >-
+  https://docs.cloud.f5.com/docs-v2/platform/how-to/volt-automation/vesctl (200) and the vesctl
+  README it links to at https://gitlab.com/volterra.io/vesctl/-/raw/main/README.md (200, 26KB,
+  fetched verbatim 2026-09-07); https://pypi.org/pypi/f5-cli/json for the legacy F5 CLI.
+description: >-
+  F5 ships one current, first-party command-line client — vesctl, for F5 Distributed Cloud — and
+  one abandoned one, f5-cli for BIG-IP. Two things about vesctl are worth an integrator's
+  attention before adopting it. It is not distributed on GitHub, npm, PyPI or Homebrew: the source
+  and releases live on GitLab under the volterra.io namespace, five years after F5 acquired
+  Volterra, and the binaries are served from an Azure CDN hostname (vesio.azureedge.net) with the
+  version pointer at downloads.volterra.io. And it is credential-heavy by design — the default
+  authentication is a P12 client-certificate bundle downloaded from the tenant console, not an API
+  token, so it does not drop cleanly into an ephemeral agent or CI environment without secret
+  handling.
+cli_count: 2
+clis:
+  - name: vesctl
+    product: F5 Distributed Cloud Services
+    official: true
+    status: current
+    docs: https://docs.cloud.f5.com/docs-v2/platform/how-to/volt-automation/vesctl
+    repository: https://gitlab.com/volterra.io/vesctl
+    releases: https://gitlab.com/volterra.io/vesctl/-/releases
+    description: >-
+      Configuration CLI for creating, debugging and diagnosing F5 Distributed Cloud
+      configuration. Modelled directly on the F5 Distributed Cloud API and described by F5 as
+      "similar in concept to kubectl" — every API object is addressable through the same
+      create/get/list/replace/delete verbs.
+    install:
+      - platform: macos
+        method: binary download
+        command: >-
+          curl -LO "https://vesio.azureedge.net/releases/vesctl/$(curl -s
+          https://downloads.volterra.io/releases/vesctl/latest.txt)/vesctl.darwin-amd64.gz"
+      - platform: linux
+        method: binary download
+        command: >-
+          curl -LO "https://vesio.azureedge.net/releases/vesctl/$(curl -s
+          https://downloads.volterra.io/releases/vesctl/latest.txt)/vesctl.linux-amd64.gz"
+    package_registries: []
+    package_registries_note: >-
+      Not published to npm, PyPI, Homebrew, apt or any language registry. Distribution is a gzipped
+      binary from an Azure CDN. There is no registry metadata endpoint, so no version or release
+      date can be read the way packages/f5-packages.yml reads them — the current version is
+      whatever https://downloads.volterra.io/releases/vesctl/latest.txt resolves to at fetch time,
+      which is an unpinned distribution: a consumer cannot tell from the command what they are
+      getting.
+    authentication:
+      primary: P12 client-certificate bundle downloaded from the tenant console
+      config_file: $HOME/.vesconfig
+      config_keys:
+        - server-urls
+        - p12-bundle
+      env:
+        - name: VES_P12_PASSWORD
+          description: Password for the P12 bundle, read from the environment rather than the config file.
+      flags:
+        - --cert / -c (client cert file path)
+        - --key / -k (client key file path)
+        - --cacert / -a (server CA cert file path)
+        - --p12-bundle (client P12 key+cert bundle)
+      server_urls:
+        individual: https://console.ves.volterra.io/api
+        enterprise: https://{tenant}.console.ves.volterra.io/api
+    commands:
+      - name: configuration
+        description: Configure objects — the main surface, mirroring the API object model.
+        subcommands:
+          - create
+          - delete
+          - get
+          - list
+          - replace
+          - status
+        object_types_sample:
+          - advertise_policy
+          - bgp
+          - cluster
+          - contact
+          - discovery
+          - endpoint
+          - fleet
+          - healthcheck
+          - namespace
+          - policer
+          - registration
+          - role
+          - route
+          - site
+          - token
+          - user
+          - waf
+        note: The object-type list is the API object model itself; the sample above is what the
+          README's help output enumerates, not an exhaustive list.
+      - name: request
+        description: Execute commands (custom/action APIs, e.g. secrets encryption).
+      - name: site
+        description: Manage site creation through the view.aws_vpc APIs.
+      - name: completion
+        description: Generate a shell completion script.
+      - name: version
+        description: Print the build version.
+    global_flags:
+      - --config (config file path; default $HOME/.vesconfig)
+      - --server-urls / -u (API endpoint URL)
+      - --outfmt (output format, e.g. yaml)
+      - --output / -o (output directory)
+      - --show-curl (emit each request as a curl command — useful for turning CLI usage into API calls)
+      - --timeout (seconds, default 5)
+    key_flows:
+      - name: Create an object from a declaration file
+        command: vesctl configuration create advertise_policy -i advertise_policy.yaml
+      - name: List objects in a namespace as YAML
+        command: vesctl configuration list advertise_policy --namespace documentation --outfmt yaml
+      - name: Get one object
+        command: vesctl configuration get advertise_policy advertise-on-public --namespace documentation
+    agent_note: >-
+      --show-curl is the single most useful flag here for an agent or an integrator: it prints the
+      exact HTTP request the CLI would issue, which is the closest thing F5 Distributed Cloud
+      offers to a public, per-object API example given the reference is a JS-rendered page and the
+      swagger downloads sit behind the tenant developer portal.
+  - name: f5-cli
+    product: BIG-IP and F5 Cloud Services
+    official: true
+    status: abandoned
+    docs: https://pypi.org/project/f5-cli/
+    repository: null
+    version: 0.9.2
+    published: '2020-04-16'
+    install:
+      - platform: any
+        method: pip
+        command: pip install f5-cli
+    note: >-
+      Last released 2020-04-16. The GitHub repository F5 documentation points at
+      (github.com/F5Networks/f5-cli) returns HTTP 404 as of 2026-09-07 — the package on PyPI has
+      outlived its source. Recorded here for completeness; it should not be recommended.
+not_clis:
+  - name: tmsh
+    note: >-
+      TMOS Shell — the BIG-IP device's own administrative shell, reached over SSH on the device.
+      It is not a client you install locally and not an API client, so it is excluded from
+      cli_count.

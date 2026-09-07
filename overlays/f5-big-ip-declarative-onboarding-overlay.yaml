@@ -1,0 +1,71 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for F5 BIG-IP Declarative Onboarding
+  version: 1.0.0
+extends: ../openapi/f5-big-ip-declarative-onboarding-openapi.yml
+x-provenance:
+  generated: '2026-09-07'
+  method: generated
+  source: Generated from the harvested contract openapi/f5-big-ip-declarative-onboarding-openapi.yml plus
+    the repo artifacts it feeds. The underlying spec was fetched verbatim from https://github.com/F5Networks/f5-declarative-onboarding/blob/main/src/schema/latest/openapi.yaml
+    on 2026-09-07 and is NOT modified by this overlay.
+  target_title: F5 BIG-IP Declarative Onboarding
+  target_version: 1.47.0
+actions:
+- target: $.info
+  description: Record where this contract was harvested from and which repo artifacts describe its runtime
+    semantics.
+  update:
+    x-apievangelist:
+      provider: F5
+      providerId: f5
+      harvested: '2026-09-07'
+      harvested_from: https://github.com/F5Networks/f5-declarative-onboarding/blob/main/src/schema/latest/openapi.yaml
+      repository: https://github.com/F5Networks/f5-declarative-onboarding
+      artifacts:
+        conventions: ../conventions/f5-conventions.yml
+        errors: ../errors/f5-problem-types.yml
+        authentication: ../authentication/f5-authentication.yml
+        lifecycle: ../lifecycle/f5-lifecycle.yml
+        conformance: ../conformance/f5-conformance.yml
+        data_model: ../data-model/f5-data-model.yml
+        rate_limits: ../rate-limits/f5-rate-limits.yml
+        packages: ../packages/f5-packages.yml
+- target: $.info
+  description: State the real base URL model. These are customer-hosted control planes; the declared server
+    is a placeholder, not a reachable host.
+  update:
+    x-base-url-model:
+      model: customer-hosted
+      effective_base: https://{bigip}/mgmt/shared/declarative-onboarding
+      note: The caller supplies the host. No F5-operated endpoint serves this API.
+- target: $.info
+  description: Summarise the authentication the provider documents, which this contract does not fully
+    declare.
+  update:
+    x-authentication-note: HTTP Basic over TLS against a BIG-IP administrative user, or the X-F5-Auth-Token
+      header.
+- target: $.info
+  description: Point at the derived error catalog and note what the contract omits.
+  update:
+    x-error-note: DO declares 404/422/500. A 200 from POST / does not mean success — read result.code
+      on the task.
+- target: $.info
+  description: Integration notes an agent needs that are not expressible in the contract itself.
+  update:
+    x-integration-notes:
+    - The declared server 192.0.2.1 is the RFC 5737 documentation address, a placeholder for the caller's
+      own device.
+    - DO stores the device's original pre-onboarding configuration and returns it from GET /config/{machineId}.
+      DELETE /config/{machineId} destroys that stored original and is irreversible.
+    - DO must succeed before AS3 has anything to configure — device identity, licensing, VLANs and provisioning
+      come first.
+- target: $.info
+  description: Record the measured absence of rate-limit signalling so a consumer does not go looking
+    for headers that are never sent.
+  update:
+    x-rate-limit-signalling:
+      headers: []
+      status_on_exhaustion: null
+      note: No rate-limit header or 429 response is declared in this contract, and F5 publishes no limits
+        for its own APIs. See ../rate-limits/f5-rate-limits.yml.

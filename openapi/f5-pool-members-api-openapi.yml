@@ -1,0 +1,671 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP iControl REST Nodes Pool Members API
+  description: The iControl REST API provides programmatic access to manage and configure F5 BIG-IP devices. It enables automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes, pool members, and profiles for application delivery, load balancing, and network management.
+  version: 15.1.0
+  contact:
+    name: F5 Support
+    email: support@f5.com
+    url: https://www.f5.com/company/contact/regional-offices
+  license:
+    name: Proprietary
+    url: https://www.f5.com/company/policies/terms-of-use
+  x-logo:
+    url: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
+servers:
+- url: https://{bigip_host}/mgmt/tm
+  description: BIG-IP Management Interface
+  variables:
+    bigip_host:
+      default: 192.168.1.245
+      description: Hostname or IP address of the BIG-IP device
+security:
+- basicAuth: []
+- tokenAuth: []
+tags:
+- name: Pool Members
+  description: Manage individual members within a pool, including their health status, session state, and load balancing weight.
+  externalDocs:
+    url: https://clouddocs.f5.com/api/icontrol-rest/APIRef_tm_ltm_pool_members.html
+paths:
+  /ltm/pool/{poolName}/members:
+    parameters:
+    - $ref: '#/components/parameters/PoolNameParam'
+    get:
+      operationId: listPoolMembers
+      summary: List Pool Members
+      description: Returns a collection of all members within the specified pool.
+      tags:
+      - Pool Members
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200':
+          description: Successful retrieval of pool member collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:pool:members:memberscollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PoolMember'
+              examples:
+                Listpoolmembers200Example:
+                  summary: Default listPoolMembers 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      address: example_value
+                      connectionLimit: 10
+                      description: A sample description.
+                      dynamicRatio: 10
+                      ephemeral: 'true'
+                      inheritProfile: enabled
+                      logging: enabled
+                      monitor: example_value
+                      partition: example_value
+                      priorityGroup: 10
+                      rateLimit: example_value
+                      ratio: 10
+                      session: user-enabled
+                      state: user-up
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    post:
+      operationId: addPoolMember
+      summary: Add a Pool Member
+      description: Adds a new member to the specified pool. The member name must be in the format address:port (e.g., 10.0.0.1:80).
+      tags:
+      - Pool Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolMemberCreate'
+            examples:
+              AddpoolmemberRequestExample:
+                summary: Default addPoolMember request
+                x-microcks-default: true
+                value:
+                  name: Example Title
+                  address: example_value
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  priorityGroup: 10
+                  rateLimit: example_value
+                  ratio: 10
+                  session: user-enabled
+                  state: user-up
+      responses:
+        '200':
+          description: Pool member added successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolMember'
+              examples:
+                Addpoolmember200Example:
+                  summary: Default addPoolMember 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    inheritProfile: enabled
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    priorityGroup: 10
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/pool/{poolName}/members/{memberName}:
+    parameters:
+    - $ref: '#/components/parameters/PoolNameParam'
+    - $ref: '#/components/parameters/MemberNameParam'
+    get:
+      operationId: getPoolMember
+      summary: Get a Pool Member
+      description: Returns a single pool member identified by name.
+      tags:
+      - Pool Members
+      responses:
+        '200':
+          description: Successful retrieval of pool member.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolMember'
+              examples:
+                Getpoolmember200Example:
+                  summary: Default getPoolMember 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    inheritProfile: enabled
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    priorityGroup: 10
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    put:
+      operationId: updatePoolMember
+      summary: Update a Pool Member
+      description: Replaces the entire pool member resource configuration.
+      tags:
+      - Pool Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolMemberUpdate'
+            examples:
+              UpdatepoolmemberRequestExample:
+                summary: Default updatePoolMember request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  priorityGroup: 10
+                  rateLimit: example_value
+                  ratio: 10
+                  session: user-enabled
+                  state: user-up
+      responses:
+        '200':
+          description: Pool member updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolMember'
+              examples:
+                Updatepoolmember200Example:
+                  summary: Default updatePoolMember 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    inheritProfile: enabled
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    priorityGroup: 10
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    patch:
+      operationId: patchPoolMember
+      summary: Patch a Pool Member
+      description: Partially updates a pool member resource configuration.
+      tags:
+      - Pool Members
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolMemberUpdate'
+            examples:
+              PatchpoolmemberRequestExample:
+                summary: Default patchPoolMember request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  priorityGroup: 10
+                  rateLimit: example_value
+                  ratio: 10
+                  session: user-enabled
+                  state: user-up
+      responses:
+        '200':
+          description: Pool member patched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolMember'
+              examples:
+                Patchpoolmember200Example:
+                  summary: Default patchPoolMember 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    inheritProfile: enabled
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    priorityGroup: 10
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deletePoolMember
+      summary: Delete a Pool Member
+      description: Removes a member from the specified pool.
+      tags:
+      - Pool Members
+      responses:
+        '200':
+          description: Pool member deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    MemberNameParam:
+      name: memberName
+      in: path
+      required: true
+      description: Name of the pool member in the format address:port (e.g., 10.0.0.1:80).
+      schema:
+        type: string
+      example: 10.0.0.1:80
+    PoolNameParam:
+      name: poolName
+      in: path
+      required: true
+      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
+      schema:
+        type: string
+      example: my_pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+  schemas:
+    PoolMemberUpdate:
+      type: object
+      description: Request body for updating a pool member.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        priorityGroup:
+          type: integer
+          minimum: 0
+          example: 10
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        session:
+          type: string
+          enum:
+          - user-enabled
+          - user-disabled
+          example: user-enabled
+        state:
+          type: string
+          enum:
+          - user-up
+          - user-down
+          example: user-up
+    PoolMemberCreate:
+      type: object
+      description: Request body for adding a new pool member.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Member name in address:port format. If a node with the address does not exist, one will be created.
+          example: 10.0.0.1:80
+        address:
+          type: string
+          description: IP address if it differs from the name.
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        priorityGroup:
+          type: integer
+          minimum: 0
+          example: 10
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        session:
+          type: string
+          enum:
+          - user-enabled
+          - user-disabled
+          example: user-enabled
+        state:
+          type: string
+          enum:
+          - user-up
+          - user-down
+          example: user-up
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    PoolMember:
+      type: object
+      description: A pool member resource representing an individual backend server within a pool, identified by address and port.
+      properties:
+        kind:
+          type: string
+          description: Resource type identifier.
+          example: tm:ltm:pool:members:membersstate
+          readOnly: true
+        name:
+          type: string
+          description: Member name in address:port format.
+          example: 10.0.0.1:80
+        fullPath:
+          type: string
+          description: Full path including partition.
+          example: /Common/10.0.0.1:80
+          readOnly: true
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        address:
+          type: string
+          description: IP address of the pool member.
+          example: 10.0.0.1
+        connectionLimit:
+          type: integer
+          description: Maximum concurrent connections. 0 means unlimited.
+          minimum: 0
+          default: 0
+          example: 10
+        description:
+          type: string
+          description: User-defined description.
+          example: A sample description.
+        dynamicRatio:
+          type: integer
+          description: Dynamic ratio for load balancing.
+          default: 1
+          example: 10
+        ephemeral:
+          type: string
+          description: Whether this is a transient auto-discovered member.
+          readOnly: true
+          enum:
+          - 'true'
+          - 'false'
+          default: 'false'
+          example: 'true'
+        inheritProfile:
+          type: string
+          description: Whether the member inherits the encapsulation profile from its parent pool.
+          enum:
+          - enabled
+          - disabled
+          default: enabled
+          example: enabled
+        logging:
+          type: string
+          description: Whether monitor actions are logged.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        monitor:
+          type: string
+          description: Health monitor override for this member.
+          default: default
+          example: example_value
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        priorityGroup:
+          type: integer
+          description: Priority group number. Higher values receive traffic first when priority-group activation is configured.
+          minimum: 0
+          default: 0
+          example: 10
+        rateLimit:
+          type: string
+          description: Maximum connections per second. disabled means no limit.
+          default: disabled
+          example: example_value
+        ratio:
+          type: integer
+          description: Ratio weight for load balancing.
+          minimum: 1
+          default: 1
+          example: 10
+        session:
+          type: string
+          description: Session availability state.
+          enum:
+          - user-enabled
+          - user-disabled
+          - monitor-enabled
+          default: user-enabled
+          example: user-enabled
+        state:
+          type: string
+          description: Operational state of the member.
+          enum:
+          - user-up
+          - user-down
+          - up
+          - down
+          - unchecked
+          example: up
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using BIG-IP admin credentials. The username and password are sent base64-encoded in the Authorization header.
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token-based authentication. Obtain a token by POSTing credentials to /mgmt/shared/authn/login, then pass the token value in the X-F5-Auth-Token header for subsequent requests.
+externalDocs:
+  description: F5 iControl REST API Documentation
+  url: https://clouddocs.f5.com/api/icontrol-rest/

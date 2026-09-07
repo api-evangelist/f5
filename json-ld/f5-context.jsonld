@@ -1,0 +1,467 @@
+{
+  "@context": {
+    "@version": 1.1,
+
+    "f5": "https://schemas.f5.com/bigip/ltm/",
+    "schema": "https://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+    "network": "https://schemas.f5.com/bigip/network/",
+
+    "VirtualServer": {
+      "@id": "f5:VirtualServer",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "fullPath": {
+          "@id": "f5:fullPath",
+          "@type": "xsd:string"
+        },
+        "description": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "destination": {
+          "@id": "f5:destination",
+          "@type": "xsd:string"
+        },
+        "ipProtocol": {
+          "@id": "f5:ipProtocol",
+          "@type": "xsd:string"
+        },
+        "mask": {
+          "@id": "f5:networkMask",
+          "@type": "xsd:string"
+        },
+        "source": {
+          "@id": "f5:sourceFilter",
+          "@type": "xsd:string"
+        },
+        "partition": {
+          "@id": "f5:partition",
+          "@type": "xsd:string"
+        },
+        "pool": {
+          "@id": "f5:assignedPool",
+          "@type": "@id"
+        },
+        "enabled": {
+          "@id": "f5:enabled",
+          "@type": "xsd:boolean"
+        },
+        "disabled": {
+          "@id": "f5:disabled",
+          "@type": "xsd:boolean"
+        },
+        "connectionLimit": {
+          "@id": "f5:connectionLimit",
+          "@type": "xsd:integer"
+        },
+        "translateAddress": {
+          "@id": "f5:translateAddress",
+          "@type": "xsd:string"
+        },
+        "translatePort": {
+          "@id": "f5:translatePort",
+          "@type": "xsd:string"
+        },
+        "sourcePort": {
+          "@id": "f5:sourcePort",
+          "@type": "xsd:string"
+        },
+        "mirror": {
+          "@id": "f5:mirrorEnabled",
+          "@type": "xsd:string"
+        },
+        "rateLimit": {
+          "@id": "f5:rateLimit",
+          "@type": "xsd:string"
+        },
+        "rateLimitMode": {
+          "@id": "f5:rateLimitMode",
+          "@type": "xsd:string"
+        },
+        "addressStatus": {
+          "@id": "f5:addressStatus",
+          "@type": "xsd:string"
+        },
+        "autoLasthop": {
+          "@id": "f5:autoLasthop",
+          "@type": "xsd:string"
+        },
+        "cmpEnabled": {
+          "@id": "f5:cmpEnabled",
+          "@type": "xsd:string"
+        },
+        "nat64": {
+          "@id": "f5:nat64",
+          "@type": "xsd:string"
+        },
+        "gtmScore": {
+          "@id": "f5:gtmScore",
+          "@type": "xsd:integer"
+        },
+        "fallbackPersistence": {
+          "@id": "f5:fallbackPersistence",
+          "@type": "xsd:string"
+        },
+        "profiles": {
+          "@id": "f5:hasProfile",
+          "@type": "@id",
+          "@container": "@set"
+        },
+        "persist": {
+          "@id": "f5:hasPersistence",
+          "@type": "@id",
+          "@container": "@set"
+        },
+        "rules": {
+          "@id": "f5:hasRule",
+          "@container": "@set"
+        },
+        "vlans": {
+          "@id": "f5:onVlan",
+          "@container": "@set"
+        },
+        "vlansEnabled": {
+          "@id": "f5:vlansEnabled",
+          "@type": "xsd:boolean"
+        },
+        "vlansDisabled": {
+          "@id": "f5:vlansDisabled",
+          "@type": "xsd:boolean"
+        },
+        "selfLink": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "kind": {
+          "@id": "f5:resourceKind",
+          "@type": "xsd:string"
+        },
+        "generation": {
+          "@id": "f5:generation",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "Pool": {
+      "@id": "f5:Pool",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "fullPath": {
+          "@id": "f5:fullPath",
+          "@type": "xsd:string"
+        },
+        "description": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "partition": {
+          "@id": "f5:partition",
+          "@type": "xsd:string"
+        },
+        "loadBalancingMode": {
+          "@id": "f5:loadBalancingMode",
+          "@type": "xsd:string"
+        },
+        "monitor": {
+          "@id": "f5:healthMonitor",
+          "@type": "xsd:string"
+        },
+        "allowNat": {
+          "@id": "f5:allowNat",
+          "@type": "xsd:string"
+        },
+        "allowSnat": {
+          "@id": "f5:allowSnat",
+          "@type": "xsd:string"
+        },
+        "minActiveMembers": {
+          "@id": "f5:minActiveMembers",
+          "@type": "xsd:integer"
+        },
+        "minUpMembers": {
+          "@id": "f5:minUpMembers",
+          "@type": "xsd:integer"
+        },
+        "minUpMembersAction": {
+          "@id": "f5:minUpMembersAction",
+          "@type": "xsd:string"
+        },
+        "minUpMembersChecking": {
+          "@id": "f5:minUpMembersChecking",
+          "@type": "xsd:string"
+        },
+        "slowRampTime": {
+          "@id": "f5:slowRampTime",
+          "@type": "xsd:integer"
+        },
+        "reselectTries": {
+          "@id": "f5:reselectTries",
+          "@type": "xsd:integer"
+        },
+        "serviceDownAction": {
+          "@id": "f5:serviceDownAction",
+          "@type": "xsd:string"
+        },
+        "queueDepthLimit": {
+          "@id": "f5:queueDepthLimit",
+          "@type": "xsd:integer"
+        },
+        "queueOnConnectionLimit": {
+          "@id": "f5:queueOnConnectionLimit",
+          "@type": "xsd:string"
+        },
+        "queueTimeLimit": {
+          "@id": "f5:queueTimeLimit",
+          "@type": "xsd:integer"
+        },
+        "members": {
+          "@id": "f5:hasMember",
+          "@type": "@id",
+          "@container": "@set"
+        },
+        "selfLink": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "kind": {
+          "@id": "f5:resourceKind",
+          "@type": "xsd:string"
+        },
+        "generation": {
+          "@id": "f5:generation",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "PoolMember": {
+      "@id": "f5:PoolMember",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "fullPath": {
+          "@id": "f5:fullPath",
+          "@type": "xsd:string"
+        },
+        "description": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "address": {
+          "@id": "network:ipAddress",
+          "@type": "xsd:string"
+        },
+        "partition": {
+          "@id": "f5:partition",
+          "@type": "xsd:string"
+        },
+        "connectionLimit": {
+          "@id": "f5:connectionLimit",
+          "@type": "xsd:integer"
+        },
+        "dynamicRatio": {
+          "@id": "f5:dynamicRatio",
+          "@type": "xsd:integer"
+        },
+        "monitor": {
+          "@id": "f5:healthMonitor",
+          "@type": "xsd:string"
+        },
+        "priorityGroup": {
+          "@id": "f5:priorityGroup",
+          "@type": "xsd:integer"
+        },
+        "rateLimit": {
+          "@id": "f5:rateLimit",
+          "@type": "xsd:string"
+        },
+        "ratio": {
+          "@id": "f5:ratio",
+          "@type": "xsd:integer"
+        },
+        "session": {
+          "@id": "f5:sessionState",
+          "@type": "xsd:string"
+        },
+        "state": {
+          "@id": "f5:operationalState",
+          "@type": "xsd:string"
+        },
+        "inheritProfile": {
+          "@id": "f5:inheritProfile",
+          "@type": "xsd:string"
+        },
+        "logging": {
+          "@id": "f5:loggingEnabled",
+          "@type": "xsd:string"
+        },
+        "selfLink": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "kind": {
+          "@id": "f5:resourceKind",
+          "@type": "xsd:string"
+        },
+        "generation": {
+          "@id": "f5:generation",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "Node": {
+      "@id": "f5:Node",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "fullPath": {
+          "@id": "f5:fullPath",
+          "@type": "xsd:string"
+        },
+        "description": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "address": {
+          "@id": "network:ipAddress",
+          "@type": "xsd:string"
+        },
+        "partition": {
+          "@id": "f5:partition",
+          "@type": "xsd:string"
+        },
+        "connectionLimit": {
+          "@id": "f5:connectionLimit",
+          "@type": "xsd:integer"
+        },
+        "dynamicRatio": {
+          "@id": "f5:dynamicRatio",
+          "@type": "xsd:integer"
+        },
+        "monitor": {
+          "@id": "f5:healthMonitor",
+          "@type": "xsd:string"
+        },
+        "rateLimit": {
+          "@id": "f5:rateLimit",
+          "@type": "xsd:string"
+        },
+        "ratio": {
+          "@id": "f5:ratio",
+          "@type": "xsd:integer"
+        },
+        "session": {
+          "@id": "f5:sessionState",
+          "@type": "xsd:string"
+        },
+        "state": {
+          "@id": "f5:operationalState",
+          "@type": "xsd:string"
+        },
+        "logging": {
+          "@id": "f5:loggingEnabled",
+          "@type": "xsd:string"
+        },
+        "fqdn": {
+          "@id": "f5:fqdnConfig",
+          "@type": "@id"
+        },
+        "selfLink": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "kind": {
+          "@id": "f5:resourceKind",
+          "@type": "xsd:string"
+        },
+        "generation": {
+          "@id": "f5:generation",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "Profile": {
+      "@id": "f5:Profile",
+      "@context": {
+        "name": {
+          "@id": "schema:name",
+          "@type": "xsd:string"
+        },
+        "fullPath": {
+          "@id": "f5:fullPath",
+          "@type": "xsd:string"
+        },
+        "description": {
+          "@id": "schema:description",
+          "@type": "xsd:string"
+        },
+        "context": {
+          "@id": "f5:profileContext",
+          "@type": "xsd:string"
+        },
+        "defaultsFrom": {
+          "@id": "f5:inheritsFrom",
+          "@type": "@id"
+        },
+        "partition": {
+          "@id": "f5:partition",
+          "@type": "xsd:string"
+        },
+        "selfLink": {
+          "@id": "schema:url",
+          "@type": "@id"
+        },
+        "kind": {
+          "@id": "f5:resourceKind",
+          "@type": "xsd:string"
+        },
+        "generation": {
+          "@id": "f5:generation",
+          "@type": "xsd:integer"
+        }
+      }
+    },
+
+    "NodeFqdn": {
+      "@id": "f5:NodeFqdn",
+      "@context": {
+        "addressFamily": {
+          "@id": "f5:addressFamily",
+          "@type": "xsd:string"
+        },
+        "autopopulate": {
+          "@id": "f5:autopopulate",
+          "@type": "xsd:string"
+        },
+        "downInterval": {
+          "@id": "f5:downInterval",
+          "@type": "xsd:integer"
+        },
+        "interval": {
+          "@id": "f5:queryInterval",
+          "@type": "xsd:string"
+        },
+        "tmName": {
+          "@id": "f5:fqdnName",
+          "@type": "xsd:string"
+        }
+      }
+    }
+  }
+}

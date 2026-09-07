@@ -1,0 +1,268 @@
+specification: API Commons DataModel
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: derived
+source: >-
+  Derived from the schema components and $ref graph of the four first-party contracts harvested
+  into openapi/ on 2026-09-07 — openapi/f5-nginx-plus-api-openapi.yml (49 definitions),
+  openapi/f5-big-ip-fast-openapi.yml (35 schemas), openapi/f5-big-ip-declarative-onboarding-openapi.yml
+  (8 schemas) and openapi/f5-big-ip-as3-openapi.yml (3 schemas).
+description: >-
+  The F5 estate does not have one data model; it has two shapes that behave very differently and
+  an agent needs to tell them apart. The NGINX Plus REST API is a fully normalised OBSERVATION
+  model — 49 named definitions, mostly maps keyed by a configuration name, describing counters and
+  live state, with a clean hierarchy from the root object down through http/stream to zones and
+  peers. The BIG-IP Automation Toolchain APIs are DECLARATION models: AS3 has exactly three
+  schemas because the entire application-delivery object graph lives inside one opaque
+  `declaration` document governed by an external JSON Schema, not by the OpenAPI. That is why AS3
+  looks tiny in an OpenAPI-shaped scan and is in fact the largest object model F5 ships.
+models:
+  - api: NGINX Plus REST API
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    shape: observation
+    entity_count: 49
+    root: NginxObject
+    note: >-
+      Collections are represented as *Map definitions (additionalProperties keyed by the
+      configured zone or upstream name) rather than as arrays, so the identifier IS the key. The
+      one exception is upstream peers, which carry a numeric server `id` assigned by NGINX — and
+      that ID is not stable across a configuration reload, which is the single most common source
+      of a 404 UpstreamServerNotFound.
+    entities:
+      - name: NginxObject
+        description: Root — version, build, address, generation, load_timestamp, pid, ppid.
+      - name: NginxProcesses
+      - name: NginxConnections
+      - name: NginxSSLObject
+      - name: NginxLicenseObject
+      - name: NginxWorker
+      - name: NginxWorkersMap
+      - name: NginxSlabZone
+      - name: NginxSlabZoneSlot
+      - name: NginxSlabZoneMap
+      - name: NginxHTTPRequests
+      - name: NginxHTTPServerZone
+      - name: NginxHTTPServerZonesMap
+      - name: NginxHTTPLocationZone
+      - name: NginxHTTPLocationZonesMap
+      - name: NginxHTTPCache
+      - name: NginxHTTPCachesMap
+      - name: NginxHTTPLimitConnZone
+      - name: NginxHTTPLimitConnZonesMap
+      - name: NginxHTTPLimitReqZone
+      - name: NginxHTTPLimitReqZonesMap
+      - name: NginxHTTPUpstream
+      - name: NginxHTTPUpstreamMap
+      - name: NginxHTTPUpstreamPeer
+      - name: NginxHTTPUpstreamPeerMap
+      - name: NginxHTTPUpstreamConfServer
+      - name: NginxHTTPUpstreamConfServerMap
+      - name: NginxHTTPKeyvalZone
+      - name: NginxHTTPKeyvalZonePostPatch
+      - name: NginxHTTPKeyvalZonesMap
+      - name: NginxStreamServerZone
+      - name: NginxStreamServerZonesMap
+      - name: NginxStreamLimitConnZone
+      - name: NginxStreamLimitConnZonesMap
+      - name: NginxStreamUpstream
+      - name: NginxStreamUpstreamMap
+      - name: NginxStreamUpstreamPeer
+      - name: NginxStreamUpstreamPeerMap
+      - name: NginxStreamUpstreamConfServer
+      - name: NginxStreamUpstreamConfServerMap
+      - name: NginxStreamKeyvalZone
+      - name: NginxStreamKeyvalZonePostPatch
+      - name: NginxStreamKeyvalZonesMap
+      - name: NginxStreamZoneSync
+      - name: NginxStreamZoneSyncZone
+      - name: NginxResolverZone
+      - name: NginxResolverZonesMap
+      - name: NginxError
+      - name: ArrayOfStrings
+    relationships:
+      - from: NginxObject
+        to: NginxHTTPUpstreamMap
+        type: has_many
+        via: http.upstreams (keyed by upstream name)
+      - from: NginxHTTPUpstream
+        to: NginxHTTPUpstreamPeer
+        type: has_many
+        via: peers[] (each with a numeric id)
+      - from: NginxHTTPUpstreamPeer
+        to: NginxHTTPUpstreamConfServer
+        type: belongs_to
+        via: the configured server entry the peer was created from
+      - from: NginxObject
+        to: NginxHTTPServerZonesMap
+        type: has_many
+        via: http.server_zones (keyed by zone name)
+      - from: NginxObject
+        to: NginxHTTPLocationZonesMap
+        type: has_many
+        via: http.location_zones
+      - from: NginxObject
+        to: NginxHTTPCachesMap
+        type: has_many
+        via: http.caches
+      - from: NginxObject
+        to: NginxHTTPKeyvalZonesMap
+        type: has_many
+        via: http.keyvals
+      - from: NginxObject
+        to: NginxStreamUpstreamMap
+        type: has_many
+        via: stream.upstreams
+      - from: NginxStreamUpstream
+        to: NginxStreamUpstreamPeer
+        type: has_many
+        via: peers[]
+      - from: NginxObject
+        to: NginxSlabZoneMap
+        type: has_many
+        via: slabs — every zone above is backed by a slab, so slab exhaustion is the shared
+          failure mode across upstreams, keyvals and limit zones
+      - from: NginxObject
+        to: NginxResolverZonesMap
+        type: has_many
+        via: resolvers
+      - from: NginxObject
+        to: NginxWorkersMap
+        type: has_many
+        via: workers
+  - api: F5 BIG-IP AS3
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    shape: declaration
+    entity_count: 3
+    entities:
+      - name: declaration
+        description: >-
+          The entire application-delivery object graph — tenants, applications, services, pools,
+          monitors, profiles, WAF policies — as one nested document. Its structure is governed by
+          the AS3 JSON Schema published separately at
+          github.com/F5Networks/f5-appsvcs-extension (schema/latest/as3-schema.json), NOT by this
+          OpenAPI. Any tool that reads only the OpenAPI will see an opaque object.
+      - name: result
+        description: Per-declaration outcome — code, message, host, tenant, runTime.
+      - name: error
+    relationships:
+      - from: declaration
+        to: tenant
+        type: has_many
+        via: top-level keys of class Tenant
+      - from: tenant
+        to: application
+        type: has_many
+        via: nested keys of class Application
+      - from: application
+        to: service
+        type: has_many
+        via: Service_HTTP / Service_HTTPS / Service_TCP / Service_UDP / Service_L4 members
+      - from: service
+        to: pool
+        type: has_one
+        via: pool (a name reference resolved within the same application)
+      - from: pool
+        to: monitor
+        type: has_many
+        via: monitors[] (name references)
+    identifier_note: >-
+      AS3 addresses objects by NAME within a namespace path (/{tenant}/{application}/{object}),
+      not by opaque ID. There are no id prefixes anywhere in the F5 estate — every identifier is a
+      configuration name the customer chose, which means an agent cannot infer type from an
+      identifier the way it can with a prefixed ID scheme.
+  - api: F5 BIG-IP FAST
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    shape: template
+    entity_count: 35
+    entities:
+      - name: Template
+      - name: TemplateSet
+      - name: TemplateList
+      - name: TemplateSetList
+      - name: TemplateNameList
+      - name: FastApplication
+      - name: FastApplicationList
+      - name: FastApplicationRequest
+      - name: FastApplicationResponse
+      - name: FastApplicationDefinition
+      - name: FastApplicationDefinitionList
+      - name: FastApplicationRenderedResponse
+      - name: FastApplicationDeleteResponse
+      - name: FastAs3App
+      - name: Task
+      - name: TaskList
+      - name: Settings
+      - name: SettingsSchema
+      - name: Info
+      - name: ParametersDefinition
+      - name: StringDefinition
+      - name: ObjectDefinition
+      - name: IpamInfoblox
+      - name: IpamGeneric
+      - name: ErrorsArray
+      - name: LinksDefinition
+      - name: uuid
+    relationships:
+      - from: TemplateSet
+        to: Template
+        type: has_many
+        via: templates[] within the set
+      - from: FastApplication
+        to: Template
+        type: belongs_to
+        via: template (setName/templateName)
+      - from: FastApplication
+        to: FastAs3App
+        type: has_one
+        via: the AS3 application FAST renders and deploys — the join between the two APIs
+      - from: FastApplicationRequest
+        to: Task
+        type: has_one
+        via: the task id returned by an async application write
+      - from: Template
+        to: ParametersDefinition
+        type: has_one
+        via: parameters schema the template exposes
+    identifier_note: FAST is the one F5 API using opaque IDs — Task IDs are UUIDs (schema `uuid`).
+      Applications are still addressed by {tenantName}/{appName}.
+  - api: F5 BIG-IP Declarative Onboarding
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    shape: declaration
+    entity_count: 8
+    entities:
+      - name: device
+      - name: config
+      - name: configObject
+      - name: inspect
+      - name: task
+      - name: result
+      - name: errorConfig
+      - name: errorProcessing
+    relationships:
+      - from: device
+        to: config
+        type: has_one
+        via: machineId — the stored ORIGINAL configuration of that device
+      - from: device
+        to: task
+        type: has_many
+        via: taskId — each POSTed declaration becomes a task
+      - from: task
+        to: result
+        type: has_one
+        via: result.code / result.status / result.message
+cross_api_joins:
+  - from: FAST FastApplication
+    to: AS3 declaration
+    via: FAST renders an AS3 declaration and deploys it through AS3; FastAs3App is the rendered
+      artifact. An application created in FAST is visible in AS3's GET /declare.
+  - from: DO declaration
+    to: AS3 declaration
+    via: >-
+      Sequencing, not a field. DO establishes device identity, licensing, VLANs, self-IPs and
+      provisioning; AS3 then configures application services on top. DO must succeed before AS3
+      has anything to configure — this ordering is the real relationship between the two models.
+render: null
+render_note: No subway/ directory exists in this repo, so no rendered ER diagram is referenced.

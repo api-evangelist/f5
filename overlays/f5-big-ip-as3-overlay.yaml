@@ -1,0 +1,72 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for F5 BIG-IP AS3
+  version: 1.0.0
+extends: ../openapi/f5-big-ip-as3-openapi.yml
+x-provenance:
+  generated: '2026-09-07'
+  method: generated
+  source: Generated from the harvested contract openapi/f5-big-ip-as3-openapi.yml plus the repo artifacts
+    it feeds. The underlying spec was fetched verbatim from https://github.com/F5Networks/f5-appsvcs-extension/blob/main/docs/openapi.yaml
+    on 2026-09-07 and is NOT modified by this overlay.
+  target_title: F5 BIG-IP AS3
+  target_version: 3.56.0
+actions:
+- target: $.info
+  description: Record where this contract was harvested from and which repo artifacts describe its runtime
+    semantics.
+  update:
+    x-apievangelist:
+      provider: F5
+      providerId: f5
+      harvested: '2026-09-07'
+      harvested_from: https://github.com/F5Networks/f5-appsvcs-extension/blob/main/docs/openapi.yaml
+      repository: https://github.com/F5Networks/f5-appsvcs-extension
+      artifacts:
+        conventions: ../conventions/f5-conventions.yml
+        errors: ../errors/f5-problem-types.yml
+        authentication: ../authentication/f5-authentication.yml
+        lifecycle: ../lifecycle/f5-lifecycle.yml
+        conformance: ../conformance/f5-conformance.yml
+        data_model: ../data-model/f5-data-model.yml
+        rate_limits: ../rate-limits/f5-rate-limits.yml
+        packages: ../packages/f5-packages.yml
+- target: $.info
+  description: State the real base URL model. These are customer-hosted control planes; the declared server
+    is a placeholder, not a reachable host.
+  update:
+    x-base-url-model:
+      model: customer-hosted
+      effective_base: https://{bigip}/mgmt/shared/appsvcs
+      note: The caller supplies the host. No F5-operated endpoint serves this API.
+- target: $.info
+  description: Summarise the authentication the provider documents, which this contract does not fully
+    declare.
+  update:
+    x-authentication-note: HTTP Basic over TLS against a BIG-IP administrative user, or the X-F5-Auth-Token
+      header obtained from POST /mgmt/shared/authn/login on the same device.
+- target: $.info
+  description: Point at the derived error catalog and note what the contract omits.
+  update:
+    x-error-note: AS3 declares 404/422/500/503 with prose only and no error schema. 503 means another
+      declaration is in flight — retry with backoff or use ?async=true.
+- target: $.info
+  description: Integration notes an agent needs that are not expressible in the contract itself.
+  update:
+    x-integration-notes:
+    - No operation in this contract declares an operationId. Bindings must be made by method+path.
+    - controls.dryRun=true runs the full validation chain without deploying, and is wired to the DELETE
+      path as well as the POST paths.
+    - GET /declare?age=0-15 retrieves prior declarations (?age=list indexes them); re-POSTing one is the
+      documented undo. Default retention is 4, configurable to 15 via historyLimit.
+    - The declaration body is governed by the AS3 JSON Schema published separately at schema/latest/as3-schema.json
+      in the same repository, not by this OpenAPI.
+- target: $.info
+  description: Record the measured absence of rate-limit signalling so a consumer does not go looking
+    for headers that are never sent.
+  update:
+    x-rate-limit-signalling:
+      headers: []
+      status_on_exhaustion: null
+      note: No rate-limit header or 429 response is declared in this contract, and F5 publishes no limits
+        for its own APIs. See ../rate-limits/f5-rate-limits.yml.

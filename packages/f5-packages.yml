@@ -1,0 +1,180 @@
+specification: API Commons Packages
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: >-
+  Registry metadata endpoints queried unauthenticated on 2026-09-07 — pypi.org/pypi/<pkg>/json,
+  registry.npmjs.org/<pkg>, registry.terraform.io/v1/providers/<ns>/<name>,
+  galaxy.ansible.com/api/v3/.../collections/index/f5networks/<name>/, proxy.golang.org/<mod>/@latest,
+  hub.docker.com/v2/repositories/<repo>/ — cross-referenced against the F5Networks, f5devcentral and
+  nginx GitHub organizations.
+description: >-
+  First-party F5 client libraries, providers, collections and images. F5's distribution centre of
+  gravity is infrastructure-as-code and operator tooling — Terraform providers, Ansible collections
+  and Kubernetes controllers are current and actively released, while the classic Python SDKs for
+  iControl REST were last published in 2019 and are effectively frozen. That split is the single
+  most useful currency signal in this record: an agent integrating with BIG-IP through the Python
+  SDK is picking up a library that has not shipped in seven years, while the same platform's
+  Terraform provider shipped two months ago.
+package_count: 13
+official_count: 13
+findings:
+  - The two Python SDKs F5 published for iControl REST (f5-sdk / f5-common-python and
+    f5-icontrol-rest) both last released in April 2019. The API they wrap is still shipping.
+  - f5-cli, F5's own command-line client on PyPI, last released 2020-04-16 and its GitHub
+    repository (F5Networks/f5-cli) now returns 404 — the package outlives its source.
+  - >-
+    Terraform, Ansible and container distribution are current — bigip 1.28.0 (2026-07-02),
+    f5os 1.13.0 (2026-08-19), f5networks.f5_modules 1.43.0 (2026-08-11),
+    f5networks.f5os 1.23.0 (2026-08-25), nginx/nginx-ingress image updated 2026-09-07.
+  - The Volterra (F5 Distributed Cloud) Terraform provider is published under the volterraedge
+    namespace, not F5Networks — a legacy of the 2021 Volterra acquisition. F5's own XC
+    documentation points at it, which is why it is marked official here.
+packages:
+  - name: f5-sdk
+    registry: pypi
+    language: python
+    official: true
+    version: 3.0.21
+    published: '2019-04-11'
+    url: https://pypi.org/project/f5-sdk/
+    repository: https://github.com/F5Networks/f5-common-python
+    description: Python SDK for configuration and monitoring of F5 BIG-IP devices via the iControl REST API.
+    note: Last release 2019-04-11 — frozen for over seven years while iControl REST remains F5's
+      primary BIG-IP management interface.
+  - name: f5-icontrol-rest
+    registry: pypi
+    language: python
+    official: true
+    version: 1.3.13
+    published: '2019-04-10'
+    url: https://pypi.org/project/f5-icontrol-rest/
+    repository: https://github.com/F5Networks/f5-icontrol-rest-python
+    description: Generic Python transport library used by the F5 SDK and other F5 projects to talk to BIG-IP over iControl REST.
+    note: Last release 2019-04-10. Same freeze as f5-sdk, which depends on it.
+  - name: f5-cli
+    registry: pypi
+    language: python
+    official: true
+    version: 0.9.2
+    published: '2020-04-16'
+    url: https://pypi.org/project/f5-cli/
+    repository: null
+    description: F5 CLI — command-line client for BIG-IP and F5 Cloud Services.
+    note: Last release 2020-04-16; the GitHub repository named in F5's own docs
+      (F5Networks/f5-cli) returns HTTP 404 as of 2026-09-07.
+  - name: '@f5devcentral/f5-cloud-libs'
+    registry: npm
+    language: javascript
+    official: true
+    version: 4.30.0
+    published: '2025-11-06'
+    url: https://www.npmjs.com/package/@f5devcentral/f5-cloud-libs
+    repository: https://github.com/F5Networks/f5-cloud-libs
+    description: Node.js libraries used by F5 cloud deployment templates to onboard and configure BIG-IP instances.
+  - name: '@f5devcentral/f5-fast-core'
+    registry: npm
+    language: javascript
+    official: true
+    version: 0.26.1
+    published: '2026-05-01'
+    url: https://www.npmjs.com/package/@f5devcentral/f5-fast-core
+    repository: https://github.com/f5devcentral/f5-fast-core
+    description: Core templating engine behind F5 BIG-IP Application Services Templates (FAST); the
+      library under the FAST API captured in openapi/f5-big-ip-fast-openapi.yml.
+  - name: '@f5devcentral/atg-shared-utilities'
+    registry: npm
+    language: javascript
+    official: true
+    version: 0.10.12
+    published: '2026-08-31'
+    url: https://www.npmjs.com/package/@f5devcentral/atg-shared-utilities
+    description: Shared utilities used across F5's Automation Toolchain extensions (AS3, DO, FAST, TS).
+  - name: '@f5devcentral/f5-teem'
+    registry: npm
+    language: javascript
+    official: true
+    version: 1.6.1
+    published: '2023-04-26'
+    url: https://www.npmjs.com/package/@f5devcentral/f5-teem
+    description: F5 telemetry (TEEM) client embedded in the Automation Toolchain extensions.
+  - name: F5Networks/bigip
+    registry: terraform
+    language: hcl
+    official: true
+    version: 1.28.0
+    published: '2026-07-02'
+    url: https://registry.terraform.io/providers/F5Networks/bigip/latest
+    repository: https://github.com/F5Networks/terraform-provider-bigip
+    description: Terraform provider for configuring BIG-IP LTM, GTM, AS3, DO and FAST resources.
+  - name: F5Networks/f5os
+    registry: terraform
+    language: hcl
+    official: true
+    version: 1.13.0
+    published: '2026-08-19'
+    url: https://registry.terraform.io/providers/F5Networks/f5os/latest
+    repository: https://github.com/F5Networks/terraform-provider-f5os
+    description: Terraform provider for F5OS platforms (VELOS, rSeries).
+  - name: F5Networks/bigipnext
+    registry: terraform
+    language: hcl
+    official: true
+    version: 1.4.0
+    published: '2024-12-09'
+    url: https://registry.terraform.io/providers/F5Networks/bigipnext/latest
+    repository: https://github.com/F5Networks/terraform-provider-bigipnext
+    description: Terraform provider for BIG-IP Next via BIG-IP Next Central Manager.
+    note: Last published 2024-12-09. F5 has since announced it is discontinuing BIG-IP Next and
+      modernizing BIG-IP TMOS (see F5Networks/f5-ansible-next, archived for the same reason).
+  - name: volterraedge/volterra
+    registry: terraform
+    language: hcl
+    official: true
+    version: 0.12.2
+    published: '2026-07-13'
+    url: https://registry.terraform.io/providers/volterraedge/volterra/latest
+    repository: https://github.com/volterraedge/terraform-provider-volterra
+    description: Terraform provider for F5 Distributed Cloud (XC) — sites, load balancers, WAF, DNS, namespaces.
+    note: Published under the volterraedge namespace rather than F5Networks, a legacy of the
+      2021 Volterra acquisition; F5's own Distributed Cloud documentation points at it.
+  - name: f5networks.f5_modules
+    registry: ansible-galaxy
+    language: python
+    official: true
+    version: 1.43.0
+    published: '2026-08-11'
+    url: https://galaxy.ansible.com/ui/repo/published/f5networks/f5_modules/
+    repository: https://github.com/F5Networks/f5-ansible
+    description: Imperative Ansible collection for BIG-IP and BIG-IQ.
+  - name: f5networks.f5os
+    registry: ansible-galaxy
+    language: python
+    official: true
+    version: 1.23.0
+    published: '2026-08-25'
+    url: https://galaxy.ansible.com/ui/repo/published/f5networks/f5os/
+    repository: https://github.com/F5Networks/f5-ansible-f5os
+    description: Ansible collection for managing F5OS-based devices.
+containers:
+  - name: nginx/nginx-ingress
+    registry: dockerhub
+    official: true
+    version: null
+    published: '2026-09-07'
+    url: https://hub.docker.com/r/nginx/nginx-ingress
+    pull_count: 1087103021
+    note: Docker Hub's repository endpoint reports last_updated but not a resolvable "latest
+      version" string, so version is recorded null rather than guessed; the tag list is the
+      authoritative version surface.
+  - name: f5networks/k8s-bigip-ctlr
+    registry: dockerhub
+    official: true
+    version: null
+    published: '2026-06-05'
+    url: https://hub.docker.com/r/f5networks/k8s-bigip-ctlr
+    pull_count: 31626694
+    note: Go module github.com/F5Networks/k8s-bigip-ctlr last tagged v1.14.2 (2022-12-30) on
+      proxy.golang.org; the shipping artifact is the container image, not the Go module.

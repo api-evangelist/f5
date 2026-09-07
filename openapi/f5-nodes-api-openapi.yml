@@ -1,0 +1,726 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP iControl REST Nodes API
+  description: The iControl REST API provides programmatic access to manage and configure F5 BIG-IP devices. It enables automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes, pool members, and profiles for application delivery, load balancing, and network management.
+  version: 15.1.0
+  contact:
+    name: F5 Support
+    email: support@f5.com
+    url: https://www.f5.com/company/contact/regional-offices
+  license:
+    name: Proprietary
+    url: https://www.f5.com/company/policies/terms-of-use
+  x-logo:
+    url: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
+servers:
+- url: https://{bigip_host}/mgmt/tm
+  description: BIG-IP Management Interface
+  variables:
+    bigip_host:
+      default: 192.168.1.245
+      description: Hostname or IP address of the BIG-IP device
+security:
+- basicAuth: []
+- tokenAuth: []
+tags:
+- name: Nodes
+  description: Manage nodes representing individual backend servers by IP address or FQDN.
+  externalDocs:
+    url: https://clouddocs.f5.com/api/icontrol-rest/APIRef_tm_ltm_node.html
+paths:
+  /ltm/node:
+    get:
+      operationId: listNodes
+      summary: List All Nodes
+      description: Returns a collection of all node resources configured on the BIG-IP system.
+      tags:
+      - Nodes
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      - $ref: '#/components/parameters/TopParam'
+      - $ref: '#/components/parameters/SkipParam'
+      responses:
+        '200':
+          description: Successful retrieval of node collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:node:nodecollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Node'
+              examples:
+                Listnodes200Example:
+                  summary: Default listNodes 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      address: example_value
+                      connectionLimit: 10
+                      description: A sample description.
+                      dynamicRatio: 10
+                      ephemeral: 'true'
+                      fqdn:
+                        addressFamily: ipv4
+                        autopopulate: enabled
+                        downInterval: 10
+                        interval: example_value
+                        tmName: example_value
+                      logging: enabled
+                      monitor: example_value
+                      partition: example_value
+                      rateLimit: example_value
+                      ratio: 10
+                      session: user-enabled
+                      state: user-up
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    post:
+      operationId: createNode
+      summary: Create a Node
+      description: Creates a new node resource on the BIG-IP system. The name and address are required for creation.
+      tags:
+      - Nodes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeCreate'
+            examples:
+              CreatenodeRequestExample:
+                summary: Default createNode request
+                x-microcks-default: true
+                value:
+                  name: Example Title
+                  address: example_value
+                  partition: example_value
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  rateLimit: example_value
+                  ratio: 10
+                  fqdn:
+                    addressFamily: ipv4
+                    autopopulate: enabled
+                    downInterval: 10
+                    interval: example_value
+                    tmName: example_value
+      responses:
+        '200':
+          description: Node created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              examples:
+                Createnode200Example:
+                  summary: Default createNode 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    fqdn:
+                      addressFamily: ipv4
+                      autopopulate: enabled
+                      downInterval: 10
+                      interval: example_value
+                      tmName: example_value
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/node/{nodeName}:
+    parameters:
+    - $ref: '#/components/parameters/NodeNameParam'
+    get:
+      operationId: getNode
+      summary: Get a Node
+      description: Returns a single node resource identified by name.
+      tags:
+      - Nodes
+      responses:
+        '200':
+          description: Successful retrieval of node.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              examples:
+                Getnode200Example:
+                  summary: Default getNode 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    fqdn:
+                      addressFamily: ipv4
+                      autopopulate: enabled
+                      downInterval: 10
+                      interval: example_value
+                      tmName: example_value
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    put:
+      operationId: updateNode
+      summary: Update a Node
+      description: Replaces the entire node resource configuration.
+      tags:
+      - Nodes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeUpdate'
+            examples:
+              UpdatenodeRequestExample:
+                summary: Default updateNode request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  rateLimit: example_value
+                  ratio: 10
+                  session: user-enabled
+                  state: user-up
+                  logging: enabled
+      responses:
+        '200':
+          description: Node updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              examples:
+                Updatenode200Example:
+                  summary: Default updateNode 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    fqdn:
+                      addressFamily: ipv4
+                      autopopulate: enabled
+                      downInterval: 10
+                      interval: example_value
+                      tmName: example_value
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    patch:
+      operationId: patchNode
+      summary: Patch a Node
+      description: Partially updates a node resource configuration.
+      tags:
+      - Nodes
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NodeUpdate'
+            examples:
+              PatchnodeRequestExample:
+                summary: Default patchNode request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  connectionLimit: 10
+                  monitor: example_value
+                  rateLimit: example_value
+                  ratio: 10
+                  session: user-enabled
+                  state: user-up
+                  logging: enabled
+      responses:
+        '200':
+          description: Node patched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Node'
+              examples:
+                Patchnode200Example:
+                  summary: Default patchNode 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    address: example_value
+                    connectionLimit: 10
+                    description: A sample description.
+                    dynamicRatio: 10
+                    ephemeral: 'true'
+                    fqdn:
+                      addressFamily: ipv4
+                      autopopulate: enabled
+                      downInterval: 10
+                      interval: example_value
+                      tmName: example_value
+                    logging: enabled
+                    monitor: example_value
+                    partition: example_value
+                    rateLimit: example_value
+                    ratio: 10
+                    session: user-enabled
+                    state: user-up
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deleteNode
+      summary: Delete a Node
+      description: Removes a node resource from the BIG-IP system. The node must not be referenced by any pool member.
+      tags:
+      - Nodes
+      responses:
+        '200':
+          description: Node deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    NodeNameParam:
+      name: nodeName
+      in: path
+      required: true
+      description: Name of the node resource. Can be the IP address or a user-defined name.
+      schema:
+        type: string
+      example: 10.0.0.1
+  schemas:
+    NodeUpdate:
+      type: object
+      description: Request body for updating a node.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        session:
+          type: string
+          enum:
+          - user-enabled
+          - user-disabled
+          example: user-enabled
+        state:
+          type: string
+          enum:
+          - user-up
+          - user-down
+          example: user-up
+        logging:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+    NodeCreate:
+      type: object
+      description: Request body for creating a new node.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Name of the node. If the name is an IP address, the address property is optional.
+          example: 10.0.0.1
+        address:
+          type: string
+          description: IP address of the node. Required if the name is not an IP address.
+          example: 10.0.0.1
+        partition:
+          type: string
+          default: Common
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        fqdn:
+          type: object
+          properties:
+            addressFamily:
+              type: string
+              enum:
+              - ipv4
+              - ipv6
+            autopopulate:
+              type: string
+              enum:
+              - enabled
+              - disabled
+            downInterval:
+              type: integer
+            interval:
+              type: string
+            tmName:
+              type: string
+          example: example_value
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    Node:
+      type: object
+      description: A node resource representing an individual backend server by its IP address or FQDN. Nodes are automatically created when pool members are added, or can be created independently.
+      properties:
+        kind:
+          type: string
+          description: Resource type identifier.
+          example: tm:ltm:node:nodestate
+          readOnly: true
+        name:
+          type: string
+          description: Name of the node (typically the IP address).
+          example: 10.0.0.1
+        fullPath:
+          type: string
+          description: Full path including partition.
+          example: /Common/10.0.0.1
+          readOnly: true
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        address:
+          type: string
+          description: IP address of the node.
+          example: 10.0.0.1
+        connectionLimit:
+          type: integer
+          description: Maximum concurrent connections. 0 means unlimited.
+          minimum: 0
+          default: 0
+          example: 10
+        description:
+          type: string
+          description: User-defined description.
+          example: A sample description.
+        dynamicRatio:
+          type: integer
+          description: Dynamic ratio weight for load balancing.
+          default: 1
+          example: 10
+        ephemeral:
+          type: string
+          description: Whether this is a transient auto-discovered node.
+          readOnly: true
+          enum:
+          - 'true'
+          - 'false'
+          default: 'false'
+          example: 'true'
+        fqdn:
+          type: object
+          description: FQDN configuration for DNS-based node resolution.
+          properties:
+            addressFamily:
+              type: string
+              description: IP address family for DNS resolution.
+              enum:
+              - ipv4
+              - ipv6
+              default: ipv4
+            autopopulate:
+              type: string
+              description: Whether to auto-populate the node with DNS lookup results.
+              enum:
+              - enabled
+              - disabled
+              default: disabled
+            downInterval:
+              type: integer
+              description: Interval in seconds for DNS queries when the node is down.
+              default: 5
+            interval:
+              type: string
+              description: Interval in seconds between DNS queries for the FQDN.
+              default: '3600'
+            tmName:
+              type: string
+              description: The FQDN value to resolve.
+          example: example_value
+        logging:
+          type: string
+          description: Whether monitor actions are logged.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        monitor:
+          type: string
+          description: Health monitor applied to the node.
+          default: default
+          example: example_value
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        rateLimit:
+          type: string
+          description: Maximum connections per second. 0 means no limit.
+          default: disabled
+          example: example_value
+        ratio:
+          type: integer
+          description: Fixed ratio weight for load balancing.
+          minimum: 1
+          default: 1
+          example: 10
+        session:
+          type: string
+          description: Session availability state.
+          enum:
+          - user-enabled
+          - user-disabled
+          - monitor-enabled
+          default: user-enabled
+          example: user-enabled
+        state:
+          type: string
+          description: Operational state of the node.
+          enum:
+          - user-up
+          - user-down
+          - up
+          - down
+          - unchecked
+          example: up
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using BIG-IP admin credentials. The username and password are sent base64-encoded in the Authorization header.
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token-based authentication. Obtain a token by POSTing credentials to /mgmt/shared/authn/login, then pass the token value in the X-F5-Auth-Token header for subsequent requests.
+externalDocs:
+  description: F5 iControl REST API Documentation
+  url: https://clouddocs.f5.com/api/icontrol-rest/

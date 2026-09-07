@@ -1,0 +1,1114 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP iControl REST Nodes Virtual Servers API
+  description: The iControl REST API provides programmatic access to manage and configure F5 BIG-IP devices. It enables automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes, pool members, and profiles for application delivery, load balancing, and network management.
+  version: 15.1.0
+  contact:
+    name: F5 Support
+    email: support@f5.com
+    url: https://www.f5.com/company/contact/regional-offices
+  license:
+    name: Proprietary
+    url: https://www.f5.com/company/policies/terms-of-use
+  x-logo:
+    url: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
+servers:
+- url: https://{bigip_host}/mgmt/tm
+  description: BIG-IP Management Interface
+  variables:
+    bigip_host:
+      default: 192.168.1.245
+      description: Hostname or IP address of the BIG-IP device
+security:
+- basicAuth: []
+- tokenAuth: []
+tags:
+- name: Virtual Servers
+  description: Manage virtual servers that direct client traffic to appropriate server pools based on configured rules and profiles.
+  externalDocs:
+    url: https://clouddocs.f5.com/api/icontrol-rest/APIRef_tm_ltm_virtual.html
+paths:
+  /ltm/virtual:
+    get:
+      operationId: listVirtualServers
+      summary: List All Virtual Servers
+      description: Returns a collection of all virtual server resources configured on the BIG-IP system.
+      tags:
+      - Virtual Servers
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      - $ref: '#/components/parameters/TopParam'
+      - $ref: '#/components/parameters/SkipParam'
+      - $ref: '#/components/parameters/ExpandSubcollectionsParam'
+      responses:
+        '200':
+          description: Successful retrieval of virtual server collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:virtual:virtualcollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/VirtualServer'
+              examples:
+                Listvirtualservers200Example:
+                  summary: Default listVirtualServers 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      addressStatus: 'yes'
+                      autoLasthop: default
+                      cmpEnabled: 'yes'
+                      connectionLimit: 10
+                      description: A sample description.
+                      destination: example_value
+                      disabled: true
+                      enabled: true
+                      fallbackPersistence: example_value
+                      gtmScore: 10
+                      ipProtocol: tcp
+                      mask: example_value
+                      mirror: enabled
+                      nat64: enabled
+                      partition: example_value
+                      persist:
+                      - {}
+                      pool: example_value
+                      profiles:
+                      - {}
+                      rateLimit: example_value
+                      rateLimitMode: object
+                      rules:
+                      - {}
+                      source: example_value
+                      sourcePort: preserve
+                      synCookieStatus: not-activated
+                      translateAddress: enabled
+                      translatePort: enabled
+                      vlansEnabled: true
+                      vlansDisabled: true
+                      vlans:
+                      - {}
+                      vsIndex: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    post:
+      operationId: createVirtualServer
+      summary: Create a Virtual Server
+      description: Creates a new virtual server resource on the BIG-IP system. At minimum, a name and destination address:port must be specified.
+      tags:
+      - Virtual Servers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualServerCreate'
+            examples:
+              CreatevirtualserverRequestExample:
+                summary: Default createVirtualServer request
+                x-microcks-default: true
+                value:
+                  name: Example Title
+                  partition: example_value
+                  destination: example_value
+                  description: A sample description.
+                  ipProtocol: tcp
+                  mask: example_value
+                  pool: example_value
+                  profiles:
+                  - name: Example Title
+                    context: all
+                  persist:
+                  - name: Example Title
+                    tmDefault: 'yes'
+                  source: example_value
+                  sourcePort: preserve
+                  translateAddress: enabled
+                  translatePort: enabled
+                  connectionLimit: 10
+                  rules:
+                  - example_value
+                  vlans:
+                  - example_value
+                  vlansEnabled: true
+                  vlansDisabled: true
+      responses:
+        '200':
+          description: Virtual server created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualServer'
+              examples:
+                Createvirtualserver200Example:
+                  summary: Default createVirtualServer 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    addressStatus: 'yes'
+                    autoLasthop: default
+                    cmpEnabled: 'yes'
+                    connectionLimit: 10
+                    description: A sample description.
+                    destination: example_value
+                    disabled: true
+                    enabled: true
+                    fallbackPersistence: example_value
+                    gtmScore: 10
+                    ipProtocol: tcp
+                    mask: example_value
+                    mirror: enabled
+                    nat64: enabled
+                    partition: example_value
+                    persist:
+                    - name: Example Title
+                      tmDefault: 'yes'
+                    pool: example_value
+                    profiles:
+                    - name: Example Title
+                      context: all
+                      fullPath: example_value
+                    rateLimit: example_value
+                    rateLimitMode: object
+                    rules:
+                    - example_value
+                    source: example_value
+                    sourcePort: preserve
+                    synCookieStatus: not-activated
+                    translateAddress: enabled
+                    translatePort: enabled
+                    vlansEnabled: true
+                    vlansDisabled: true
+                    vlans:
+                    - example_value
+                    vsIndex: 10
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/virtual/{virtualName}:
+    parameters:
+    - $ref: '#/components/parameters/VirtualNameParam'
+    get:
+      operationId: getVirtualServer
+      summary: Get a Virtual Server
+      description: Returns a single virtual server resource identified by name.
+      tags:
+      - Virtual Servers
+      parameters:
+      - $ref: '#/components/parameters/ExpandSubcollectionsParam'
+      responses:
+        '200':
+          description: Successful retrieval of the virtual server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualServer'
+              examples:
+                Getvirtualserver200Example:
+                  summary: Default getVirtualServer 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    addressStatus: 'yes'
+                    autoLasthop: default
+                    cmpEnabled: 'yes'
+                    connectionLimit: 10
+                    description: A sample description.
+                    destination: example_value
+                    disabled: true
+                    enabled: true
+                    fallbackPersistence: example_value
+                    gtmScore: 10
+                    ipProtocol: tcp
+                    mask: example_value
+                    mirror: enabled
+                    nat64: enabled
+                    partition: example_value
+                    persist:
+                    - name: Example Title
+                      tmDefault: 'yes'
+                    pool: example_value
+                    profiles:
+                    - name: Example Title
+                      context: all
+                      fullPath: example_value
+                    rateLimit: example_value
+                    rateLimitMode: object
+                    rules:
+                    - example_value
+                    source: example_value
+                    sourcePort: preserve
+                    synCookieStatus: not-activated
+                    translateAddress: enabled
+                    translatePort: enabled
+                    vlansEnabled: true
+                    vlansDisabled: true
+                    vlans:
+                    - example_value
+                    vsIndex: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    put:
+      operationId: updateVirtualServer
+      summary: Update a Virtual Server
+      description: Replaces the entire virtual server resource. All writable properties must be included in the request body.
+      tags:
+      - Virtual Servers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualServerUpdate'
+            examples:
+              UpdatevirtualserverRequestExample:
+                summary: Default updateVirtualServer request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  destination: example_value
+                  ipProtocol: tcp
+                  mask: example_value
+                  pool: example_value
+                  profiles:
+                  - name: Example Title
+                    context: all
+                  persist:
+                  - name: Example Title
+                    tmDefault: example_value
+                  source: example_value
+                  sourcePort: preserve
+                  translateAddress: enabled
+                  translatePort: enabled
+                  connectionLimit: 10
+                  enabled: true
+                  disabled: true
+                  mirror: enabled
+                  rateLimit: example_value
+                  rules:
+                  - example_value
+                  vlans:
+                  - example_value
+                  vlansEnabled: true
+                  vlansDisabled: true
+                  fallbackPersistence: example_value
+      responses:
+        '200':
+          description: Virtual server updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualServer'
+              examples:
+                Updatevirtualserver200Example:
+                  summary: Default updateVirtualServer 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    addressStatus: 'yes'
+                    autoLasthop: default
+                    cmpEnabled: 'yes'
+                    connectionLimit: 10
+                    description: A sample description.
+                    destination: example_value
+                    disabled: true
+                    enabled: true
+                    fallbackPersistence: example_value
+                    gtmScore: 10
+                    ipProtocol: tcp
+                    mask: example_value
+                    mirror: enabled
+                    nat64: enabled
+                    partition: example_value
+                    persist:
+                    - name: Example Title
+                      tmDefault: 'yes'
+                    pool: example_value
+                    profiles:
+                    - name: Example Title
+                      context: all
+                      fullPath: example_value
+                    rateLimit: example_value
+                    rateLimitMode: object
+                    rules:
+                    - example_value
+                    source: example_value
+                    sourcePort: preserve
+                    synCookieStatus: not-activated
+                    translateAddress: enabled
+                    translatePort: enabled
+                    vlansEnabled: true
+                    vlansDisabled: true
+                    vlans:
+                    - example_value
+                    vsIndex: 10
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    patch:
+      operationId: patchVirtualServer
+      summary: Patch a Virtual Server
+      description: Partially updates a virtual server resource. Only specified properties are modified.
+      tags:
+      - Virtual Servers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VirtualServerUpdate'
+            examples:
+              PatchvirtualserverRequestExample:
+                summary: Default patchVirtualServer request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  destination: example_value
+                  ipProtocol: tcp
+                  mask: example_value
+                  pool: example_value
+                  profiles:
+                  - name: Example Title
+                    context: all
+                  persist:
+                  - name: Example Title
+                    tmDefault: example_value
+                  source: example_value
+                  sourcePort: preserve
+                  translateAddress: enabled
+                  translatePort: enabled
+                  connectionLimit: 10
+                  enabled: true
+                  disabled: true
+                  mirror: enabled
+                  rateLimit: example_value
+                  rules:
+                  - example_value
+                  vlans:
+                  - example_value
+                  vlansEnabled: true
+                  vlansDisabled: true
+                  fallbackPersistence: example_value
+      responses:
+        '200':
+          description: Virtual server patched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VirtualServer'
+              examples:
+                Patchvirtualserver200Example:
+                  summary: Default patchVirtualServer 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    addressStatus: 'yes'
+                    autoLasthop: default
+                    cmpEnabled: 'yes'
+                    connectionLimit: 10
+                    description: A sample description.
+                    destination: example_value
+                    disabled: true
+                    enabled: true
+                    fallbackPersistence: example_value
+                    gtmScore: 10
+                    ipProtocol: tcp
+                    mask: example_value
+                    mirror: enabled
+                    nat64: enabled
+                    partition: example_value
+                    persist:
+                    - name: Example Title
+                      tmDefault: 'yes'
+                    pool: example_value
+                    profiles:
+                    - name: Example Title
+                      context: all
+                      fullPath: example_value
+                    rateLimit: example_value
+                    rateLimitMode: object
+                    rules:
+                    - example_value
+                    source: example_value
+                    sourcePort: preserve
+                    synCookieStatus: not-activated
+                    translateAddress: enabled
+                    translatePort: enabled
+                    vlansEnabled: true
+                    vlansDisabled: true
+                    vlans:
+                    - example_value
+                    vsIndex: 10
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deleteVirtualServer
+      summary: Delete a Virtual Server
+      description: Removes a virtual server resource from the BIG-IP system. Active connections will be terminated.
+      tags:
+      - Virtual Servers
+      responses:
+        '200':
+          description: Virtual server deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    ExpandSubcollectionsParam:
+      name: expandSubcollections
+      in: query
+      required: false
+      description: When set to true, expands all subcollections inline within the response.
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+      example: 'true'
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    VirtualNameParam:
+      name: virtualName
+      in: path
+      required: true
+      description: Name of the virtual server resource. Use ~Common~ prefix for partition-qualified names (e.g., ~Common~my_virtual).
+      schema:
+        type: string
+      example: my_virtual_server
+  schemas:
+    VirtualServerUpdate:
+      type: object
+      description: Request body for updating a virtual server.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        destination:
+          type: string
+          example: example_value
+        ipProtocol:
+          type: string
+          enum:
+          - tcp
+          - udp
+          - sctp
+          - any
+          example: tcp
+        mask:
+          type: string
+          example: example_value
+        pool:
+          type: string
+          example: example_value
+        profiles:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              context:
+                type: string
+                enum:
+                - all
+                - clientside
+                - serverside
+          example: []
+        persist:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              tmDefault:
+                type: string
+          example: []
+        source:
+          type: string
+          example: example_value
+        sourcePort:
+          type: string
+          enum:
+          - preserve
+          - preserve-strict
+          - change
+          example: preserve
+        translateAddress:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        translatePort:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        enabled:
+          type: boolean
+          example: true
+        disabled:
+          type: boolean
+          example: true
+        mirror:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        rateLimit:
+          type: string
+          example: example_value
+        rules:
+          type: array
+          items:
+            type: string
+          example: []
+        vlans:
+          type: array
+          items:
+            type: string
+          example: []
+        vlansEnabled:
+          type: boolean
+          example: true
+        vlansDisabled:
+          type: boolean
+          example: true
+        fallbackPersistence:
+          type: string
+          example: example_value
+    VirtualServerCreate:
+      type: object
+      description: Request body for creating a new virtual server.
+      required:
+      - name
+      - destination
+      properties:
+        name:
+          type: string
+          description: Name of the virtual server.
+          example: my_virtual_server
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        destination:
+          type: string
+          description: Destination address and port in /partition/address:port format.
+          example: /Common/10.0.0.100:80
+        description:
+          type: string
+          description: User-defined description.
+          example: A sample description.
+        ipProtocol:
+          type: string
+          description: IP protocol.
+          enum:
+          - tcp
+          - udp
+          - sctp
+          - any
+          example: tcp
+        mask:
+          type: string
+          description: Destination network mask.
+          example: 255.255.255.255
+        pool:
+          type: string
+          description: Default pool full path.
+          example: /Common/my_pool
+        profiles:
+          type: array
+          description: Profiles to apply.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              context:
+                type: string
+                enum:
+                - all
+                - clientside
+                - serverside
+          example: []
+        persist:
+          type: array
+          description: Persistence profiles to apply.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              tmDefault:
+                type: string
+                enum:
+                - 'yes'
+                - 'no'
+          example: []
+        source:
+          type: string
+          description: Source address filter.
+          default: 0.0.0.0/0
+          example: example_value
+        sourcePort:
+          type: string
+          description: Source port translation behavior.
+          enum:
+          - preserve
+          - preserve-strict
+          - change
+          example: preserve
+        translateAddress:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        translatePort:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        rules:
+          type: array
+          items:
+            type: string
+          example: []
+        vlans:
+          type: array
+          items:
+            type: string
+          example: []
+        vlansEnabled:
+          type: boolean
+          example: true
+        vlansDisabled:
+          type: boolean
+          example: true
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    VirtualServer:
+      type: object
+      description: A virtual server resource that directs client traffic to a pool of backend servers based on an IP address and port combination.
+      properties:
+        kind:
+          type: string
+          description: Resource type identifier.
+          example: tm:ltm:virtual:virtualstate
+          readOnly: true
+        name:
+          type: string
+          description: Name of the virtual server resource.
+          example: my_virtual_server
+        fullPath:
+          type: string
+          description: Full path including partition.
+          example: /Common/my_virtual_server
+          readOnly: true
+        generation:
+          type: integer
+          description: Configuration generation counter.
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          description: Self-referencing URI for this resource.
+          readOnly: true
+          example: https://www.example.com
+        addressStatus:
+          type: string
+          description: Whether the virtual contributes to the operational status of the associated virtual address.
+          enum:
+          - 'yes'
+          - 'no'
+          default: 'yes'
+          example: 'yes'
+        autoLasthop:
+          type: string
+          description: Automatic last hop setting for return traffic routing.
+          enum:
+          - default
+          - enabled
+          - disabled
+          default: default
+          example: default
+        cmpEnabled:
+          type: string
+          description: Whether Clustered Multi-Processing (CMP) acceleration is enabled.
+          enum:
+          - 'yes'
+          - 'no'
+          default: 'yes'
+          example: 'yes'
+        connectionLimit:
+          type: integer
+          description: Maximum number of concurrent connections allowed. A value of 0 means unlimited.
+          minimum: 0
+          default: 0
+          example: 0
+        description:
+          type: string
+          description: User-defined description of the virtual server.
+          example: Production web virtual server
+        destination:
+          type: string
+          description: Destination IP address and service port in the format /partition/address:port or /partition/address.port.
+          example: /Common/10.0.0.100:80
+        disabled:
+          type: boolean
+          description: When true, the virtual server does not accept new connections.
+          example: true
+        enabled:
+          type: boolean
+          description: When true, the virtual server accepts and processes traffic.
+          example: true
+        fallbackPersistence:
+          type: string
+          description: Persistence profile to use when the primary persistence method fails.
+          example: /Common/source_addr
+        gtmScore:
+          type: integer
+          description: Score value used by Global Traffic Manager for load balancing decisions.
+          default: 0
+          example: 10
+        ipProtocol:
+          type: string
+          description: IP protocol for the virtual server.
+          enum:
+          - tcp
+          - udp
+          - sctp
+          - any
+          example: tcp
+        mask:
+          type: string
+          description: Network mask for the destination address. Use 255.255.255.255 for host-specific virtual servers.
+          example: 255.255.255.255
+        mirror:
+          type: string
+          description: Whether connection and persistence mirroring is enabled for high availability failover.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        nat64:
+          type: string
+          description: Whether NAT64 translation is enabled.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        partition:
+          type: string
+          description: Administrative partition containing this resource.
+          default: Common
+          example: Common
+        persist:
+          type: array
+          description: Persistence profiles applied to the virtual server.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: cookie
+              tmDefault:
+                type: string
+                enum:
+                - 'yes'
+                - 'no'
+          example: []
+        pool:
+          type: string
+          description: Default pool for directing traffic. Specified as a full path (e.g., /Common/my_pool).
+          example: /Common/my_pool
+        profiles:
+          type: array
+          description: Profiles applied to the virtual server.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                example: http
+              context:
+                type: string
+                enum:
+                - all
+                - clientside
+                - serverside
+                example: all
+              fullPath:
+                type: string
+                example: /Common/http
+          example: []
+        rateLimit:
+          type: string
+          description: Maximum number of connections per second. A value of disabled or 0 means no limit.
+          default: disabled
+          example: example_value
+        rateLimitMode:
+          type: string
+          description: Scope of rate limiting.
+          enum:
+          - object
+          - object-source
+          - object-destination
+          - object-source-destination
+          default: object
+          example: object
+        rules:
+          type: array
+          description: iRules applied to the virtual server.
+          items:
+            type: string
+          example:
+          - /Common/my_irule
+        source:
+          type: string
+          description: Source address filter. Only connections from this network are accepted.
+          default: 0.0.0.0/0
+          example: 0.0.0.0/0
+        sourcePort:
+          type: string
+          description: Source port translation behavior.
+          enum:
+          - preserve
+          - preserve-strict
+          - change
+          default: preserve
+          example: preserve
+        synCookieStatus:
+          type: string
+          description: Current SYN Cookie protection status.
+          readOnly: true
+          enum:
+          - not-activated
+          - activated
+          example: not-activated
+        translateAddress:
+          type: string
+          description: Whether address translation is enabled.
+          enum:
+          - enabled
+          - disabled
+          default: enabled
+          example: enabled
+        translatePort:
+          type: string
+          description: Whether port translation is enabled.
+          enum:
+          - enabled
+          - disabled
+          default: enabled
+          example: enabled
+        vlansEnabled:
+          type: boolean
+          description: Whether VLAN filtering is enabled.
+          example: true
+        vlansDisabled:
+          type: boolean
+          description: Whether the virtual server is disabled on listed VLANs.
+          example: true
+        vlans:
+          type: array
+          description: List of VLANs on which the virtual server is enabled or disabled.
+          items:
+            type: string
+          example:
+          - /Common/external
+        vsIndex:
+          type: integer
+          description: System-assigned index for the virtual server.
+          readOnly: true
+          example: 10
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using BIG-IP admin credentials. The username and password are sent base64-encoded in the Authorization header.
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token-based authentication. Obtain a token by POSTing credentials to /mgmt/shared/authn/login, then pass the token value in the X-F5-Auth-Token header for subsequent requests.
+externalDocs:
+  description: F5 iControl REST API Documentation
+  url: https://clouddocs.f5.com/api/icontrol-rest/

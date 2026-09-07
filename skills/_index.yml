@@ -1,0 +1,76 @@
+specification: API Commons AgentSkill
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: generated
+source: >-
+  Authored from the four first-party F5 contracts harvested into openapi/ on 2026-09-07. Every
+  operationId referenced in every skill was read out of the spec it names — none were invented.
+  F5 publishes no AGENTS.md and no skills of its own; a search of f5.com, docs.nginx.com,
+  clouddocs.f5.com, docs.cloud.f5.com and the F5Networks / f5devcentral / nginx GitHub
+  organizations found none.
+description: >-
+  Packaged Agent Skills for the F5 API estate, one per marquee flow. Each is grounded in real
+  operationIds and carries the runtime rules an agent actually trips over — write mode, task
+  polling, convergent deletes, the reversibility window — rather than restating the reference docs.
+skill_count: 4
+skills:
+  - name: f5-nginx-scale-upstream
+    file: f5-nginx-scale-upstream.md
+    api: NGINX Plus REST API
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    consequence: write
+    summary: >-
+      Add, drain and remove upstream servers at runtime without a reload. Carries the two
+      preconditions that make every mutation fail otherwise (`api write=on;` and a `zone`-backed
+      upstream), the non-idempotency of the POST, and the fact that in-memory changes vanish on
+      restart unless a state file is configured.
+    operations: [getAPIEndpoints, getHttpUpstreams, getHttpUpstreamName, getHttpUpstreamServers,
+      postHttpUpstreamServer, patchHttpUpstreamPeer, deleteHttpUpstreamServer]
+  - name: f5-as3-deploy-application
+    file: f5-as3-deploy-application.md
+    api: F5 BIG-IP AS3
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    consequence: write
+    summary: >-
+      Deploy an application delivery configuration with a dry run first and a documented path back.
+      Leads with the fact that AS3 is convergent, so anything absent from the declaration is
+      deleted, and with the real bound on the ?age history (default 4, max 16).
+    operations_note: AS3 declares no operationIds; the skill binds by method and path and says so.
+  - name: f5-fast-create-application
+    file: f5-fast-create-application.md
+    api: F5 BIG-IP FAST
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    consequence: write
+    summary: >-
+      Create an application from a FAST template. The best entry point for an agent because the
+      template's parameter schema is a real machine-readable input contract, and POST /render shows
+      the AS3 declaration before anything is deployed.
+    operations: [getFASTInfo, getFASTTemplateSets, getFASTTemplates,
+      getFASTTemplateBySetAndTemplateName, postFASTRender, postFASTApplications, getFASTTasks,
+      getFASTTaskById, getFASTApplication, deleteFASTApplication]
+  - name: f5-do-onboard-device
+    file: f5-do-onboard-device.md
+    api: F5 BIG-IP Declarative Onboarding
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    consequence: write
+    summary: >-
+      Onboard a device. Flagged as the highest-consequence write in the estate — no dry run exists,
+      a 200 does not mean success (read result.code on the task), and deleteConfig destroys the
+      stored original configuration irreversibly.
+    operations: [getMostRecentTask, getConfig, getAllConfigs, getInspect, postDeclaration, getTask,
+      getAllTasks]
+not_covered:
+  - api: F5 Distributed Cloud
+    reason: >-
+      No public contract could be harvested. The API reference at docs.cloud.f5.com is a
+      JavaScript-rendered Redoc page and the downloadable swagger sits behind the tenant developer
+      portal at console.ves.volterra.io/web/devportal/domain. A skill written against it would be
+      grounded in nothing, so none was written. The vesctl CLI's --show-curl flag documented in
+      cli/f5-cli.yml is the practical substitute.
+  - api: F5 BIG-IP iControl REST
+    reason: >-
+      openapi/f5-mgmt-api-openapi.yml is a 10-path partial that predates this pass and covers a
+      fraction of the /mgmt/tm/ tree. The four contracts above are complete published documents;
+      skills were grounded in those instead.

@@ -1,0 +1,103 @@
+specification: API Commons Webhooks
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: >-
+  https://docs.cloud.f5.com/docs-v2/shared-configuration/how-to/alerting (200),
+  https://docs.cloud.f5.com/docs-v2/shared-configuration/how-tos/alerting/alerts-webhook (200),
+  https://docs.cloud.f5.com/docs-v2/api/alert-receiver (200),
+  https://docs.cloud.f5.com/docs-v2/api/alert-policy (200),
+  https://docs.cloud.f5.com/docs-v2/api/global-log-receiver (200),
+  https://docs.nginx.com/nginx-one-console/api/query-events-api/ (200) — all probed 2026-09-07
+asyncapi_published: false
+asyncapi_note: >-
+  No AsyncAPI document exists anywhere in the F5 estate. Searched the F5Networks, f5devcentral,
+  nginx and nginxinc GitHub organizations, docs.nginx.com, docs.cloud.f5.com and clouddocs.f5.com;
+  /asyncapi.yaml and /asyncapi.json were not served by any F5 host probed. Recorded as an honest
+  absence — this is not fabricated as a derived document.
+description: >-
+  F5 Distributed Cloud has a real outbound event surface, configured as first-class API objects
+  rather than as a bolt-on: an Alert Receiver names a destination, an Alert Policy defines the
+  routes that match incoming alerts to it, and a Global Log Receiver streams logs to an external
+  sink. The delivery model is push. What is NOT publicly readable is the payload: the API
+  reference at docs.cloud.f5.com is a JavaScript-rendered Redoc page whose underlying
+  specification download sits behind the tenant developer portal
+  (https://console.ves.volterra.io/web/devportal/domain), so the event names and their schemas
+  could not be enumerated without a tenant. This artifact therefore records the surface and its
+  control-plane operations, which are verifiable, and stops short of an event catalogue, which is
+  not.
+delivery: push
+webhooks:
+  supported: true
+  object: ves.io.schema.alert_receiver
+  api_reference: https://docs.cloud.f5.com/docs-v2/api/alert-receiver
+  receiver_types:
+    - id: webhook
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-tos/alerting/alerts-webhook
+      note: Generic HTTP callback. F5 documents both HTTP Basic and token authentication on the
+        outbound call, so the receiving endpoint can be protected.
+    - id: slack
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-tos/alerting/alerts-slack
+    - id: pagerduty
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-tos/alerting/alerts-pagerduty
+    - id: opsgenie
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-to/alerting
+    - id: email
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-to/alerting
+    - id: sms
+      docs: https://docs.cloud.f5.com/docs-v2/shared-configuration/how-to/alerting
+  control_plane_operations:
+    - Create Alert Receiver
+    - Replace Alert Receiver
+    - List Alert Receiver
+    - Get Alert Receiver
+    - Delete Alert Receiver
+    - Confirm Alert Receiver
+    - Test Alert Receiver
+    - Verify Alert Receiver
+  operations_note: >-
+    Confirm / Test / Verify are worth calling out. F5 requires a receiver to be verified before it
+    will route to it, and exposes an explicit Test operation — so an agent configuring an alert
+    destination has a documented way to prove the callback works before relying on it, which is
+    more than most webhook surfaces offer.
+  routing:
+    object: ves.io.schema.alert_policy
+    api_reference: https://docs.cloud.f5.com/docs-v2/api/alert-policy
+    note: Alert Policies define match routes binding alerts to one or more receivers.
+  event_catalog: null
+  event_catalog_note: >-
+    Not enumerable from public documentation. The alert and event type vocabulary lives in the
+    tenant developer portal and in the Redoc-rendered API reference, neither of which serves a
+    fetchable specification anonymously. NOT invented here.
+  signature_verification: unknown
+  retry_policy: unknown
+log_streaming:
+  supported: true
+  object: ves.io.schema.global_log_receiver
+  api_reference: https://docs.cloud.f5.com/docs-v2/api/global-log-receiver
+  note: Streams request and security-event logs to an external destination; a push surface, but a
+    log pipeline rather than a discrete-event webhook.
+pull_event_apis:
+  - api: NGINX One Console
+    operation: Query security events through the API
+    docs: https://docs.nginx.com/nginx-one-console/api/query-events-api/
+    model: pull
+    note: A query API over security events, not a subscription. An agent polls it; nothing is
+      pushed.
+  - api: NGINX Plus REST API
+    operation: GET /http/requests, GET /http/server_zones/, GET /stream/server_zones/ and the
+      other zone endpoints
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    model: pull
+    note: >-
+      The NGINX Plus API is a polled statistics surface with no event or subscription semantics at
+      all. It is the metrics plane, and the correct integration is a scrape, not a listener.
+big_ip:
+  event_surface: F5 BIG-IP Telemetry Streaming (github.com/F5Networks/f5-telemetry-streaming)
+  note: >-
+    Telemetry Streaming is a declarative BIG-IP extension that pushes system telemetry and events
+    to external consumers (Splunk, Elastic, Kafka, Azure, AWS, generic HTTP). It ships a JSON
+    Schema for its declaration but publishes no OpenAPI and no AsyncAPI — a probe of
+    docs/openapi.yaml on both main and master returned 404 — so no contract was harvested for it.

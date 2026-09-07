@@ -1,0 +1,717 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.f5.com/bigip/ltm/virtual-server",
+  "title": "F5 BIG-IP Virtual Server",
+  "description": "Schema for an F5 BIG-IP LTM virtual server resource that directs client traffic to pools of backend servers based on IP address, port, and protocol configuration. Virtual servers are the core traffic management objects in the BIG-IP Local Traffic Manager.",
+  "type": "object",
+  "required": [
+    "name",
+    "destination"
+  ],
+  "properties": {
+    "kind": {
+      "type": "string",
+      "const": "tm:ltm:virtual:virtualstate",
+      "description": "Resource type identifier for a virtual server.",
+      "readOnly": true
+    },
+    "name": {
+      "type": "string",
+      "description": "Unique name of the virtual server resource within its partition.",
+      "minLength": 1,
+      "maxLength": 255,
+      "pattern": "^[a-zA-Z0-9_.\\-]+$",
+      "examples": [
+        "my_virtual_server",
+        "web_app_vs",
+        "api_gateway_443"
+      ]
+    },
+    "fullPath": {
+      "type": "string",
+      "description": "Full administrative path including partition (e.g., /Common/my_virtual).",
+      "pattern": "^/[a-zA-Z0-9_.\\-]+/[a-zA-Z0-9_.\\-]+$",
+      "readOnly": true,
+      "examples": [
+        "/Common/my_virtual_server"
+      ]
+    },
+    "generation": {
+      "type": "integer",
+      "description": "Configuration generation counter incremented on each change.",
+      "minimum": 0,
+      "readOnly": true
+    },
+    "selfLink": {
+      "type": "string",
+      "format": "uri",
+      "description": "Self-referencing URI for this virtual server resource.",
+      "readOnly": true
+    },
+    "addressStatus": {
+      "type": "string",
+      "description": "Whether the virtual contributes to the operational status of the associated virtual address.",
+      "enum": [
+        "yes",
+        "no"
+      ],
+      "default": "yes"
+    },
+    "autoLasthop": {
+      "type": "string",
+      "description": "Automatic last hop setting controlling return traffic routing when the BIG-IP is not the default gateway.",
+      "enum": [
+        "default",
+        "enabled",
+        "disabled"
+      ],
+      "default": "default"
+    },
+    "cmpEnabled": {
+      "type": "string",
+      "description": "Whether Clustered Multi-Processing (CMP) acceleration is enabled for this virtual server.",
+      "enum": [
+        "yes",
+        "no"
+      ],
+      "default": "yes"
+    },
+    "connectionLimit": {
+      "type": "integer",
+      "description": "Maximum number of concurrent connections allowed for this virtual server. A value of 0 means unlimited connections.",
+      "minimum": 0,
+      "default": 0
+    },
+    "description": {
+      "type": "string",
+      "description": "User-defined description of the virtual server and its purpose.",
+      "maxLength": 1024
+    },
+    "destination": {
+      "type": "string",
+      "description": "Destination IP address and service port the virtual server listens on, specified in /partition/address:port or /partition/address.port format.",
+      "examples": [
+        "/Common/10.0.0.100:80",
+        "/Common/10.0.0.100:443",
+        "/Common/192.168.1.100.https"
+      ]
+    },
+    "disabled": {
+      "type": "boolean",
+      "description": "When true, the virtual server does not accept new connections. Existing connections are maintained.",
+      "default": false
+    },
+    "enabled": {
+      "type": "boolean",
+      "description": "When true, the virtual server accepts and processes client traffic.",
+      "default": true
+    },
+    "fallbackPersistence": {
+      "type": "string",
+      "description": "Persistence profile to use as a fallback when the primary persistence method fails to establish a session.",
+      "examples": [
+        "/Common/source_addr"
+      ]
+    },
+    "gtmScore": {
+      "type": "integer",
+      "description": "Score value used by the Global Traffic Manager for load balancing decisions across data centers.",
+      "minimum": 0,
+      "default": 0
+    },
+    "ipProtocol": {
+      "type": "string",
+      "description": "Network protocol the virtual server handles.",
+      "enum": [
+        "tcp",
+        "udp",
+        "sctp",
+        "any"
+      ],
+      "examples": [
+        "tcp"
+      ]
+    },
+    "mask": {
+      "type": "string",
+      "description": "Network mask for the destination address. Use 255.255.255.255 for a host-specific virtual server or a subnet mask for a network virtual server.",
+      "format": "ipv4",
+      "default": "255.255.255.255",
+      "examples": [
+        "255.255.255.255",
+        "255.255.255.0"
+      ]
+    },
+    "mirror": {
+      "type": "string",
+      "description": "Whether connection and persistence state mirroring is enabled for high-availability failover scenarios.",
+      "enum": [
+        "enabled",
+        "disabled"
+      ],
+      "default": "disabled"
+    },
+    "nat64": {
+      "type": "string",
+      "description": "Whether NAT64 IPv6-to-IPv4 address translation is enabled.",
+      "enum": [
+        "enabled",
+        "disabled"
+      ],
+      "default": "disabled"
+    },
+    "partition": {
+      "type": "string",
+      "description": "Administrative partition containing this virtual server resource.",
+      "default": "Common",
+      "examples": [
+        "Common",
+        "Production",
+        "Staging"
+      ]
+    },
+    "persist": {
+      "type": "array",
+      "description": "Persistence profiles applied to the virtual server for maintaining session affinity.",
+      "items": {
+        "$ref": "#/$defs/PersistenceReference"
+      }
+    },
+    "pool": {
+      "type": "string",
+      "description": "Default pool that receives traffic from this virtual server, specified as a full partition-qualified path.",
+      "examples": [
+        "/Common/my_pool",
+        "/Common/web_pool"
+      ]
+    },
+    "profiles": {
+      "type": "array",
+      "description": "Traffic processing profiles applied to this virtual server (e.g., HTTP, TCP, SSL profiles).",
+      "items": {
+        "$ref": "#/$defs/ProfileReference"
+      }
+    },
+    "rateLimit": {
+      "type": "string",
+      "description": "Maximum number of new connections per second. A value of 'disabled' or '0' means no rate limiting.",
+      "default": "disabled"
+    },
+    "rateLimitMode": {
+      "type": "string",
+      "description": "Scope at which rate limiting is applied.",
+      "enum": [
+        "object",
+        "object-source",
+        "object-destination",
+        "object-source-destination"
+      ],
+      "default": "object"
+    },
+    "rateLimitDstMask": {
+      "type": "integer",
+      "description": "Destination address mask bits used for rate limit tracking.",
+      "minimum": 0,
+      "maximum": 32,
+      "default": 0
+    },
+    "rateLimitSrcMask": {
+      "type": "integer",
+      "description": "Source address mask bits used for rate limit tracking.",
+      "minimum": 0,
+      "maximum": 32,
+      "default": 0
+    },
+    "rules": {
+      "type": "array",
+      "description": "iRules applied to this virtual server for custom traffic processing logic.",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        [
+          "/Common/my_irule",
+          "/Common/redirect_http"
+        ]
+      ]
+    },
+    "source": {
+      "type": "string",
+      "description": "Source address filter. Only connections from this network are accepted by the virtual server.",
+      "default": "0.0.0.0/0",
+      "examples": [
+        "0.0.0.0/0",
+        "10.0.0.0/8"
+      ]
+    },
+    "sourcePort": {
+      "type": "string",
+      "description": "Source port translation behavior controlling how client source ports are handled.",
+      "enum": [
+        "preserve",
+        "preserve-strict",
+        "change"
+      ],
+      "default": "preserve"
+    },
+    "synCookieStatus": {
+      "type": "string",
+      "description": "Current SYN Cookie DDoS protection status.",
+      "enum": [
+        "not-activated",
+        "activated"
+      ],
+      "readOnly": true
+    },
+    "translateAddress": {
+      "type": "string",
+      "description": "Whether destination address translation is enabled. When enabled, the BIG-IP translates the destination address to the pool member address.",
+      "enum": [
+        "enabled",
+        "disabled"
+      ],
+      "default": "enabled"
+    },
+    "translatePort": {
+      "type": "string",
+      "description": "Whether destination port translation is enabled. When enabled, the BIG-IP translates the destination port to the pool member port.",
+      "enum": [
+        "enabled",
+        "disabled"
+      ],
+      "default": "enabled"
+    },
+    "vlansEnabled": {
+      "type": "boolean",
+      "description": "When true, the virtual server is enabled only on VLANs listed in the vlans property."
+    },
+    "vlansDisabled": {
+      "type": "boolean",
+      "description": "When true, the virtual server is disabled on VLANs listed in the vlans property."
+    },
+    "vlans": {
+      "type": "array",
+      "description": "List of VLANs on which the virtual server is enabled or disabled, depending on vlansEnabled/vlansDisabled setting.",
+      "items": {
+        "type": "string"
+      },
+      "examples": [
+        [
+          "/Common/external",
+          "/Common/internal"
+        ]
+      ]
+    },
+    "vsIndex": {
+      "type": "integer",
+      "description": "System-assigned index for the virtual server.",
+      "readOnly": true,
+      "minimum": 0
+    }
+  },
+  "$defs": {
+    "PersistenceReference": {
+      "type": "object",
+      "description": "Reference to a persistence profile applied to a virtual server.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the persistence profile.",
+          "examples": [
+            "cookie",
+            "source_addr",
+            "ssl",
+            "hash"
+          ]
+        },
+        "tmDefault": {
+          "type": "string",
+          "description": "Whether this is the default persistence profile for the virtual server.",
+          "enum": [
+            "yes",
+            "no"
+          ]
+        }
+      }
+    },
+    "ProfileReference": {
+      "type": "object",
+      "description": "Reference to a traffic processing profile applied to a virtual server.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the profile.",
+          "examples": [
+            "http",
+            "tcp",
+            "clientssl",
+            "serverssl",
+            "udp",
+            "fastL4"
+          ]
+        },
+        "context": {
+          "type": "string",
+          "description": "Connection side to which the profile applies.",
+          "enum": [
+            "all",
+            "clientside",
+            "serverside"
+          ],
+          "default": "all"
+        },
+        "fullPath": {
+          "type": "string",
+          "description": "Full partition-qualified path to the profile.",
+          "examples": [
+            "/Common/http",
+            "/Common/tcp",
+            "/Common/clientssl"
+          ]
+        }
+      }
+    },
+    "Pool": {
+      "type": "object",
+      "description": "A load balancing pool containing backend server members.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "tm:ltm:pool:poolstate",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the pool resource.",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "fullPath": {
+          "type": "string",
+          "readOnly": true
+        },
+        "generation": {
+          "type": "integer",
+          "readOnly": true
+        },
+        "selfLink": {
+          "type": "string",
+          "format": "uri",
+          "readOnly": true
+        },
+        "allowNat": {
+          "type": "string",
+          "description": "Whether the pool can load balance NAT connections.",
+          "enum": ["yes", "no"],
+          "default": "yes"
+        },
+        "allowSnat": {
+          "type": "string",
+          "description": "Whether the pool can load balance SNAT connections.",
+          "enum": ["yes", "no"],
+          "default": "yes"
+        },
+        "description": {
+          "type": "string",
+          "description": "User-defined description."
+        },
+        "loadBalancingMode": {
+          "type": "string",
+          "description": "Load balancing algorithm used to distribute traffic across pool members.",
+          "enum": [
+            "round-robin",
+            "ratio-member",
+            "least-connections-member",
+            "observed-member",
+            "predictive-member",
+            "ratio-node",
+            "least-connections-node",
+            "fastest-node",
+            "observed-node",
+            "predictive-node",
+            "dynamic-ratio-node",
+            "fastest-app-response",
+            "least-sessions",
+            "dynamic-ratio-member",
+            "weighted-least-connections-member",
+            "weighted-least-connections-node",
+            "ratio-session",
+            "ratio-least-connections-member",
+            "ratio-least-connections-node"
+          ],
+          "default": "round-robin"
+        },
+        "minActiveMembers": {
+          "type": "integer",
+          "description": "Minimum number of active members before priority-group activation.",
+          "minimum": 0,
+          "default": 0
+        },
+        "monitor": {
+          "type": "string",
+          "description": "Health monitor(s) applied to pool members."
+        },
+        "partition": {
+          "type": "string",
+          "default": "Common"
+        },
+        "reselectTries": {
+          "type": "integer",
+          "description": "Number of reselection attempts after a passive failure detection.",
+          "minimum": 0,
+          "default": 0
+        },
+        "serviceDownAction": {
+          "type": "string",
+          "description": "Action taken when all pool members are unavailable.",
+          "enum": ["none", "reset", "reselect", "drop"],
+          "default": "none"
+        },
+        "slowRampTime": {
+          "type": "integer",
+          "description": "Time in seconds to gradually ramp up traffic to newly enabled members.",
+          "minimum": 0,
+          "default": 10
+        }
+      }
+    },
+    "PoolMember": {
+      "type": "object",
+      "description": "An individual backend server member within a pool.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "tm:ltm:pool:members:membersstate",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Member name in address:port format.",
+          "pattern": "^[\\w.\\-]+:\\d+$",
+          "examples": ["10.0.0.1:80", "web-server-01:443"]
+        },
+        "fullPath": {
+          "type": "string",
+          "readOnly": true
+        },
+        "address": {
+          "type": "string",
+          "description": "IP address of the pool member.",
+          "format": "ipv4"
+        },
+        "connectionLimit": {
+          "type": "integer",
+          "description": "Maximum concurrent connections. 0 means unlimited.",
+          "minimum": 0,
+          "default": 0
+        },
+        "description": {
+          "type": "string"
+        },
+        "dynamicRatio": {
+          "type": "integer",
+          "description": "Dynamic ratio weight for load balancing.",
+          "default": 1
+        },
+        "monitor": {
+          "type": "string",
+          "description": "Health monitor override for this specific member.",
+          "default": "default"
+        },
+        "partition": {
+          "type": "string",
+          "default": "Common"
+        },
+        "priorityGroup": {
+          "type": "integer",
+          "description": "Priority group number. Higher values receive traffic first.",
+          "minimum": 0,
+          "default": 0
+        },
+        "rateLimit": {
+          "type": "string",
+          "description": "Maximum connections per second.",
+          "default": "disabled"
+        },
+        "ratio": {
+          "type": "integer",
+          "description": "Ratio weight for proportional load balancing.",
+          "minimum": 1,
+          "default": 1
+        },
+        "session": {
+          "type": "string",
+          "description": "Session availability state.",
+          "enum": ["user-enabled", "user-disabled", "monitor-enabled"],
+          "default": "user-enabled"
+        },
+        "state": {
+          "type": "string",
+          "description": "Operational state of the member.",
+          "enum": ["user-up", "user-down", "up", "down", "unchecked"]
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "description": "A backend server node identified by IP address or FQDN.",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "const": "tm:ltm:node:nodestate",
+          "readOnly": true
+        },
+        "name": {
+          "type": "string",
+          "description": "Name of the node, typically its IP address.",
+          "examples": ["10.0.0.1", "web-server-01"]
+        },
+        "fullPath": {
+          "type": "string",
+          "readOnly": true
+        },
+        "address": {
+          "type": "string",
+          "description": "IP address of the node.",
+          "format": "ipv4"
+        },
+        "connectionLimit": {
+          "type": "integer",
+          "minimum": 0,
+          "default": 0
+        },
+        "description": {
+          "type": "string"
+        },
+        "dynamicRatio": {
+          "type": "integer",
+          "default": 1
+        },
+        "fqdn": {
+          "$ref": "#/$defs/NodeFqdn"
+        },
+        "logging": {
+          "type": "string",
+          "description": "Whether monitor actions are logged.",
+          "enum": ["enabled", "disabled"],
+          "default": "disabled"
+        },
+        "monitor": {
+          "type": "string",
+          "description": "Health monitor applied to the node.",
+          "default": "default"
+        },
+        "partition": {
+          "type": "string",
+          "default": "Common"
+        },
+        "rateLimit": {
+          "type": "string",
+          "default": "disabled"
+        },
+        "ratio": {
+          "type": "integer",
+          "minimum": 1,
+          "default": 1
+        },
+        "session": {
+          "type": "string",
+          "enum": ["user-enabled", "user-disabled", "monitor-enabled"],
+          "default": "user-enabled"
+        },
+        "state": {
+          "type": "string",
+          "enum": ["user-up", "user-down", "up", "down", "unchecked"]
+        }
+      }
+    },
+    "NodeFqdn": {
+      "type": "object",
+      "description": "FQDN configuration for DNS-based node address resolution.",
+      "properties": {
+        "addressFamily": {
+          "type": "string",
+          "description": "IP address family for DNS resolution.",
+          "enum": ["ipv4", "ipv6"],
+          "default": "ipv4"
+        },
+        "autopopulate": {
+          "type": "string",
+          "description": "Whether to auto-populate the node with all addresses from DNS lookup.",
+          "enum": ["enabled", "disabled"],
+          "default": "disabled"
+        },
+        "downInterval": {
+          "type": "integer",
+          "description": "Interval in seconds for DNS queries when the node is marked down.",
+          "minimum": 0,
+          "default": 5
+        },
+        "interval": {
+          "type": "string",
+          "description": "Interval in seconds between DNS queries.",
+          "default": "3600"
+        },
+        "tmName": {
+          "type": "string",
+          "description": "The fully qualified domain name to resolve.",
+          "format": "hostname"
+        }
+      }
+    }
+  },
+  "examples": [
+    {
+      "name": "web_app_vs",
+      "partition": "Common",
+      "destination": "/Common/10.0.0.100:443",
+      "description": "Production web application virtual server with SSL offloading",
+      "ipProtocol": "tcp",
+      "mask": "255.255.255.255",
+      "pool": "/Common/web_pool",
+      "source": "0.0.0.0/0",
+      "sourcePort": "preserve",
+      "translateAddress": "enabled",
+      "translatePort": "enabled",
+      "profiles": [
+        {
+          "name": "tcp",
+          "context": "all"
+        },
+        {
+          "name": "http",
+          "context": "all"
+        },
+        {
+          "name": "clientssl",
+          "context": "clientside"
+        }
+      ],
+      "persist": [
+        {
+          "name": "cookie",
+          "tmDefault": "yes"
+        }
+      ],
+      "vlansEnabled": true,
+      "vlans": [
+        "/Common/external"
+      ]
+    }
+  ]
+}

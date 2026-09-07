@@ -4,146 +4,79 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: F5
 providerId: f5
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-07'
+generated: '2026-09-07'
+method: searched
+source: >-
+  https://www.f5.com/products/get-f5 (200, fetched 2026-09-07) — the page F5 routes every pricing
+  enquiry to; https://www.nginx.com/pricing 301-redirects to it. https://www.f5.com/pricing and
+  https://www.f5.com/products/pricing both return 404. https://www.f5.com/go/faq/nginx-faq for the
+  NGINX One purchasing model.
 tags:
   - Applications
   - Security
   - Load Balancing
   - API Gateway
   - WAF
-description: Machine-readable plans and pricing scaffold for this API provider. Conforms to the API Commons
-  Plans schema. Tier limits and prices are scaffold defaults; replace with provider-published values.
-plans:
-  - id: f5-free
-    name: Free
-    type: freemium
-    description: Free entry tier for the F5 API surface. Intended for evaluation, prototyping, and low-volume
-      integrations. Real limits and pricing must be reconciled with the provider's published plan documentation.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota across all included endpoints
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 1000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the free tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 10
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-    elements:
-      - name: Public Documentation
-      - name: Community Support
-      - name: Sandbox Access
-      - name: F5 BIG-IP
-      - name: F5 NGINX
-      - name: F5 Distributed Cloud Services
-  - id: f5-pro
-    name: Professional
-    type: paid
-    description: Production tier for F5. Provides higher quotas, priority support, and access to the broader
-      API portfolio. Pricing placeholder; align with the provider's pricing page.
-    entries:
-      - label: API Requests
-        description: Monthly API request quota
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: 100000
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1
-        price: TBD
-        userMultiplied: false
-      - label: Rate Limit
-        description: Maximum requests per minute on the professional tier
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 100
-        timeFrame: minute
-        geo: global
-        domains: []
-        unit: 1
-        price: '0.00'
-        userMultiplied: false
-      - label: Overage
-        description: Per-request price after monthly quota is exceeded
-        name: overage
-        type: metered
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: global
-        domains: []
-        unit: 1000
-        price: TBD
-        userMultiplied: false
-    elements:
-      - name: All Production Endpoints
-      - name: Email Support
-      - name: SLA Targets
-      - name: Webhook Subscriptions
-      - name: F5 BIG-IP
-      - name: F5 NGINX
-      - name: F5 Distributed Cloud Services
-  - id: f5-enterprise
-    name: Enterprise
-    type: enterprise
-    description: Custom-negotiated tier for F5. Includes dedicated capacity, contractual SLAs, security
-      review, data residency options, and named technical account management.
-    entries:
-      - label: API Requests
-        description: Negotiated request volume; -1 indicates uncapped subject to fair use
-        name: api_requests
-        type: quota
-        metric: requests
-        limit: -1
-        timeFrame: month
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-      - label: Rate Limit
-        description: Negotiated burst and steady-state rate
-        name: rate_limit
-        type: rate
-        metric: requests_per_minute
-        limit: 1000
-        timeFrame: minute
-        geo: configurable
-        domains: []
-        unit: 1
-        price: custom
-        userMultiplied: false
-    elements:
-      - name: Unlimited / Negotiated Volume
-      - name: 24/7 Dedicated Support
-      - name: Contractual SLA
-      - name: Security & Compliance Review
-      - name: Dedicated Account Manager
-      - name: Custom Data Residency
-      - name: F5 BIG-IP
-      - name: F5 NGINX
-      - name: F5 Distributed Cloud Services
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+description: >-
+  F5 publishes no prices. This record exists to state that clearly rather than to omit the file,
+  and it replaces a scaffold written by the 2026-05-04 bulk sweep that invented a free tier with a
+  1,000-request monthly quota and a 10-requests-per-minute rate limit. None of those numbers came
+  from F5 and none of them are true. What F5 actually publishes is a set of purchasing MODELS with
+  no amounts attached, plus a 30-day free trial.
+plan_count: 0
+pricing_model: contact-sales
+prices_published: false
+currency: null
+plans: []
+purchasing_models:
+  - id: subscription
+    name: Subscriptions
+    description: 1-, 2- or 3-year terms including maintenance and support.
+    price: null
+  - id: perpetual
+    name: Perpetual licensing
+    description: Lifetime licences, available individually or bundled.
+    price: null
+  - id: flex-consumption
+    name: Flex Consumption Program
+    description: 3- or 5-year annual spending commitments adjusted against actual usage.
+    price: null
+  - id: reseller
+    name: Local resellers
+    description: Purchase through F5 business partners worldwide.
+    price: null
+trial:
+  available: true
+  length_days: 30
+  description: >-
+    "Get a free 30-day trial to see how F5 products and services work with your apps, in your
+    environment." — https://www.f5.com/products/get-f5
+  url: https://www.f5.com/products/get-f5
+  self_serve: partial
+  note: >-
+    F5 Distributed Cloud offers self-service tenant signup at
+    https://console.ves.volterra.io/signup/account (the vesctl README names it as the prerequisite
+    for API credentials), which is the closest thing in the estate to self-serve onboarding. BIG-IP
+    and NGINX Plus trials route through a form.
+free_tier:
+  available: false
+  note: >-
+    No free tier is published for any F5 product API. NGINX Open Source is free and open source
+    software, but it is not an F5 API product and it does not include the NGINX Plus REST API —
+    the /api endpoint is a NGINX Plus feature.
+api_pricing:
+  metered: false
+  note: >-
+    None of F5's APIs are separately priced or metered. The BIG-IP management APIs (iControl REST,
+    AS3, FAST, DO) and the NGINX Plus REST API are included capabilities of a product licence and
+    run on the customer's own instance, so there is no per-call price and no quota to buy. F5
+    Distributed Cloud and NGINX One are licensed by consumption of the underlying service, not by
+    API call.
+findings:
+  - No dollar amount for any F5 or NGINX product appears on any f5.com page probed on 2026-09-07.
+  - www.nginx.com/pricing, the historical NGINX pricing page, now 301-redirects to
+    www.f5.com/products/get-f5, which carries no prices at all — the NGINX per-instance list price
+    that circulated publicly before the F5 acquisition is no longer published by the vendor.
+  - Third-party marketplaces quote NGINX Plus figures, but nothing F5 publishes corroborates them
+    and none are recorded here.

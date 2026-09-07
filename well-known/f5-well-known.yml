@@ -1,0 +1,152 @@
+specification: API Commons WellKnown
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: probed
+source: live HTTPS probes of every host in apis.yml, every OpenAPI servers[] host that is a
+  real hostname, and the docs/console hosts. Every path was fetched with a browser User-Agent
+  and the status and content-type recorded.
+description: >-
+  Probe of the RFC 8615 /.well-known/ namespace across the F5 estate. Two real documents were
+  served: an RFC 9116 security.txt on the f5.com apex and www (identical bytes, canonical
+  https://www.f5.com/.well-known/security.txt) and an OpenID Connect discovery document on
+  my.f5.com, the F5 customer support portal. Three hosts answer 200 with an HTML shell for
+  every path probed and are recorded as misses, not hits — clouddocs.f5.com returns the same
+  18,299-byte SPA shell for every /.well-known/ path, and my.f5.com returns an HTML login
+  interstitial for every path except openid-configuration. console.ves.volterra.io rejects
+  unauthenticated requests with 400 at the edge.
+notes:
+  - The my.f5.com OpenID configuration is genuinely served from an F5-controlled host
+    (issuer https://my.f5.com) but the portal runs on Salesforce Experience Cloud, so the
+    scopes_supported list is the Salesforce platform scope vocabulary (cdp_*, pardot_api,
+    visualforce, lightning), not an F5 product API scope vocabulary. It authorizes the
+    support portal, not BIG-IP / NGINX / Distributed Cloud APIs.
+  - No /.well-known/agent-card.json or /.well-known/agent.json was served by any F5 host.
+    my.f5.com, clouddocs.f5.com and www.nginx.com each answered 200 with HTML for those
+    paths, which is a catch-all, not a card. No A2A artifact was written.
+hosts:
+  - host: www.f5.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: f5-security.txt
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: f5.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: f5-security.txt
+        note: byte-identical to www.f5.com; the document declares www.f5.com as canonical
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: my.f5.com
+    documents:
+      - path: /.well-known/openid-configuration
+        status: 200
+        content_type: application/json
+        file: f5-my-openid-configuration.json
+      - path: /.well-known/security.txt
+        status: 200
+        note: 200 but text/html login interstitial, not a security.txt — recorded as a miss
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        note: 200 but text/html interstitial, no RFC 8414 document — recorded as a miss
+      - path: /.well-known/api-catalog
+        status: 200
+        note: 200 but text/html interstitial — recorded as a miss
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        note: 200 but text/html interstitial — recorded as a miss
+  - host: clouddocs.f5.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        note: SPA shell, identical 18299-byte body on every path — miss
+      - path: /.well-known/openid-configuration
+        status: 200
+        note: SPA shell — miss
+      - path: /.well-known/oauth-authorization-server
+        status: 200
+        note: SPA shell — miss
+      - path: /.well-known/api-catalog
+        status: 200
+        note: SPA shell — miss
+      - path: /.well-known/ai-plugin.json
+        status: 200
+        note: SPA shell — miss
+  - host: docs.cloud.f5.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: console.ves.volterra.io
+    documents:
+      - path: /.well-known/security.txt
+        status: 400
+      - path: /.well-known/openid-configuration
+        status: 400
+      - path: /.well-known/oauth-authorization-server
+        status: 400
+      - path: /.well-known/api-catalog
+        status: 400
+      - path: /.well-known/ai-plugin.json
+        status: 400
+  - host: docs.nginx.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: nginx.org
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+  - host: demo.nginx.com
+    documents:
+      - path: /.well-known/security.txt
+        status: 404
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404

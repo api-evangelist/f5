@@ -1,0 +1,118 @@
+specification: API Commons Lifecycle
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: >-
+  https://www.f5cloudstatus.com/ (probed 2026-09-07, HTTP 200; status.volterra.io 301s to it),
+  https://www.f5cloudstatus.com/api/v2/status.json, https://docs.nginx.com/nginx/releases/,
+  https://my.f5.com/manage/s/article/K5903 (F5 end of life policy),
+  https://my.f5.com/manage/s/article/K4309 (F5 software lifecycle policy), and the version and
+  deprecation signals declared in the four contracts in openapi/
+description: >-
+  How F5 versions, deprecates and reports on its API surfaces. F5 runs a mature product lifecycle
+  programme with published end-of-life dates, but expresses none of it at the protocol layer:
+  there are no Sunset or Deprecation response headers anywhere in the estate, no `deprecated: true`
+  operation in any published contract, and no machine-readable EOL feed. Everything an agent would
+  need to know about retirement lives in knowledge-base articles keyed by product, not by endpoint.
+status_page:
+  url: https://www.f5cloudstatus.com/
+  provider: Atlassian Statuspage
+  probed: '2026-09-07'
+  http_status: 200
+  machine_readable: true
+  endpoints:
+    - https://www.f5cloudstatus.com/api/v2/status.json
+    - https://www.f5cloudstatus.com/api/v2/summary.json
+    - https://www.f5cloudstatus.com/api/v2/components.json
+    - https://www.f5cloudstatus.com/api/v2/incidents.json
+  scope: >-
+    F5 Distributed Cloud and F5's SaaS estate. Statuspage reports the page name as "F5". There is
+    no status page for BIG-IP or NGINX Plus, and there could not usefully be one — those run on
+    customer infrastructure.
+  note: >-
+    status.volterra.io redirects (301) to this page. f5.statuspage.io exists but is an INACTIVE
+    Statuspage placeholder ("F Status - Page Inactive") whose API returns 401; it is not F5's
+    status page and should not be linked.
+deprecation_policy:
+  published: true
+  urls:
+    - https://my.f5.com/manage/s/article/K5903
+    - https://my.f5.com/manage/s/article/K4309
+  probed: '2026-09-07'
+  http_status: 200
+  mechanism: knowledge-base article per product
+  runtime_signalling: none
+  runtime_note: >-
+    No Sunset (RFC 8594) or Deprecation header is declared in, or documented for, any F5 API. No
+    operation in any of the four published contracts carries `deprecated: true`. An agent calling
+    an F5 API cannot learn from the response that the endpoint or the product behind it is
+    scheduled for retirement.
+sla:
+  published: false
+  note: >-
+    No public SLA document was found for F5 Distributed Cloud or NGINX One. Availability
+    commitments are contractual and quoted through sales; see plans/f5-plans-pricing.yml.
+versioning:
+  - api: NGINX Plus REST API
+    scheme: URL path segment — /api/{version}
+    current: '9'
+    supported: '1-9, per the running build'
+    discovery: GET / (getAPIEndpoints) returns the array of versions this build supports
+    unsupported_behaviour: HTTP 404 with internal error code UnknownVersion
+    note: Version 9 is the current API version; it has been stable across NGINX Plus R31-R37.
+  - api: F5 BIG-IP AS3
+    scheme: extension RPM version, not URL
+    current: 3.56.0
+    discovery: GET /info returns version, release, schemaCurrent and schemaMinimum
+    note: >-
+      The path /mgmt/shared/appsvcs carries no version segment. Compatibility is negotiated
+      through the declaration's own $schema/class version rather than the URL, so an agent must
+      read GET /info before assuming a class or property exists.
+  - api: F5 BIG-IP FAST
+    scheme: extension RPM version, not URL
+    current: 1.26.0
+    discovery: GET /info (getFASTInfo)
+  - api: F5 BIG-IP Declarative Onboarding
+    scheme: extension RPM version, not URL
+    current: 1.47.0
+    discovery: GET /info
+  - api: F5 Distributed Cloud
+    scheme: per-object schema namespace (ves.io.schema.*)
+    current: null
+    note: No global API version; objects version independently through their schema package name.
+deprecated_operations: []
+deprecated_operations_note: >-
+  Zero operations across all four published contracts are marked deprecated. This is a real
+  finding, not a gap in the scan.
+product_retirements_observed:
+  - product: BIG-IP Next
+    signal: >-
+      F5Networks/f5-ansible-next is archived on GitHub with the reason "Modernizing BIG-IP TMOS
+      and discontinuing BIG-IP Next. For more information, see K000152956". The Terraform provider
+      F5Networks/bigipnext has not published since 1.4.0 on 2024-12-09.
+    kb: https://my.f5.com/manage/s/article/K000152956
+  - product: iControl SOAP
+    signal: >-
+      Still documented at https://clouddocs.f5.com/api/icontrol-soap/ (HTTP 200) and still served
+      by BIG-IP devices, but F5 has directed new automation to iControl REST and the Automation
+      Toolchain for years. No WSDL is published on a public F5 host — the WSDL is generated by the
+      device at /iControl/iControlPortal.cgi?WSDL=<interface>, so it is reachable only from inside
+      a customer network. No wsdl/ artifact was written because none could be fetched.
+release_notes:
+  - api: NGINX Plus
+    url: https://docs.nginx.com/nginx/releases/
+    cadence: continuous release plus a long-term-support track
+    latest: PLS.37.1.0.1 CR (2026-09-02)
+  - api: F5 BIG-IP AS3
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - api: F5 BIG-IP Declarative Onboarding
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+  - api: F5 BIG-IP FAST
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+support:
+  url: https://www.f5.com/services/support
+  community: https://community.f5.com/
+  community_note: community.f5.com returns 403 to a plain crawler; the site is live in a browser.
+  security_contact: https://my.f5.com/manage/s/article/K4602

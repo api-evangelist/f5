@@ -1,0 +1,884 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP iControl REST Nodes Pools API
+  description: The iControl REST API provides programmatic access to manage and configure F5 BIG-IP devices. It enables automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes, pool members, and profiles for application delivery, load balancing, and network management.
+  version: 15.1.0
+  contact:
+    name: F5 Support
+    email: support@f5.com
+    url: https://www.f5.com/company/contact/regional-offices
+  license:
+    name: Proprietary
+    url: https://www.f5.com/company/policies/terms-of-use
+  x-logo:
+    url: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
+servers:
+- url: https://{bigip_host}/mgmt/tm
+  description: BIG-IP Management Interface
+  variables:
+    bigip_host:
+      default: 192.168.1.245
+      description: Hostname or IP address of the BIG-IP device
+security:
+- basicAuth: []
+- tokenAuth: []
+tags:
+- name: Pools
+  description: Manage pools of backend servers for load distribution and health monitoring.
+  externalDocs:
+    url: https://clouddocs.f5.com/api/icontrol-rest/APIRef_tm_ltm_pool.html
+paths:
+  /ltm/pool:
+    get:
+      operationId: listPools
+      summary: List All Pools
+      description: Returns a collection of all pool resources configured on the BIG-IP system.
+      tags:
+      - Pools
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      - $ref: '#/components/parameters/TopParam'
+      - $ref: '#/components/parameters/SkipParam'
+      - $ref: '#/components/parameters/ExpandSubcollectionsParam'
+      responses:
+        '200':
+          description: Successful retrieval of pool collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:pool:poolcollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Pool'
+              examples:
+                Listpools200Example:
+                  summary: Default listPools 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      allowNat: 'yes'
+                      allowSnat: 'yes'
+                      description: A sample description.
+                      ignorePersistedWeight: enabled
+                      ipTosToClient: example_value
+                      ipTosToServer: example_value
+                      linkQosToClient: example_value
+                      linkQosToServer: example_value
+                      loadBalancingMode: round-robin
+                      minActiveMembers: 10
+                      minUpMembers: 10
+                      minUpMembersAction: failover
+                      minUpMembersChecking: enabled
+                      monitor: example_value
+                      partition: example_value
+                      queueDepthLimit: 10
+                      queueOnConnectionLimit: enabled
+                      queueTimeLimit: 10
+                      reselectTries: 10
+                      serviceDownAction: none
+                      slowRampTime: 10
+                      membersReference:
+                        link: https://www.example.com
+                        isSubcollection: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    post:
+      operationId: createPool
+      summary: Create a Pool
+      description: Creates a new pool resource on the BIG-IP system. The pool name is required; members and monitors can be specified during creation.
+      tags:
+      - Pools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolCreate'
+            examples:
+              CreatepoolRequestExample:
+                summary: Default createPool request
+                x-microcks-default: true
+                value:
+                  name: Example Title
+                  partition: example_value
+                  description: A sample description.
+                  loadBalancingMode: round-robin
+                  monitor: example_value
+                  members:
+                  - name: Example Title
+                    address: example_value
+                    description: A sample description.
+                    ratio: 10
+                    priorityGroup: 10
+                    connectionLimit: 10
+                    monitor: example_value
+                  serviceDownAction: none
+                  slowRampTime: 10
+                  allowNat: 'yes'
+                  allowSnat: 'yes'
+      responses:
+        '200':
+          description: Pool created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+              examples:
+                Createpool200Example:
+                  summary: Default createPool 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    allowNat: 'yes'
+                    allowSnat: 'yes'
+                    description: A sample description.
+                    ignorePersistedWeight: enabled
+                    ipTosToClient: example_value
+                    ipTosToServer: example_value
+                    linkQosToClient: example_value
+                    linkQosToServer: example_value
+                    loadBalancingMode: round-robin
+                    minActiveMembers: 10
+                    minUpMembers: 10
+                    minUpMembersAction: failover
+                    minUpMembersChecking: enabled
+                    monitor: example_value
+                    partition: example_value
+                    queueDepthLimit: 10
+                    queueOnConnectionLimit: enabled
+                    queueTimeLimit: 10
+                    reselectTries: 10
+                    serviceDownAction: none
+                    slowRampTime: 10
+                    membersReference:
+                      link: https://www.example.com
+                      isSubcollection: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          $ref: '#/components/responses/Conflict'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/pool/{poolName}:
+    parameters:
+    - $ref: '#/components/parameters/PoolNameParam'
+    get:
+      operationId: getPool
+      summary: Get a Pool
+      description: Returns a single pool resource identified by name.
+      tags:
+      - Pools
+      parameters:
+      - $ref: '#/components/parameters/ExpandSubcollectionsParam'
+      responses:
+        '200':
+          description: Successful retrieval of the pool.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+              examples:
+                Getpool200Example:
+                  summary: Default getPool 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    allowNat: 'yes'
+                    allowSnat: 'yes'
+                    description: A sample description.
+                    ignorePersistedWeight: enabled
+                    ipTosToClient: example_value
+                    ipTosToServer: example_value
+                    linkQosToClient: example_value
+                    linkQosToServer: example_value
+                    loadBalancingMode: round-robin
+                    minActiveMembers: 10
+                    minUpMembers: 10
+                    minUpMembersAction: failover
+                    minUpMembersChecking: enabled
+                    monitor: example_value
+                    partition: example_value
+                    queueDepthLimit: 10
+                    queueOnConnectionLimit: enabled
+                    queueTimeLimit: 10
+                    reselectTries: 10
+                    serviceDownAction: none
+                    slowRampTime: 10
+                    membersReference:
+                      link: https://www.example.com
+                      isSubcollection: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    put:
+      operationId: updatePool
+      summary: Update a Pool
+      description: Replaces the entire pool resource configuration.
+      tags:
+      - Pools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolUpdate'
+            examples:
+              UpdatepoolRequestExample:
+                summary: Default updatePool request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  loadBalancingMode: round-robin
+                  monitor: example_value
+                  serviceDownAction: none
+                  slowRampTime: 10
+                  minActiveMembers: 10
+                  allowNat: 'yes'
+                  allowSnat: 'yes'
+      responses:
+        '200':
+          description: Pool updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+              examples:
+                Updatepool200Example:
+                  summary: Default updatePool 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    allowNat: 'yes'
+                    allowSnat: 'yes'
+                    description: A sample description.
+                    ignorePersistedWeight: enabled
+                    ipTosToClient: example_value
+                    ipTosToServer: example_value
+                    linkQosToClient: example_value
+                    linkQosToServer: example_value
+                    loadBalancingMode: round-robin
+                    minActiveMembers: 10
+                    minUpMembers: 10
+                    minUpMembersAction: failover
+                    minUpMembersChecking: enabled
+                    monitor: example_value
+                    partition: example_value
+                    queueDepthLimit: 10
+                    queueOnConnectionLimit: enabled
+                    queueTimeLimit: 10
+                    reselectTries: 10
+                    serviceDownAction: none
+                    slowRampTime: 10
+                    membersReference:
+                      link: https://www.example.com
+                      isSubcollection: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    patch:
+      operationId: patchPool
+      summary: Patch a Pool
+      description: Partially updates a pool resource configuration.
+      tags:
+      - Pools
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolUpdate'
+            examples:
+              PatchpoolRequestExample:
+                summary: Default patchPool request
+                x-microcks-default: true
+                value:
+                  description: A sample description.
+                  loadBalancingMode: round-robin
+                  monitor: example_value
+                  serviceDownAction: none
+                  slowRampTime: 10
+                  minActiveMembers: 10
+                  allowNat: 'yes'
+                  allowSnat: 'yes'
+      responses:
+        '200':
+          description: Pool patched successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pool'
+              examples:
+                Patchpool200Example:
+                  summary: Default patchPool 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    allowNat: 'yes'
+                    allowSnat: 'yes'
+                    description: A sample description.
+                    ignorePersistedWeight: enabled
+                    ipTosToClient: example_value
+                    ipTosToServer: example_value
+                    linkQosToClient: example_value
+                    linkQosToServer: example_value
+                    loadBalancingMode: round-robin
+                    minActiveMembers: 10
+                    minUpMembers: 10
+                    minUpMembersAction: failover
+                    minUpMembersChecking: enabled
+                    monitor: example_value
+                    partition: example_value
+                    queueDepthLimit: 10
+                    queueOnConnectionLimit: enabled
+                    queueTimeLimit: 10
+                    reselectTries: 10
+                    serviceDownAction: none
+                    slowRampTime: 10
+                    membersReference:
+                      link: https://www.example.com
+                      isSubcollection: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+    delete:
+      operationId: deletePool
+      summary: Delete a Pool
+      description: Removes a pool resource from the BIG-IP system. The pool must not be referenced by any virtual server.
+      tags:
+      - Pools
+      responses:
+        '200':
+          description: Pool deleted successfully.
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  parameters:
+    PoolNameParam:
+      name: poolName
+      in: path
+      required: true
+      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
+      schema:
+        type: string
+      example: my_pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    ExpandSubcollectionsParam:
+      name: expandSubcollections
+      in: query
+      required: false
+      description: When set to true, expands all subcollections inline within the response.
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+      example: 'true'
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+  schemas:
+    PoolCreate:
+      type: object
+      description: Request body for creating a new pool.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Name of the pool.
+          example: my_pool
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        loadBalancingMode:
+          type: string
+          enum:
+          - round-robin
+          - ratio-member
+          - least-connections-member
+          - observed-member
+          - predictive-member
+          - ratio-node
+          - least-connections-node
+          - fastest-node
+          - observed-node
+          - predictive-node
+          - dynamic-ratio-node
+          - fastest-app-response
+          - least-sessions
+          - dynamic-ratio-member
+          default: round-robin
+          example: round-robin
+        monitor:
+          type: string
+          example: /Common/http
+        members:
+          type: array
+          description: Initial pool members to add during creation.
+          items:
+            type: object
+            required:
+            - name
+            properties:
+              name:
+                type: string
+                description: Member name in address:port format.
+                example: 10.0.0.1:80
+              address:
+                type: string
+              description:
+                type: string
+              ratio:
+                type: integer
+              priorityGroup:
+                type: integer
+              connectionLimit:
+                type: integer
+              monitor:
+                type: string
+          example: []
+        serviceDownAction:
+          type: string
+          enum:
+          - none
+          - reset
+          - reselect
+          - drop
+          example: none
+        slowRampTime:
+          type: integer
+          minimum: 0
+          example: 10
+        allowNat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+        allowSnat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+    PoolUpdate:
+      type: object
+      description: Request body for updating a pool.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        loadBalancingMode:
+          type: string
+          enum:
+          - round-robin
+          - ratio-member
+          - least-connections-member
+          - observed-member
+          - predictive-member
+          - ratio-node
+          - least-connections-node
+          - fastest-node
+          - observed-node
+          - predictive-node
+          - dynamic-ratio-node
+          - fastest-app-response
+          - least-sessions
+          - dynamic-ratio-member
+          example: round-robin
+        monitor:
+          type: string
+          example: example_value
+        serviceDownAction:
+          type: string
+          enum:
+          - none
+          - reset
+          - reselect
+          - drop
+          example: none
+        slowRampTime:
+          type: integer
+          minimum: 0
+          example: 10
+        minActiveMembers:
+          type: integer
+          minimum: 0
+          example: 10
+        allowNat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+        allowSnat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+    Pool:
+      type: object
+      description: A pool resource that contains a group of backend server members used for load balancing traffic from virtual servers.
+      properties:
+        kind:
+          type: string
+          description: Resource type identifier.
+          example: tm:ltm:pool:poolstate
+          readOnly: true
+        name:
+          type: string
+          description: Name of the pool resource.
+          example: my_pool
+        fullPath:
+          type: string
+          description: Full path including partition.
+          example: /Common/my_pool
+          readOnly: true
+        generation:
+          type: integer
+          description: Configuration generation counter.
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          description: Self-referencing URI.
+          readOnly: true
+          example: https://www.example.com
+        allowNat:
+          type: string
+          description: Whether the pool can load balance NAT connections.
+          enum:
+          - 'yes'
+          - 'no'
+          default: 'yes'
+          example: 'yes'
+        allowSnat:
+          type: string
+          description: Whether the pool can load balance SNAT connections.
+          enum:
+          - 'yes'
+          - 'no'
+          default: 'yes'
+          example: 'yes'
+        description:
+          type: string
+          description: User-defined description.
+          example: A sample description.
+        ignorePersistedWeight:
+          type: string
+          description: Whether to ignore persisted weight when calculating load distribution.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        ipTosToClient:
+          type: string
+          description: Type of Service level for client-bound outgoing packets.
+          default: pass-through
+          example: example_value
+        ipTosToServer:
+          type: string
+          description: Type of Service level for server-bound outgoing packets.
+          default: pass-through
+          example: example_value
+        linkQosToClient:
+          type: string
+          description: QoS level for outgoing packets to clients.
+          default: pass-through
+          example: example_value
+        linkQosToServer:
+          type: string
+          description: QoS level for outgoing packets to servers.
+          default: pass-through
+          example: example_value
+        loadBalancingMode:
+          type: string
+          description: Load balancing algorithm used to distribute traffic.
+          enum:
+          - round-robin
+          - ratio-member
+          - least-connections-member
+          - observed-member
+          - predictive-member
+          - ratio-node
+          - least-connections-node
+          - fastest-node
+          - observed-node
+          - predictive-node
+          - dynamic-ratio-node
+          - fastest-app-response
+          - least-sessions
+          - dynamic-ratio-member
+          - weighted-least-connections-member
+          - weighted-least-connections-node
+          - ratio-session
+          - ratio-least-connections-member
+          - ratio-least-connections-node
+          default: round-robin
+          example: round-robin
+        minActiveMembers:
+          type: integer
+          description: Minimum number of active members for priority-group activation.
+          minimum: 0
+          default: 0
+          example: 10
+        minUpMembers:
+          type: integer
+          description: Minimum number of operational pool members required before action is taken.
+          minimum: 0
+          default: 0
+          example: 10
+        minUpMembersAction:
+          type: string
+          description: Action to take when the number of operational members falls below the minimum.
+          enum:
+          - failover
+          - reboot
+          - restart-all
+          default: failover
+          example: failover
+        minUpMembersChecking:
+          type: string
+          description: Whether minimum member monitoring is enabled.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        monitor:
+          type: string
+          description: Health monitor or monitor rule applied to pool members. Specify multiple monitors with 'and' or 'min N of'.
+          example: /Common/http
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        queueDepthLimit:
+          type: integer
+          description: Maximum number of connections queued per member.
+          minimum: 0
+          default: 0
+          example: 10
+        queueOnConnectionLimit:
+          type: string
+          description: Whether to queue connections when limits are reached.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        queueTimeLimit:
+          type: integer
+          description: Maximum time in milliseconds a connection can remain queued.
+          minimum: 0
+          default: 0
+          example: 10
+        reselectTries:
+          type: integer
+          description: Number of reselection attempts after a passive failure.
+          minimum: 0
+          default: 0
+          example: 10
+        serviceDownAction:
+          type: string
+          description: Action to take when all pool members are unavailable.
+          enum:
+          - none
+          - reset
+          - reselect
+          - drop
+          default: none
+          example: none
+        slowRampTime:
+          type: integer
+          description: Time in seconds to gradually increase traffic to a newly enabled member.
+          minimum: 0
+          default: 10
+          example: 10
+        membersReference:
+          type: object
+          description: Reference to the pool members subcollection.
+          properties:
+            link:
+              type: string
+              format: uri
+            isSubcollection:
+              type: boolean
+          readOnly: true
+          example: example_value
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using BIG-IP admin credentials. The username and password are sent base64-encoded in the Authorization header.
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token-based authentication. Obtain a token by POSTing credentials to /mgmt/shared/authn/login, then pass the token value in the X-F5-Auth-Token header for subsequent requests.
+externalDocs:
+  description: F5 iControl REST API Documentation
+  url: https://clouddocs.f5.com/api/icontrol-rest/

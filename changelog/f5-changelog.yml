@@ -1,0 +1,117 @@
+specification: API Commons ChangeLog
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: https://docs.nginx.com/nginx/releases/
+description: >-
+  F5's dated, public, machine-locatable change record. There is no single F5-wide API changelog;
+  the surface that actually publishes dated release notes on a cadence is NGINX Plus, and the
+  BIG-IP Automation Toolchain extensions publish theirs as GitHub releases. The recent NGINX Plus
+  window matters to an API consumer for one specific reason: PLS.37 changed a default that alters
+  how NGINX talks to upstreams, which is a behavioural break for anyone whose backends do not
+  handle connection reuse.
+scheme: >-
+  NGINX Plus uses two parallel tracks. Continuous Release (CR) versions carry new features
+  (PLS.37.1.0.1); Long-Term Support (LTS) versions in the same major receive bugfix and security
+  patches only (PLS.37.0.5.1). The older R-numbered scheme (R36 Pn) is still patched in parallel.
+current_version: PLS.37.1.0.1 CR
+current_version_date: '2026-09-02'
+lts_version: PLS.37.0.5.1 LTS
+lts_version_date: '2026-09-02'
+changelogs:
+  - api: NGINX Plus
+    url: https://docs.nginx.com/nginx/releases/
+    dated: true
+  - api: F5 BIG-IP AS3
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+    dated: true
+  - api: F5 BIG-IP Declarative Onboarding
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+    dated: true
+  - api: F5 BIG-IP FAST
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+    dated: true
+entries:
+  - version: PLS.37.1.0.1 CR
+    date: '2026-09-02'
+    track: continuous-release
+    based_on: NGINX Open Source 1.31.3
+    breaking: false
+    additions:
+      - Variable-based rate limiting, allowing rate limits to be configured dynamically.
+      - Improved HTTP/2 and HTTP/3 protocol validation.
+  - version: PLS.37.0.5.1 LTS
+    date: '2026-09-02'
+    track: long-term-support
+    based_on: NGINX Open Source 1.29.8
+    breaking: false
+    highlights:
+      - Bugfix release; recommended for all users on the LTS track.
+  - version: PLS.37.0.4.1 LTS
+    date: '2026-07-22'
+    track: long-term-support
+    based_on: NGINX Open Source 1.29.8
+    breaking: false
+    highlights:
+      - Fixed Host header handling.
+      - Restored third-party dynamic module compatibility.
+  - version: PLS.37.0.3.1 LTS
+    date: '2026-07-15'
+    track: long-term-support
+    based_on: NGINX Open Source 1.29.8
+    breaking: false
+    security: true
+    highlights:
+      - Security release addressing four CVEs in the SSI, map, slice and MQTT modules.
+  - version: R36 P8
+    date: '2026-07-22'
+    track: legacy-patch
+    based_on: NGINX Open Source 1.29.3
+    breaking: false
+    highlights:
+      - Restored dynamic module compatibility.
+      - The keepalive directive again accepts a value of 0.
+  - version: R36 P7
+    date: '2026-07-15'
+    track: legacy-patch
+    based_on: NGINX Open Source 1.29.3
+    breaking: false
+    security: true
+    highlights:
+      - Five CVE fixes across the SSI, map, slice and MQTT modules.
+  - version: R36 P6
+    date: '2026-06-17'
+    track: legacy-patch
+    based_on: NGINX Open Source 1.29.3
+    breaking: false
+    security: true
+    highlights:
+      - Two security fixes for buffer over-reads in the charset and HTTP/2 proxy modules.
+  - version: R36 P5
+    date: '2026-05-22'
+    track: legacy-patch
+    based_on: NGINX Open Source 1.29.3
+    breaking: false
+    security: true
+    highlights:
+      - Security fix for a rewrite-module buffer overflow with overlapping captures.
+behavioural_breaks:
+  - version: PLS.37
+    change: >-
+      HTTP/1.1 and upstream keepalive are enabled by default. The default upstream HTTP version
+      changed from 1.0 to 1.1.
+    impact: >-
+      Backends that cannot handle connection reuse must be opted out explicitly with `keepalive 0;`
+      in the upstream block, or `proxy_http_version 1.0;` to restore the old default. This is the
+      one recent change most likely to surprise an existing deployment.
+    docs: https://docs.nginx.com/nginx/releases/
+  - version: PLS.37
+    change: >-
+      The new response-time histogram consumes roughly 1KB of additional shared memory per
+      upstream server.
+    impact: >-
+      Existing upstream `zone` allocations sized before R37 may need a 25-30% increase; running
+      out surfaces through the NGINX Plus API as HTTP 400 UpstreamOutOfMemory.
+    docs: https://docs.nginx.com/nginx/releases/

@@ -4,10 +4,14 @@ schema: https://raw.githubusercontent.com/api-evangelist/interface-research/main
 provider: F5
 providerId: f5
 created: '2026-05-04'
-# Provenance stamped 2026-08-11: this artifact was written by the API Evangelist
-# bulk sweep dated 2026-05-04, not harvested from the provider. See roadmap#35.
-method: generated
-modified: '2026-05-04'
+modified: '2026-09-07'
+generated: '2026-09-07'
+method: searched
+source: >-
+  The four first-party contracts in openapi/ (no rate-limit header, parameter or 429 response is
+  declared in any of them); https://nginx.org/en/docs/http/ngx_http_api_module.html;
+  https://docs.nginx.com/nginx-one-console/api/authentication/;
+  https://docs.cloud.f5.com/docs-v2/api/rate-limiter (200, probed 2026-09-07).
 tags:
   - Applications
   - Security
@@ -15,88 +19,57 @@ tags:
   - API Gateway
   - WAF
   - Rate Limiting
-  - Quotas
-  - Throttling
-description: Machine-readable rate limit definitions for the F5 API surface. Captures per-tier quotas,
-  burst behavior, response signaling, and recovery semantics. Defaults are scaffold values to be replaced
-  with published provider limits.
-headers:
-  limit: X-RateLimit-Limit
-  remaining: X-RateLimit-Remaining
-  reset: X-RateLimit-Reset
-  retryAfter: Retry-After
-  policy: RateLimit-Policy
-responseCodes:
-  throttled: 429
-  quotaExceeded: 429
-  serviceUnavailable: 503
-limits:
-  - tier: free
-    name: Free Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 10
-    burst: 20
-    timeFrame: minute
-    applies:
-      - F5 BIG-IP
-      - F5 NGINX
-      - F5 Distributed Cloud Services
-  - tier: free
-    name: Free Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 1000
-    timeFrame: month
-    applies:
-      - F5 BIG-IP
-      - F5 NGINX
-      - F5 Distributed Cloud Services
-  - tier: professional
-    name: Professional Tier Default
-    scope: api-key
-    metric: requests_per_minute
-    limit: 100
-    burst: 200
-    timeFrame: minute
-    applies:
-      - F5 BIG-IP
-      - F5 NGINX
-      - F5 Distributed Cloud Services
-  - tier: professional
-    name: Professional Tier Monthly Quota
-    scope: api-key
-    metric: requests_per_month
-    limit: 100000
-    timeFrame: month
-    applies:
-      - F5 BIG-IP
-      - F5 NGINX
-      - F5 Distributed Cloud Services
-  - tier: enterprise
-    name: Enterprise Negotiated Limit
-    scope: contract
-    metric: requests_per_minute
-    limit: 1000
-    burst: 5000
-    timeFrame: minute
-    applies:
-      - F5 BIG-IP
-      - F5 NGINX
-      - F5 Distributed Cloud Services
-policies:
-  - name: Backoff Strategy
-    description: Clients should implement exponential backoff with jitter, honoring the Retry-After header
-      when present.
-  - name: Burst Handling
-    description: Short bursts above the steady-state limit are tolerated up to the documented burst ceiling
-      before throttling engages.
-  - name: Quota Reset
-    description: Monthly quotas reset at the start of each calendar month in UTC. Per-minute and per-second
-      windows reset on a sliding-window basis.
-  - name: Fair Use
-    description: Even on uncapped enterprise tiers, sustained usage that materially impacts shared infrastructure
-      may be subject to fair-use throttling.
-maintainers:
-  - FN: Kin Lane
-    email: kin@apievangelist.com
+description: >-
+  F5 publishes no rate limits for its own APIs. This record replaces a scaffold written by the
+  2026-05-04 bulk sweep that asserted a free tier of 10 requests per minute with a burst of 20 and
+  X-RateLimit-* response headers. F5 publishes none of that; the numbers were invented and the
+  headers were never observed. The correction matters more here than for most providers, because
+  F5 SELLS rate limiting — docs.cloud.f5.com carries extensive documentation of rate limiters,
+  thresholds and mitigation actions, and every word of it describes a product feature the customer
+  configures to protect THEIR APIs. It is not F5 rate-limiting F5, and reading it that way is the
+  most likely mistake anyone profiling this company will make.
+limit_count: 0
+limits: []
+headers: {}
+headers_note: >-
+  No F5 contract declares X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset,
+  RateLimit-Policy or Retry-After, and no F5 documentation says any F5 API returns them.
+responseCodes: {}
+responseCodes_note: >-
+  429 does not appear as a declared response anywhere in the NGINX Plus REST API, AS3, FAST or DO
+  contracts. The full declared 4xx set across all four is 400, 404, 405, 409, 413, 415 and 422.
+by_api:
+  - api: NGINX Plus REST API
+    published_limits: false
+    note: >-
+      Served by the customer's own NGINX Plus instance. Any limit is whatever the operator puts in
+      front of it — including NGINX's own limit_req, which the API can itself introspect through
+      GET /http/limit_reqs/. There is no vendor-imposed limit because there is no vendor in the
+      request path.
+  - api: F5 BIG-IP iControl REST / AS3 / FAST / Declarative Onboarding
+    published_limits: false
+    note: >-
+      Served by the customer's own BIG-IP. The practical constraint is not a rate limit but
+      concurrency: AS3 answers HTTP 503 while another declaration is being processed, so the
+      correct pattern under load is POST with ?async=true and poll GET /task rather than retry.
+      See conventions/f5-conventions.yml.
+  - api: F5 Distributed Cloud / NGINX One Console
+    published_limits: false
+    note: >-
+      The only genuinely hosted, multi-tenant F5 API surface, and therefore the only one where a
+      vendor rate limit would be expected. F5 documents none. Neither
+      https://docs.nginx.com/nginx-one-console/api/authentication/ nor the F5 Distributed Cloud
+      API reference states a request ceiling, a window, or a throttling response for the
+      management API.
+not_f5s_limits:
+  - url: https://docs.cloud.f5.com/docs-v2/api/rate-limiter
+    what: The ves.io.schema.rate_limiter API object — a customer-configured rate limiter.
+  - url: https://docs.cloud.f5.com/docs-v2/web-app-and-api-protection/how-to/api-security/configure-api-rate-limiting
+    what: How a customer configures API rate limiting on their own protected APIs.
+  - url: https://docs.cloud.f5.com/docs-v2/multi-cloud-app-connect/how-to/adv-security/user-rate-limit
+    what: User rate limiting — a customer-configured policy limiting requests per user per second,
+      minute or hour.
+not_f5s_limits_note: >-
+  All three describe a feature F5 sells, not a constraint F5 imposes on callers of F5's APIs.
+  They are listed here so a later pass does not mistake them for F5's own limits, which is
+  exactly how a fabricated limits record gets written.

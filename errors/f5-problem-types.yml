@@ -1,0 +1,280 @@
+specification: API Commons ErrorCatalog
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: derived
+source: >-
+  Derived from the 4xx/5xx responses declared in the four first-party F5 contracts harvested into
+  openapi/ on 2026-09-07 — NGINX Plus REST API 9.0, BIG-IP AS3 3.56.0, BIG-IP FAST 1.26.0 and
+  BIG-IP Declarative Onboarding 1.47.0 — enriched from the NGINX Plus API error reference at
+  https://nginx.org/en/docs/http/ngx_http_api_module.html
+description: >-
+  F5's error surface is not one catalogue but two, and they behave differently. The NGINX Plus REST
+  API ships a genuine machine-readable error taxonomy — a stable envelope carrying an internal
+  `error.code` string enumerated per operation in the spec itself, plus a `request_id` that
+  correlates to NGINX's own $request_id log variable and an `href` back to the documentation. The
+  BIG-IP Automation Toolchain APIs (AS3, FAST, DO) declare status codes and prose descriptions but
+  no enumerated code vocabulary and no envelope schema, so an agent handling them has status codes
+  and a message string and nothing else to branch on.
+format: vendor-specific
+rfc9457: false
+rfc9457_note: >-
+  No F5 contract declares application/problem+json. The NGINX Plus envelope predates RFC 9457 and
+  carries the same information under different field names (error.status rather than status,
+  error.text rather than detail, href rather than type).
+envelopes:
+  - api: NGINX Plus REST API
+    spec: openapi/f5-nginx-plus-api-openapi.yml
+    schema: '#/definitions/NginxError'
+    content_type: application/json
+    fields:
+      - name: error.code
+        type: string
+        description: Internal NGINX error code — the branchable identifier. Enumerated per operation.
+      - name: error.status
+        type: integer
+        description: HTTP status code, repeated inside the body.
+      - name: error.text
+        type: string
+        description: Human-readable error description.
+      - name: request_id
+        type: string
+        description: Correlation ID; equals NGINX's $request_id variable, so a client error can be
+          joined to the server access log line that produced it.
+      - name: href
+        type: string
+        description: Link to the reference documentation for the failing surface.
+  - api: F5 BIG-IP AS3
+    spec: openapi/f5-big-ip-as3-openapi.yml
+    schema: null
+    content_type: application/json
+    note: Declares 404, 422, 500 and 503 with prose descriptions; no response schema and no error
+      code vocabulary is declared in the contract.
+  - api: F5 BIG-IP FAST
+    spec: openapi/f5-big-ip-fast-openapi.yml
+    schema: null
+    content_type: application/json
+    note: Declares 400, 404, 422 and 500; the 422 responses carry validation messages but no code
+      vocabulary is declared in the contract.
+  - api: F5 BIG-IP Declarative Onboarding
+    spec: openapi/f5-big-ip-declarative-onboarding-openapi.yml
+    schema: null
+    content_type: application/json
+    note: Declares 404, 422 and 500. DO reports per-task status inside the 200 body as well, so a
+      2xx from POST / does not mean the declaration succeeded — read result.code on the task.
+status_code_counts:
+  f5-nginx-plus-api-openapi.yml:
+    '400': 18
+    '404': 71
+    '405': 29
+    '409': 4
+    '413': 4
+    '415': 8
+  f5-big-ip-as3-openapi.yml:
+    '404': 1
+    '422': 3
+    '500': 10
+    '503': 6
+  f5-big-ip-fast-openapi.yml:
+    '400': 10
+    '404': 11
+    '422': 3
+    '500': 26
+  f5-big-ip-declarative-onboarding-openapi.yml:
+    '404': 3
+    '422': 1
+    '500': 9
+problem_types:
+  - code: UnknownVersion
+    status: 404
+    api: NGINX Plus REST API
+    title: Unknown API version
+    detail: The /api/{version} prefix names a version this NGINX Plus build does not implement.
+    remediation: GET / on the API root to read the array of supported version numbers, then retry
+      against a version it returns.
+  - code: MethodDisabled
+    status: 405
+    api: NGINX Plus REST API
+    title: Method disabled
+    detail: The write methods (POST/PATCH/DELETE) are refused because the api directive is not in
+      write mode for this location.
+    remediation: Set `api write=on;` in the NGINX configuration location that serves the API, then
+      reload. Read-only deployments will always return this for mutations by design.
+  - code: UpstreamStatic
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream is static
+    detail: The upstream group was configured statically, so its server list cannot be changed at
+      runtime through the API.
+    remediation: Declare the upstream with a `zone` directive and use the `state` file or resolver
+      form so its members are dynamically configurable.
+  - code: UpstreamNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Upstream not found
+    detail: No upstream group with that name exists in the running configuration.
+  - code: UpstreamServerNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Upstream server not found
+    detail: No server with the supplied numeric ID exists in the named upstream.
+    remediation: GET the servers collection first; server IDs are assigned by NGINX and are not
+      stable across a configuration reload.
+  - code: UpstreamServerImmutable
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream server is immutable
+    detail: The server was defined statically in the configuration file and its address cannot be
+      changed or removed through the API.
+  - code: UpstreamServerWeightImmutable
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream server weight is immutable
+    detail: The weight of a service-resolved (SRV) upstream server is derived from DNS and cannot
+      be set through the API.
+  - code: UpstreamConfFormatError
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream configuration format error
+    detail: The request body named an unknown parameter, omitted the required "server" argument,
+      or nested objects where a flat object was expected.
+  - code: UpstreamBadAddress
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid upstream server address
+  - code: UpstreamBadServerId
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid upstream server ID
+  - code: UpstreamBadWeight
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid weight value
+  - code: UpstreamBadMaxConns
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid max_conns value
+  - code: UpstreamBadMaxFails
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid max_fails value
+  - code: UpstreamBadFailTimeout
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid fail_timeout value
+  - code: UpstreamBadSlowStart
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid slow_start value
+  - code: UpstreamBadRoute
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid route
+    detail: The route value is empty or longer than NGINX permits.
+  - code: UpstreamBadService
+    status: 400
+    api: NGINX Plus REST API
+    title: Invalid service value
+    detail: The SRV service name is empty or malformed.
+  - code: UpstreamConfNoResolver
+    status: 400
+    api: NGINX Plus REST API
+    title: No resolver defined
+    detail: A hostname was supplied but the upstream block has no resolver to resolve it with.
+    remediation: Add a `resolver` directive to the enclosing http or stream block.
+  - code: UpstreamNoBackup
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream has no backup servers
+  - code: UpstreamOutOfMemory
+    status: 400
+    api: NGINX Plus REST API
+    title: Upstream shared memory exhausted
+    remediation: Increase the size of the upstream's shared memory `zone`. NGINX Plus R37 added
+      roughly 1KB per upstream server for response-time histograms, so zones sized before R37 may
+      need a 25-30% increase.
+  - code: KeyvalNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Keyval zone not found
+  - code: KeyvalKeyNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Keyval key not found
+  - code: KeyvalKeyExists
+    status: 409
+    api: NGINX Plus REST API
+    title: Keyval key already exists
+    remediation: Use PATCH to update an existing key; POST only creates.
+  - code: KeyvalFormatError
+    status: 400
+    api: NGINX Plus REST API
+    title: Keyval format error
+    detail: Invalid JSON, invalid key format, a missing key, more than one key in a single
+      create/update, or a timeout supplied when keyval timeout is not enabled on the zone.
+  - code: EntryExists
+    status: 409
+    api: NGINX Plus REST API
+    title: Entry already exists
+  - code: CacheNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Cache zone not found
+  - code: LocationZoneNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Location zone not found
+  - code: ServerZoneNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Server zone not found
+  - code: SlabNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Slab zone not found
+  - code: ResolverZoneNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Resolver zone not found
+  - code: LimitConnNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: limit_conn zone not found
+  - code: LimitReqNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: limit_req zone not found
+  - code: WorkerNotFound
+    status: 404
+    api: NGINX Plus REST API
+    title: Worker process not found
+  - code: BodyReadError
+    status: 400
+    api: NGINX Plus REST API
+    title: Request body could not be read
+  - code: JsonError
+    status: 415
+    api: NGINX Plus REST API
+    title: Unsupported media type / JSON error
+    remediation: Send Content-Type application/json with a well-formed JSON body.
+  - code: null
+    status: 413
+    api: NGINX Plus REST API
+    title: Request entity too large
+    detail: This is the only 4xx in the NGINX Plus contract with no internal error code attached.
+  - code: null
+    status: 422
+    api: F5 BIG-IP AS3
+    title: Declaration failed validation
+    detail: AS3 returns 422 when the declaration is syntactically valid JSON but fails AS3 schema
+      or semantic validation.
+    remediation: Re-send with controls.dryRun=true to run the full validation chain without
+      touching the device, and read the per-tenant results array.
+  - code: null
+    status: 503
+    api: F5 BIG-IP AS3
+    title: Service unavailable / restnoded busy
+    detail: AS3 returns 503 while another declaration is being processed or the restnoded worker
+      is restarting.
+    remediation: Retry with backoff, or POST with ?async=true and poll GET /task.

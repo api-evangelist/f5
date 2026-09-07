@@ -1,0 +1,248 @@
+specification: API Commons Conventions
+specificationVersion: '0.1'
+provider: F5
+providerId: f5
+generated: '2026-09-07'
+method: searched
+source: >-
+  Derived from the four first-party contracts in openapi/ (NGINX Plus REST API 9.0, BIG-IP AS3
+  3.56.0, BIG-IP FAST 1.26.0, BIG-IP Declarative Onboarding 1.47.0), enriched from
+  https://nginx.org/en/docs/http/ngx_http_api_module.html,
+  https://docs.nginx.com/nginx-one-console/api/authentication/ and
+  https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+description: >-
+  Cross-cutting runtime semantics across the F5 API estate. The defining fact an agent needs is
+  that these are DECLARATIVE control planes running on infrastructure the caller owns, not a
+  hosted multi-tenant SaaS API. There is no shared base URL, no account, no key issued by F5: the
+  base URL is the customer's own BIG-IP or NGINX instance, or the customer's own F5 Distributed
+  Cloud tenant subdomain. Almost every convention below follows from that.
+base_url_model: customer-hosted
+base_url_note: >-
+  BIG-IP APIs (iControl REST, AS3, FAST, DO) are served by the customer's own BIG-IP at
+  https://{bigip}/mgmt/... — the AS3 contract declares a relative server /mgmt/shared/appsvcs, DO
+  declares the RFC 5737 documentation address 192.0.2.1, and FAST declares localhost:8100, all of
+  which are placeholders for the caller's device. The NGINX Plus API is served by the customer's
+  own NGINX Plus instance at /api/{version}. F5 Distributed Cloud and NGINX One Console are the
+  only genuinely hosted surfaces, at https://{tenant}.console.ves.volterra.io/api/... These are
+  templated servers, not broken ones.
+authentication:
+  style: mixed
+  schemes:
+    - api: BIG-IP iControl REST / AS3 / FAST / DO
+      mechanism: HTTP Basic over TLS, or a bearer-style token in the X-F5-Auth-Token header
+      token_endpoint: POST /mgmt/shared/authn/login
+      note: The login token has a default 1200-second timeout and can be extended by PATCHing the
+        token resource. Basic auth against a BIG-IP administrative user works on every endpoint.
+    - api: NGINX Plus REST API
+      mechanism: none at the protocol level
+      note: >-
+        The NGINX Plus API declares no securityScheme because access control is a configuration
+        concern, enforced in the nginx.conf location block that serves it (allow/deny, auth_basic,
+        client certificates). Write access is separately gated by the `api write=on;` directive —
+        without it every mutation returns 405 MethodDisabled. This is the single most important
+        deployment fact about the API: it is unauthenticated and read-only by default, and it is
+        the operator, not F5, who decides otherwise.
+    - api: F5 Distributed Cloud / NGINX One Console
+      mechanism: >-
+        "Authorization: APIToken <token>" header, or a P12 client certificate with password
+      docs: https://docs.nginx.com/nginx-one-console/api/authentication/
+  see_also: authentication/f5-authentication.yml
+idempotency:
+  coverage: partial
+  scope:
+    - AS3 POST /declare
+    - AS3 POST /declare/{tenant}
+    - AS3 POST /declare/{tenant}/applications
+    - AS3 PATCH /declare
+    - DO POST /
+    - FAST PUT /applications
+    - FAST PUT /templatesets
+    - FAST PUT /settings
+  mechanism: declarative convergence
+  header: null
+  retention: null
+  note: >-
+    There is no Idempotency-Key header anywhere in the F5 estate, and no request-deduplication
+    key of any kind. What the declarative surfaces provide instead is convergence: AS3, DO and
+    FAST take a full desired-state document and reconcile the device to it, so re-sending the same
+    declaration converges to the same state rather than creating a second copy. That is genuine
+    replay protection and it covers those APIs' entire mutating surface.
+    It is recorded as `partial` rather than `full` because it does NOT cover the estate: the NGINX
+    Plus REST API is an imperative RPC surface where POST /http/upstreams/{name}/servers/ creates
+    a new server on every call and a replay is refused with 409 EntryExists rather than absorbed,
+    and iControl REST POSTs to /mgmt/tm/... are likewise create-not-converge. An agent must know
+    which of the two models it is talking to before it retries a timed-out write.
+dry_run_mode:
+  supported: true
+  mechanism: AS3 controls.dryRun query parameter
+  scope:
+    - POST /declare
+    - POST /declare/{tenant}
+    - POST /declare/{tenant}/applications
+    - DELETE /declare/{tenant}/applications/{application}
+  since: AS3 3.30
+  evidence: >-
+    openapi/f5-big-ip-as3-openapi.yml #/components/parameters/controlsDryRun — "sends the
+    declaration through all validation checks but does not attempt to deploy the configuration on
+    the target device"
+  note: >-
+    Notable that dryRun is wired to the DELETE path as well as the create paths, so an agent can
+    rehearse a teardown. FAST, DO and the NGINX Plus API have no dry-run mode.
+reversibility:
+  grade: verified
+  summary: >-
+    AS3 is the strongest reversibility surface in the F5 estate and the reason this grades
+    verified rather than documented: it keeps a bounded, addressable history of prior declarations
+    and the contract states the bound. The other APIs have reversal paths but no stated window.
+  surfaces:
+    - api: F5 BIG-IP AS3
+      write_operations:
+        - POST /declare
+        - POST /declare/{tenant}
+        - POST /declare/{tenant}/applications
+        - PATCH /declare
+      reversal:
+        operation: GET /declare?age={n} then re-POST the returned declaration
+        operationId: null
+        kind: restore-prior-state
+        window: >-
+          age=0 is the most recently deployed declaration and age=1..15 are the fifteen prior
+          ones; ?age=list returns the index of what is retained. The default retention shown by
+          list is 4 declarations, configurable up to 15 via historyLimit in the AS3 class.
+        docs: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+        evidence: >-
+          openapi/f5-big-ip-as3-openapi.yml, GET /declare `age` parameter — "?age=0-15 asks for a
+          declaration of the given age (0 means most-recently deployed), and 'list' asks for a
+          list of available declarations with their ages. By default, list only shows 4
+          declarations, this is configurable using historyLimit in the BIG-IP AS3 class."
+      teardown:
+        operation: DELETE /declare/{tenant}/applications/{application}
+        note: Supports controls.dryRun, so the teardown can be rehearsed before it is run.
+    - api: F5 BIG-IP Declarative Onboarding
+      write_operations:
+        - POST /
+      reversal:
+        operation: GET /config/{machineId}
+        operationId: getConfig
+        kind: retrieve-original-state
+        window: null
+        evidence: >-
+          openapi/f5-big-ip-declarative-onboarding-openapi.yml — getConfig "Retrieve the original
+          configuration of a device by machine ID"; getAllConfigs returns them for all devices.
+        note: >-
+          DO stores the device's ORIGINAL pre-onboarding configuration and will hand it back, but
+          it declares no operation that re-applies it and states no retention window, so this
+          grades documented on its own. DELETE /config/{machineId} (deleteConfig) destroys that
+          stored original — the contract describes it as a recovery action for when DO "has gotten
+          into an unusable state", and an agent should treat it as irreversible.
+    - api: F5 BIG-IP FAST
+      write_operations:
+        - postFASTApplications
+        - putFASTApplications
+        - updateFASTApplication
+        - postFASTTemplateSets
+      reversal:
+        operation: deleteFASTApplication / deleteFASTApplications / deleteFASTTemplateSetByName
+        kind: delete
+        window: null
+        note: >-
+          Deletion is the only reversal; there is no version history and no restore. FAST deploys
+          through AS3, so an AS3-level ?age restore is the practical undo for a FAST-created
+          application.
+    - api: NGINX Plus REST API
+      write_operations:
+        - postHttpUpstreamServer
+        - patchHttpUpstreamPeer
+        - postHttpKeyvalZoneData
+        - patchHttpKeyvalZoneKeyValue
+        - postStreamUpstreamServer
+        - patchStreamUpstreamServer
+        - postStreamKeyvalZoneData
+        - patchStreamKeyvalZoneKeyValue
+      reversal:
+        operation: deleteHttpUpstreamServer / deleteHttpKeyvalZoneData / deleteStreamUpstreamServer / deleteStreamKeyvalZoneData
+        kind: delete
+        window: null
+        note: >-
+          Every runtime mutation has a matching DELETE, so an added upstream server or keyval
+          entry can be removed. No window is stated and none applies — this is live in-memory
+          state, and unless the upstream is backed by a `state` file the whole set of runtime
+          changes is lost on an NGINX restart, which is a different kind of reversal than the one
+          an agent is asking about. Statistics resets (DELETE on the various zone endpoints) are
+          destructive and have no undo at all.
+  na_reason: null
+pagination:
+  style: none
+  note: >-
+    No F5 contract declares pagination — no limit/offset, no cursor, no Link header, no
+    page-envelope fields. Every collection operation returns the whole collection. These are
+    per-device or per-tenant control planes whose collections are bounded by configuration size,
+    so an agent should still guard against large bodies on a busy device (a BIG-IP with thousands
+    of virtual servers returns all of them) but does not need paging logic.
+filtering:
+  supported: partial
+  mechanisms:
+    - AS3 GET /declare?filterClass={AS3Class} — return only one AS3 class from the declaration; can
+      be used once per request.
+    - AS3 GET /declare?show=base|full|expanded — controls whether defaults are populated and
+      whether references are expanded to static values. This is response shaping, and `expanded`
+      can substantially enlarge the body.
+    - AS3 GET /declare?age=0-15|list — select which stored declaration to read.
+    - iControl REST supports OData-flavoured $select/$filter query parameters on /mgmt/tm/
+      collections; these are not declared in any published F5 contract.
+async:
+  supported: true
+  mechanism: >-
+    AS3 accepts ?async=true and responds 202 with a request ID that is polled at GET /task;
+    FAST returns a task ID from application and template-set writes and exposes GET /tasks and
+    GET /tasks/{taskId}; DO exposes GET /task and GET /task/{taskId}.
+  note: >-
+    This matters more than it looks. A synchronous AS3 POST can hold the connection open for
+    minutes on a large declaration, and AS3 answers 503 while another declaration is in flight —
+    an agent should prefer ?async=true and poll rather than retry a timeout.
+request_id_tracing:
+  supported: partial
+  mechanism: >-
+    The NGINX Plus API returns a request_id field in every error body, and it equals NGINX's own
+    $request_id log variable, so a failed API call can be joined to the access-log line that
+    produced it. No such correlation ID is declared by AS3, FAST or DO; AS3 offers controls.trace
+    / controls.traceResponse instead, which produce detailed per-declaration trace files and are
+    documented as potentially containing sensitive configuration data.
+versioning:
+  style: mixed
+  detail: >-
+    The NGINX Plus API versions in the URL path — /api/{version}, currently 1 through 9 — and GET
+    / returns the array of versions the running build supports; requesting an unsupported one
+    returns 404 UnknownVersion. That is the cleanest version negotiation in the estate. The BIG-IP
+    Automation Toolchain APIs are versioned by the installed RPM of the extension itself rather
+    than by URL: AS3 is at /mgmt/shared/appsvcs with no version segment, and GET /info returns the
+    running version and the schema versions it accepts. F5 Distributed Cloud versions by object
+    schema (ves.io.schema.*) rather than by a global API version.
+  version_discovery:
+    - GET / (NGINX Plus — returns supported version array)
+    - GET /info (AS3 — version and schemaCurrent/schemaMinimum)
+    - GET /info (FAST — getFASTInfo)
+    - GET /info (DO)
+error_envelope:
+  shape: vendor-specific
+  detail: See errors/f5-problem-types.yml. NGINX Plus ships a real enumerated error-code taxonomy;
+    AS3, FAST and DO declare status codes and prose only.
+rate_limit_signalling:
+  supported: false
+  detail: >-
+    No F5 contract declares a rate-limit response header and no F5 documentation publishes a limit
+    for its own management APIs. See rate-limits/f5-rate-limits.yml — the rate-limiting material
+    on docs.cloud.f5.com is F5's product FEATURE for limiting a customer's own API traffic, which
+    is a different thing entirely and must not be read as F5's limits on F5.
+metadata:
+  supported: true
+  detail: >-
+    AS3 declarations carry a `label` and `remark` on most classes, and a `constants` class for
+    caller-defined key/value data that AS3 stores and returns but does not interpret — the closest
+    thing in the estate to a metadata bag.
+cross_links:
+  errors: errors/f5-problem-types.yml
+  lifecycle: lifecycle/f5-lifecycle.yml
+  authentication: authentication/f5-authentication.yml
+  rate_limits: rate-limits/f5-rate-limits.yml
+  conformance: conformance/f5-conformance.yml

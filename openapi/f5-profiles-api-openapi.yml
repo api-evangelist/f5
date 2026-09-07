@@ -1,0 +1,1153 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP iControl REST Nodes Profiles API
+  description: The iControl REST API provides programmatic access to manage and configure F5 BIG-IP devices. It enables automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes, pool members, and profiles for application delivery, load balancing, and network management.
+  version: 15.1.0
+  contact:
+    name: F5 Support
+    email: support@f5.com
+    url: https://www.f5.com/company/contact/regional-offices
+  license:
+    name: Proprietary
+    url: https://www.f5.com/company/policies/terms-of-use
+  x-logo:
+    url: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
+servers:
+- url: https://{bigip_host}/mgmt/tm
+  description: BIG-IP Management Interface
+  variables:
+    bigip_host:
+      default: 192.168.1.245
+      description: Hostname or IP address of the BIG-IP device
+security:
+- basicAuth: []
+- tokenAuth: []
+tags:
+- name: Profiles
+  description: Manage profiles that define traffic handling behavior for virtual servers, including HTTP, TCP, UDP, client SSL, and persistence profiles.
+paths:
+  /ltm/profile/http:
+    get:
+      operationId: listHttpProfiles
+      summary: List Http Profiles
+      description: Returns a collection of all HTTP profile resources configured on the BIG-IP system.
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200':
+          description: Successful retrieval of HTTP profile collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:profile:http:httpcollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HttpProfile'
+              examples:
+                Listhttpprofiles200Example:
+                  summary: Default listHttpProfiles 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      acceptXff: enabled
+                      appService: example_value
+                      basicAuthRealm: example_value
+                      defaultsFrom: example_value
+                      description: A sample description.
+                      encryptCookies:
+                      - {}
+                      enforcement:
+                        maxHeaderCount: 10
+                        maxHeaderSize: 10
+                        pipeline: allow
+                      fallbackHost: example_value
+                      fallbackStatusCodes:
+                      - {}
+                      headerErase: example_value
+                      headerInsert: example_value
+                      insertXforwardedFor: enabled
+                      oneconnectTransformations: enabled
+                      redirectRewrite: none
+                      requestChunking: allow
+                      responseChunking: allow
+                      serverAgentName: example_value
+                      viaHostName: example_value
+                      viaRequest: append
+                      viaResponse: append
+                      xffAlternativeNames:
+                      - {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/profile/http/{profileName}:
+    parameters:
+    - $ref: '#/components/parameters/ProfileNameParam'
+    get:
+      operationId: getHttpProfile
+      summary: Get an Http Profile
+      description: Returns a single HTTP profile resource identified by name.
+      tags:
+      - Profiles
+      responses:
+        '200':
+          description: Successful retrieval of the HTTP profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HttpProfile'
+              examples:
+                Gethttpprofile200Example:
+                  summary: Default getHttpProfile 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    acceptXff: enabled
+                    appService: example_value
+                    basicAuthRealm: example_value
+                    defaultsFrom: example_value
+                    description: A sample description.
+                    encryptCookies:
+                    - example_value
+                    enforcement:
+                      maxHeaderCount: 10
+                      maxHeaderSize: 10
+                      pipeline: allow
+                    fallbackHost: example_value
+                    fallbackStatusCodes:
+                    - example_value
+                    headerErase: example_value
+                    headerInsert: example_value
+                    insertXforwardedFor: enabled
+                    oneconnectTransformations: enabled
+                    redirectRewrite: none
+                    requestChunking: allow
+                    responseChunking: allow
+                    serverAgentName: example_value
+                    viaHostName: example_value
+                    viaRequest: append
+                    viaResponse: append
+                    xffAlternativeNames:
+                    - example_value
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/profile/tcp:
+    get:
+      operationId: listTcpProfiles
+      summary: List Tcp Profiles
+      description: Returns a collection of all TCP profile resources configured on the BIG-IP system.
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200':
+          description: Successful retrieval of TCP profile collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:profile:tcp:tcpcollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TcpProfile'
+              examples:
+                Listtcpprofiles200Example:
+                  summary: Default listTcpProfiles 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      abc: enabled
+                      ackOnPush: enabled
+                      closeWaitTimeout: 10
+                      congestionControl: high-speed
+                      defaultsFrom: example_value
+                      deferredAccept: enabled
+                      description: A sample description.
+                      finWaitTimeout: 10
+                      idleTimeout: 10
+                      initCwnd: 10
+                      initRwnd: 10
+                      keepAliveInterval: 10
+                      maxRetrans: 10
+                      maxSegmentSize: 10
+                      nagle: auto
+                      receiveWindowSize: 10
+                      sendBufferSize: 10
+                      synMaxRetrans: 10
+                      timeWaitRecycle: enabled
+                      timeWaitTimeout: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/profile/tcp/{profileName}:
+    parameters:
+    - $ref: '#/components/parameters/ProfileNameParam'
+    get:
+      operationId: getTcpProfile
+      summary: Get a Tcp Profile
+      description: Returns a single TCP profile resource identified by name.
+      tags:
+      - Profiles
+      responses:
+        '200':
+          description: Successful retrieval of the TCP profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TcpProfile'
+              examples:
+                Gettcpprofile200Example:
+                  summary: Default getTcpProfile 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    abc: enabled
+                    ackOnPush: enabled
+                    closeWaitTimeout: 10
+                    congestionControl: high-speed
+                    defaultsFrom: example_value
+                    deferredAccept: enabled
+                    description: A sample description.
+                    finWaitTimeout: 10
+                    idleTimeout: 10
+                    initCwnd: 10
+                    initRwnd: 10
+                    keepAliveInterval: 10
+                    maxRetrans: 10
+                    maxSegmentSize: 10
+                    nagle: auto
+                    receiveWindowSize: 10
+                    sendBufferSize: 10
+                    synMaxRetrans: 10
+                    timeWaitRecycle: enabled
+                    timeWaitTimeout: 10
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/profile/client-ssl:
+    get:
+      operationId: listClientSslProfiles
+      summary: List Client Ssl Profiles
+      description: Returns a collection of all Client SSL profile resources configured on the BIG-IP system.
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200':
+          description: Successful retrieval of Client SSL profile collection.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:profile:client-ssl:client-sslcollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ClientSslProfile'
+              examples:
+                Listclientsslprofiles200Example:
+                  summary: Default listClientSslProfiles 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      alertTimeout: example_value
+                      allowNonSsl: enabled
+                      cert: example_value
+                      certKeyChain:
+                      - {}
+                      ciphers: example_value
+                      defaultsFrom: example_value
+                      description: A sample description.
+                      key: example_value
+                      options:
+                      - {}
+                      peerCertMode: ignore
+                      renegotiation: enabled
+                      secureRenegotiation: require
+                      sniDefault: 'true'
+                      sniRequire: 'true'
+                      sslForwardProxy: enabled
+                      uncleanShutdown: enabled
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/profile/client-ssl/{profileName}:
+    parameters:
+    - $ref: '#/components/parameters/ProfileNameParam'
+    get:
+      operationId: getClientSslProfile
+      summary: Get a Client Ssl Profile
+      description: Returns a single Client SSL profile resource identified by name.
+      tags:
+      - Profiles
+      responses:
+        '200':
+          description: Successful retrieval of the Client SSL profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClientSslProfile'
+              examples:
+                Getclientsslprofile200Example:
+                  summary: Default getClientSslProfile 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    alertTimeout: example_value
+                    allowNonSsl: enabled
+                    cert: example_value
+                    certKeyChain:
+                    - name: Example Title
+                      cert: example_value
+                      key: example_value
+                      chain: example_value
+                    ciphers: example_value
+                    defaultsFrom: example_value
+                    description: A sample description.
+                    key: example_value
+                    options:
+                    - example_value
+                    peerCertMode: ignore
+                    renegotiation: enabled
+                    secureRenegotiation: require
+                    sniDefault: 'true'
+                    sniRequire: 'true'
+                    sslForwardProxy: enabled
+                    uncleanShutdown: enabled
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/persistence/cookie:
+    get:
+      operationId: listCookiePersistenceProfiles
+      summary: List Cookie Persistence Profiles
+      description: Returns a collection of all cookie persistence profile resources.
+      tags:
+      - Profiles
+      parameters:
+      - $ref: '#/components/parameters/SelectParam'
+      - $ref: '#/components/parameters/FilterParam'
+      responses:
+        '200':
+          description: Successful retrieval of cookie persistence profiles.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  kind:
+                    type: string
+                    example: tm:ltm:persistence:cookie:cookiecollectionstate
+                  selfLink:
+                    type: string
+                    format: uri
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CookiePersistenceProfile'
+              examples:
+                Listcookiepersistenceprofiles200Example:
+                  summary: Default listCookiePersistenceProfiles 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    selfLink: https://www.example.com
+                    items:
+                    - kind: example_value
+                      name: Example Title
+                      fullPath: example_value
+                      generation: 10
+                      selfLink: https://www.example.com
+                      alwaysSend: enabled
+                      cookieEncryption: required
+                      cookieName: example_value
+                      defaultsFrom: example_value
+                      description: A sample description.
+                      expiration: example_value
+                      hashLength: 10
+                      hashOffset: 10
+                      httponly: enabled
+                      matchAcrossPools: enabled
+                      matchAcrossServices: enabled
+                      matchAcrossVirtuals: enabled
+                      method: insert
+                      mirror: enabled
+                      overrideConnectionLimit: enabled
+                      secure: enabled
+                      timeout: example_value
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+  /ltm/persistence/cookie/{profileName}:
+    parameters:
+    - $ref: '#/components/parameters/ProfileNameParam'
+    get:
+      operationId: getCookiePersistenceProfile
+      summary: Get a Cookie Persistence Profile
+      description: Returns a single cookie persistence profile resource identified by name.
+      tags:
+      - Profiles
+      responses:
+        '200':
+          description: Successful retrieval of the cookie persistence profile.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CookiePersistenceProfile'
+              examples:
+                Getcookiepersistenceprofile200Example:
+                  summary: Default getCookiePersistenceProfile 200 response
+                  x-microcks-default: true
+                  value:
+                    kind: example_value
+                    name: Example Title
+                    fullPath: example_value
+                    generation: 10
+                    selfLink: https://www.example.com
+                    alwaysSend: enabled
+                    cookieEncryption: required
+                    cookieName: example_value
+                    defaultsFrom: example_value
+                    description: A sample description.
+                    expiration: example_value
+                    hashLength: 10
+                    hashOffset: 10
+                    httponly: enabled
+                    matchAcrossPools: enabled
+                    matchAcrossServices: enabled
+                    matchAcrossVirtuals: enabled
+                    method: insert
+                    mirror: enabled
+                    overrideConnectionLimit: enabled
+                    secure: enabled
+                    timeout: example_value
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      x-microcks-operation:
+        delay: 0
+        dispatcher: FALLBACK
+components:
+  responses:
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+  schemas:
+    TcpProfile:
+      type: object
+      description: A TCP profile that defines how the BIG-IP processes TCP traffic, including connection settings, timeouts, and optimization.
+      properties:
+        kind:
+          type: string
+          example: tm:ltm:profile:tcp:tcpstate
+          readOnly: true
+        name:
+          type: string
+          example: tcp
+        fullPath:
+          type: string
+          readOnly: true
+          example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        abc:
+          type: string
+          description: Whether Appropriate Byte Counting is enabled.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        ackOnPush:
+          type: string
+          description: Whether to send ACK on PUSH flag.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        closeWaitTimeout:
+          type: integer
+          description: Timeout in seconds for CLOSE-WAIT state.
+          example: 10
+        congestionControl:
+          type: string
+          description: TCP congestion control algorithm.
+          enum:
+          - high-speed
+          - cdg
+          - chd
+          - cubic
+          - illinois
+          - new-reno
+          - none
+          - reno
+          - scalable
+          - vegas
+          - westwood
+          - woodside
+          example: high-speed
+        defaultsFrom:
+          type: string
+          description: Parent profile.
+          example: /Common/tcp
+        deferredAccept:
+          type: string
+          description: Whether to defer connection acceptance.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        description:
+          type: string
+          example: A sample description.
+        finWaitTimeout:
+          type: integer
+          description: Timeout in seconds for FIN-WAIT state.
+          example: 10
+        idleTimeout:
+          type: integer
+          description: Idle timeout in seconds. Connections idle longer than this value are closed.
+          example: 10
+        initCwnd:
+          type: integer
+          description: Initial TCP congestion window size.
+          example: 10
+        initRwnd:
+          type: integer
+          description: Initial TCP receive window size.
+          example: 10
+        keepAliveInterval:
+          type: integer
+          description: Interval in seconds between TCP keep-alive probes.
+          example: 10
+        maxRetrans:
+          type: integer
+          description: Maximum number of TCP retransmission attempts.
+          example: 10
+        maxSegmentSize:
+          type: integer
+          description: Maximum segment size (MSS) in bytes.
+          example: 10
+        nagle:
+          type: string
+          description: Nagle algorithm setting.
+          enum:
+          - auto
+          - enabled
+          - disabled
+          example: auto
+        receiveWindowSize:
+          type: integer
+          description: TCP receive window size in bytes.
+          example: 10
+        sendBufferSize:
+          type: integer
+          description: TCP send buffer size in bytes.
+          example: 10
+        synMaxRetrans:
+          type: integer
+          description: Maximum SYN retransmission attempts.
+          example: 10
+        timeWaitRecycle:
+          type: string
+          description: Whether to recycle TIME-WAIT connections.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        timeWaitTimeout:
+          type: integer
+          description: Timeout in milliseconds for TIME-WAIT state.
+          example: 10
+    ClientSslProfile:
+      type: object
+      description: A Client SSL profile for managing SSL/TLS connections between clients and the BIG-IP system.
+      properties:
+        kind:
+          type: string
+          example: tm:ltm:profile:client-ssl:client-sslstate
+          readOnly: true
+        name:
+          type: string
+          example: clientssl
+        fullPath:
+          type: string
+          readOnly: true
+          example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        alertTimeout:
+          type: string
+          description: Alert timeout for SSL handshake.
+          example: example_value
+        allowNonSsl:
+          type: string
+          description: Whether to allow non-SSL connections.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        cert:
+          type: string
+          description: Path to the SSL certificate file.
+          example: /Common/default.crt
+        certKeyChain:
+          type: array
+          description: Certificate and key chain pairs.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              cert:
+                type: string
+              key:
+                type: string
+              chain:
+                type: string
+          example: []
+        ciphers:
+          type: string
+          description: Cipher suite string.
+          example: DEFAULT
+        defaultsFrom:
+          type: string
+          description: Parent profile.
+          example: /Common/clientssl
+        description:
+          type: string
+          example: A sample description.
+        key:
+          type: string
+          description: Path to the SSL private key file.
+          example: /Common/default.key
+        options:
+          type: array
+          description: SSL options.
+          items:
+            type: string
+          example: []
+        peerCertMode:
+          type: string
+          description: Client certificate verification mode.
+          enum:
+          - ignore
+          - require
+          - request
+          example: ignore
+        renegotiation:
+          type: string
+          description: Whether SSL renegotiation is allowed.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        secureRenegotiation:
+          type: string
+          description: Secure renegotiation mode.
+          enum:
+          - require
+          - require-strict
+          - request
+          example: require
+        sniDefault:
+          type: string
+          description: Whether this is the default SNI profile.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sniRequire:
+          type: string
+          description: Whether SNI is required.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sslForwardProxy:
+          type: string
+          description: Whether SSL forward proxy is enabled.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        uncleanShutdown:
+          type: string
+          description: How to handle unclean SSL shutdowns.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    HttpProfile:
+      type: object
+      description: An HTTP profile that defines how the BIG-IP processes HTTP traffic for a virtual server.
+      properties:
+        kind:
+          type: string
+          example: tm:ltm:profile:http:httpstate
+          readOnly: true
+        name:
+          type: string
+          example: http
+        fullPath:
+          type: string
+          readOnly: true
+          example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        acceptXff:
+          type: string
+          description: Whether to accept X-Forwarded-For headers from clients.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        appService:
+          type: string
+          example: example_value
+        basicAuthRealm:
+          type: string
+          description: Realm for HTTP Basic authentication challenges.
+          default: none
+          example: example_value
+        defaultsFrom:
+          type: string
+          description: Parent profile from which this profile inherits settings.
+          example: /Common/http
+        description:
+          type: string
+          example: A sample description.
+        encryptCookies:
+          type: array
+          description: List of cookie names to encrypt.
+          items:
+            type: string
+          example: []
+        enforcement:
+          type: object
+          properties:
+            maxHeaderCount:
+              type: integer
+              description: Maximum number of HTTP headers.
+              default: 64
+            maxHeaderSize:
+              type: integer
+              description: Maximum total header size in bytes.
+              default: 32768
+            pipeline:
+              type: string
+              description: Whether HTTP pipelining is allowed.
+              enum:
+              - allow
+              - reject
+              - pass-through
+          example: example_value
+        fallbackHost:
+          type: string
+          description: Fallback host for HTTP redirects.
+          example: example_value
+        fallbackStatusCodes:
+          type: array
+          description: HTTP status codes that trigger fallback redirection.
+          items:
+            type: string
+          example: []
+        headerErase:
+          type: string
+          description: Regular expression for headers to remove from responses.
+          example: example_value
+        headerInsert:
+          type: string
+          description: Header to insert into requests.
+          example: example_value
+        insertXforwardedFor:
+          type: string
+          description: Whether to insert an X-Forwarded-For header.
+          enum:
+          - enabled
+          - disabled
+          default: disabled
+          example: enabled
+        oneconnectTransformations:
+          type: string
+          description: Whether to rewrite HTTP connections for OneConnect.
+          enum:
+          - enabled
+          - disabled
+          default: enabled
+          example: enabled
+        redirectRewrite:
+          type: string
+          description: Redirect rewrite mode.
+          enum:
+          - none
+          - all
+          - matching
+          - nodes
+          example: none
+        requestChunking:
+          type: string
+          description: How to handle chunked requests.
+          enum:
+          - allow
+          - preserve
+          - rechunk
+          - selective
+          example: allow
+        responseChunking:
+          type: string
+          description: How to handle chunked responses.
+          enum:
+          - allow
+          - preserve
+          - rechunk
+          - selective
+          example: allow
+        serverAgentName:
+          type: string
+          description: Server agent string to include in responses.
+          example: example_value
+        viaHostName:
+          type: string
+          description: Hostname to use in Via headers.
+          example: example_value
+        viaRequest:
+          type: string
+          description: Via header handling for requests.
+          enum:
+          - append
+          - preserve
+          - remove
+          example: append
+        viaResponse:
+          type: string
+          description: Via header handling for responses.
+          enum:
+          - append
+          - preserve
+          - remove
+          example: append
+        xffAlternativeNames:
+          type: array
+          description: Alternative header names for X-Forwarded-For.
+          items:
+            type: string
+          example: []
+    CookiePersistenceProfile:
+      type: object
+      description: A cookie persistence profile that maintains session persistence by inserting or reading HTTP cookies.
+      properties:
+        kind:
+          type: string
+          example: tm:ltm:persistence:cookie:cookiestate
+          readOnly: true
+        name:
+          type: string
+          example: cookie
+        fullPath:
+          type: string
+          readOnly: true
+          example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        alwaysSend:
+          type: string
+          description: Whether to always send the cookie.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        cookieEncryption:
+          type: string
+          description: Cookie encryption method.
+          enum:
+          - required
+          - preferred
+          - disabled
+          example: required
+        cookieName:
+          type: string
+          description: Name of the persistence cookie.
+          example: example_value
+        defaultsFrom:
+          type: string
+          description: Parent profile.
+          example: /Common/cookie
+        description:
+          type: string
+          example: A sample description.
+        expiration:
+          type: string
+          description: Cookie expiration time.
+          example: session
+        hashLength:
+          type: integer
+          description: Length of the cookie hash.
+          example: 10
+        hashOffset:
+          type: integer
+          description: Offset for the cookie hash.
+          example: 10
+        httponly:
+          type: string
+          description: Whether the cookie has the HttpOnly flag.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        matchAcrossPools:
+          type: string
+          description: Whether to match persistence across pools.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        matchAcrossServices:
+          type: string
+          description: Whether to match persistence across virtual servers.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        matchAcrossVirtuals:
+          type: string
+          description: Whether to match persistence across all virtuals.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        method:
+          type: string
+          description: Cookie persistence method.
+          enum:
+          - insert
+          - rewrite
+          - passive
+          - hash
+          example: insert
+        mirror:
+          type: string
+          description: Whether to mirror persistence records.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        overrideConnectionLimit:
+          type: string
+          description: Whether to override connection limits for persisted sessions.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        secure:
+          type: string
+          description: Whether the cookie has the Secure flag.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        timeout:
+          type: string
+          description: Persistence timeout in seconds.
+          example: example_value
+  parameters:
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    ProfileNameParam:
+      name: profileName
+      in: path
+      required: true
+      description: Name of the profile resource.
+      schema:
+        type: string
+      example: my_http_profile
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+      description: HTTP Basic authentication using BIG-IP admin credentials. The username and password are sent base64-encoded in the Authorization header.
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: X-F5-Auth-Token
+      description: Token-based authentication. Obtain a token by POSTing credentials to /mgmt/shared/authn/login, then pass the token value in the X-F5-Auth-Token header for subsequent requests.
+externalDocs:
+  description: F5 iControl REST API Documentation
+  url: https://clouddocs.f5.com/api/icontrol-rest/
