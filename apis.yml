@@ -49,7 +49,12 @@ tags_raw:
 apis:
 - aid: f5:f5-big-ip
   name: F5 BIG-IP
-  description: BIG-IP delivers high-performance application and API delivery with load balancing, API gateway, DNS, and security services. The platform exposes programmable APIs including iControlREST for configuration and service management, iControl SOAP for legacy automation, iRules and iRulesLX for data-plane traffic manipulation, and TMSH scripting for control-plane automation. BIG-IQ provides centralized management for BIG-IP devices through its own well-documented REST API.
+  description: >-
+    BIG-IP delivers high-performance application and API delivery with load balancing, API gateway, DNS,
+    and security services. The platform exposes programmable APIs including iControlREST for configuration
+    and service management, iControl SOAP for legacy automation, iRules and iRulesLX for data-plane traffic
+    manipulation, and TMSH scripting for control-plane automation. BIG-IQ provides centralized management
+    for BIG-IP devices through its own well-documented REST API.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://clouddocs.f5.com/api/
   baseURL: https://{bigip}/mgmt
@@ -76,7 +81,11 @@ apis:
     url: https://clouddocs.f5.com/api/iapps/
 - aid: f5:f5-nginx
   name: F5 NGINX
-  description: NGINX provides cloud-native delivery and security for modern applications, Kubernetes, and APIs. The NGINX product line includes NGINX Plus, NGINX One, NGINX Ingress Controller, and NGINX App Protect, with management and automation capabilities exposed through REST APIs for instance management, configuration, and observability across distributed deployments.
+  description: >-
+    NGINX provides cloud-native delivery and security for modern applications, Kubernetes, and APIs. The
+    NGINX product line includes NGINX Plus, NGINX One, NGINX Ingress Controller, and NGINX App Protect,
+    with management and automation capabilities exposed through REST APIs for instance management, configuration,
+    and observability across distributed deployments.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://docs.nginx.com/
   baseURL: https://{tenant}.console.ves.volterra.io/api/nginx/one
@@ -101,7 +110,11 @@ apis:
     url: https://docs.nginx.com/nginx-instance-manager/
 - aid: f5:f5-distributed-cloud
   name: F5 Distributed Cloud Services
-  description: F5 Distributed Cloud Services delivers SaaS-based application delivery, security, and networking across multicloud and edge environments. The platform exposes a comprehensive REST API for managing tenants, virtual sites, load balancers, WAF policies, bot defense, API security, DDoS protection, and CDN configurations from a single control plane.
+  description: >-
+    F5 Distributed Cloud Services delivers SaaS-based application delivery, security, and networking across
+    multicloud and edge environments. The platform exposes a comprehensive REST API for managing tenants,
+    virtual sites, load balancers, WAF policies, bot defense, API security, DDoS protection, and CDN configurations
+    from a single control plane.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://docs.cloud.f5.com/docs-v2/api/
   baseURL: https://{tenant}.console.ves.volterra.io/api
@@ -124,7 +137,11 @@ apis:
     url: https://docs.cloud.f5.com/docs-v2/platform/concepts
 - aid: f5:f5-mgmt-api
   name: F5 BIG-IP iControl REST (Mgmt)
-  description: A partial contract for the BIG-IP iControl REST management tree — 10 paths under /mgmt/tm/ and /mgmt/shared/ covering token login, virtual servers, pools, pool members, nodes, HTTP profiles and system version. iControl REST addresses the whole TMSH-addressable configuration tree, so this covers a small fraction of the real surface; F5 publishes no complete OpenAPI for it.
+  description: >-
+    A partial contract for the BIG-IP iControl REST management tree — 10 paths under /mgmt/tm/ and /mgmt/shared/
+    covering token login, virtual servers, pools, pool members, nodes, HTTP profiles and system version.
+    iControl REST addresses the whole TMSH-addressable configuration tree, so this covers a small fraction
+    of the real surface; F5 publishes no complete OpenAPI for it.
   image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
   humanURL: https://clouddocs.f5.com/api/icontrol-rest/
   baseURL: https://{bigip}/mgmt
@@ -136,132 +153,10 @@ apis:
     url: openapi/f5-mgmt-api-openapi.yml
   - type: Documentation
     url: https://clouddocs.f5.com/api/icontrol-rest/
-- aid: f5:f5-nginx-plus-api
-  name: NGINX Plus REST API
-  description: The NGINX Plus REST API — 71 operations across 24 paths giving live status for processes, connections, workers, slabs, resolvers, SSL and the licence, plus runtime reconfiguration of HTTP and stream upstream groups and key-value stores, with no reload. Published by F5 as a Swagger 2.0 document, versioned in the nginx/nginx.org repository and served from F5's own NGINX demo host. It is the metrics and runtime-control plane of NGINX Plus, served by the customer's own instance; access control and write mode are nginx.conf decisions, not F5's.
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://nginx.org/en/docs/http/ngx_http_api_module.html
-  baseURL: https://{nginx-host}/api/9
-  tags:
-  - NGINX
-  - Load Balancing
-  - Monitoring
-  - Reverse Proxy
-  - Cloud-Native
-  tags_raw:
-  - NGINX
-  - Load Balancing
-  - Monitoring
-  - Reverse Proxy
-  - Cloud Native
-  properties:
-  - type: OpenAPI
-    url: openapi/f5-nginx-plus-api-openapi.yml
-  - type: Overlay
-    url: overlays/f5-nginx-plus-api-overlay.yaml
-  - type: Documentation
-    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
-  - type: APIReference
-    url: https://demo.nginx.com/swagger-ui/
-  - type: SourceCode
-    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
-  - type: AgentSkill
-    url: skills/f5-nginx-scale-upstream.md
-- aid: f5:f5-big-ip-as3
-  name: F5 BIG-IP AS3 (Application Services 3 Extension)
-  description: 'AS3 is BIG-IP''s declarative application-services API — one document describes tenants, applications, virtual servers, pools, monitors, profiles and WAF policies, and AS3 converges the device to it. 13 operations over /mgmt/shared/appsvcs. Two properties make it unusually good for automation: controls.dryRun runs the full validation chain without touching the device (and is wired to the delete path as well as create), and GET /declare?age=0-15 keeps a bounded history of prior declarations that can be re-deployed as an undo. The declaration body itself is governed by a separately published JSON Schema, not by this OpenAPI, and no operation in the contract declares an operationId.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
-  baseURL: https://{bigip}/mgmt/shared/appsvcs
-  tags:
-  - BIG-IP
-  - Application
-  - Load Balancing
-  - Declarative
-  - Infrastructure-as-Code
-  tags_raw:
-  - BIG-IP
-  - Applications
-  - Load Balancing
-  - Declarative
-  - Infrastructure as Code
-  properties:
-  - type: OpenAPI
-    url: openapi/f5-big-ip-as3-openapi.yml
-  - type: Overlay
-    url: overlays/f5-big-ip-as3-overlay.yaml
-  - type: Documentation
-    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
-  - type: SourceCode
-    url: https://github.com/F5Networks/f5-appsvcs-extension
-  - type: ChangeLog
-    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
-  - type: AgentSkill
-    url: skills/f5-as3-deploy-application.md
-- aid: f5:f5-big-ip-fast
-  name: F5 BIG-IP Application Services Templates (FAST)
-  description: 'FAST is the templating layer over AS3 — 26 operations over /mgmt/shared/fast for template sets, templates, applications, tasks and settings. It is the most agent-friendly F5 API in the estate for one specific reason: GET /templates/{setName}/{templateName} returns a real machine-readable parameter schema, and POST /render returns the AS3 declaration a set of parameters WOULD produce without deploying it, so an integration has both an input contract and a rehearsal step.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
-  baseURL: https://{bigip}/mgmt/shared/fast
-  tags:
-  - BIG-IP
-  - Application
-  - Templates
-  - Declarative
-  - Automation
-  tags_raw:
-  - BIG-IP
-  - Applications
-  - Templates
-  - Declarative
-  - Automation
-  properties:
-  - type: OpenAPI
-    url: openapi/f5-big-ip-fast-openapi.yml
-  - type: Overlay
-    url: overlays/f5-big-ip-fast-overlay.yaml
-  - type: Documentation
-    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
-  - type: SourceCode
-    url: https://github.com/F5Networks/f5-appsvcs-templates
-  - type: ChangeLog
-    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
-  - type: AgentSkill
-    url: skills/f5-fast-create-application.md
-- aid: f5:f5-big-ip-declarative-onboarding
-  name: F5 BIG-IP Declarative Onboarding
-  description: 'Declarative Onboarding sets up the BIG-IP device itself — hostname, licensing, DNS and NTP, VLANs, self-IPs, routes, user accounts and module provisioning — from a single declaration. 9 operations over /mgmt/shared/declarative-onboarding. It is the layer beneath AS3 and the highest-consequence write surface F5 publishes: there is no dry-run mode, a 200 on POST does not mean the declaration succeeded (the outcome is on the task), and a declaration can restart services and change the management addressing you are calling it on. DO does store the device''s original pre-onboarding configuration and will return it from GET /config/{machineId}.'
-  image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-  humanURL: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
-  baseURL: https://{bigip}/mgmt/shared/declarative-onboarding
-  tags:
-  - BIG-IP
-  - Provisioning
-  - Declarative
-  - Infrastructure-as-Code
-  - Automation
-  tags_raw:
-  - BIG-IP
-  - Provisioning
-  - Declarative
-  - Infrastructure as Code
-  - Automation
-  properties:
-  - type: OpenAPI
-    url: openapi/f5-big-ip-declarative-onboarding-openapi.yml
-  - type: Overlay
-    url: overlays/f5-big-ip-declarative-onboarding-overlay.yaml
-  - type: Documentation
-    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
-  - type: SourceCode
-    url: https://github.com/F5Networks/f5-declarative-onboarding
-  - type: ChangeLog
-    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
-  - type: AgentSkill
-    url: skills/f5-do-onboard-device.md
 - name: F5 NGINX Management Suite API
-  description: REST API for managing NGINX instances, monitoring performance, and configuring application delivery through NGINX Management Suite.
+  description: >-
+    REST API for managing NGINX instances, monitoring performance, and configuring application delivery
+    through NGINX Management Suite.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://docs.nginx.com/nginx-management-suite/
   baseURL: https://{{nms-host}}/api
@@ -282,7 +177,8 @@ apis:
   - FN: NGINX Support
     email: nginx-support@f5.com
 - name: F5 Essential App Protect API
-  description: API for managing F5's application security services including WAF policies, bot defense, and API protection.
+  description: >-
+    API for managing F5's application security services including WAF policies, bot defense, and API protection.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://docs.f5.com/en-us/app-protect
   baseURL: https://api.f5.com/app-protect
@@ -298,7 +194,9 @@ apis:
   - type: Security
     url: https://docs.f5.com/en-us/app-protect/security-policies
 - name: F5 BIG-IQ Centralized Management API
-  description: REST API for BIG-IQ Centralized Management providing programmatic control over BIG-IP device management, licensing, monitoring, and analytics across your F5 infrastructure.
+  description: >-
+    REST API for BIG-IQ Centralized Management providing programmatic control over BIG-IP device management,
+    licensing, monitoring, and analytics across your F5 infrastructure.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/
   baseURL: https://{{bigiq_host}}/mgmt
@@ -312,14 +210,18 @@ apis:
   - type: Documentation
     url: https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/
   - type: APIReference
-    url: https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/ApiReferences/bigiq_public_api_ref/r_public_api_references.html
+    url: >-
+      https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/ApiReferences/bigiq_public_api_ref/r_public_api_references.html
   - type: GettingStarted
-    url: https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/HowToSamples/bigiq_public_api_wf/t_bigiq_public_api_workflows.html
+    url: >-
+      https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/HowToSamples/bigiq_public_api_wf/t_bigiq_public_api_workflows.html
   contact:
   - FN: F5 Support
     email: support@f5.com
 - name: F5 BIG-IP Application Services 3 Extension API
-  description: Declarative API for automating layer 4-7 application services on BIG-IP using JSON declarations. AS3 enables infrastructure-as-code for application delivery configuration.
+  description: >-
+    Declarative API for automating layer 4-7 application services on BIG-IP using JSON declarations. AS3
+    enables infrastructure-as-code for application delivery configuration.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
   baseURL: https://{{bigip_host}}/mgmt/shared/appsvcs
@@ -333,7 +235,8 @@ apis:
   - type: Documentation
     url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
   - type: APIReference
-    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/refguide/as3-api.html
+    url: >-
+      https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/refguide/as3-api.html
   - type: GettingStarted
     url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/
   - type: GitHubRepository
@@ -342,7 +245,9 @@ apis:
   - FN: F5 Support
     email: support@f5.com
 - name: F5 Declarative Onboarding API
-  description: Declarative API for automating layer 1-3 BIG-IP onboarding and initial device configuration using JSON declarations, making BIG-IP available on the network and ready for application services.
+  description: >-
+    Declarative API for automating layer 1-3 BIG-IP onboarding and initial device configuration using
+    JSON declarations, making BIG-IP available on the network and ready for application services.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
   baseURL: https://{{bigip_host}}/mgmt/shared/declarative-onboarding
@@ -356,14 +261,18 @@ apis:
   - type: Documentation
     url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
   - type: APIReference
-    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/apidocs.html
+    url: >-
+      https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/apidocs.html
   - type: GettingStarted
-    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/using-do.html
+    url: >-
+      https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/using-do.html
   contact:
   - FN: F5 Support
     email: support@f5.com
 - name: F5 Telemetry Streaming API
-  description: Declarative API for aggregating, normalizing, and forwarding BIG-IP statistics and events to third-party analytics consumers including Splunk, Azure Log Analytics, AWS CloudWatch, and more.
+  description: >-
+    Declarative API for aggregating, normalizing, and forwarding BIG-IP statistics and events to third-party
+    analytics consumers including Splunk, Azure Log Analytics, AWS CloudWatch, and more.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/
   baseURL: https://{{bigip_host}}/mgmt/shared/telemetry
@@ -377,14 +286,17 @@ apis:
   - type: Documentation
     url: https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/
   - type: APIReference
-    url: https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/rest-api-endpoints.html
+    url: >-
+      https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/rest-api-endpoints.html
   - type: GitHubRepository
     url: https://github.com/F5Networks/f5-telemetry-streaming
   contact:
   - FN: F5 Support
     email: support@f5.com
 - name: F5 NGINX Plus API
-  description: REST API for NGINX Plus providing real-time live activity monitoring, dynamic upstream configuration, key-value store management, and server health statistics without requiring configuration reloads.
+  description: >-
+    REST API for NGINX Plus providing real-time live activity monitoring, dynamic upstream configuration,
+    key-value store management, and server health statistics without requiring configuration reloads.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://docs.nginx.com/nginx/
   baseURL: https://{{nginx_host}}/api
@@ -405,7 +317,10 @@ apis:
   - FN: NGINX Support
     email: nginx-support@f5.com
 - name: F5 NGINX One Console API
-  description: API for managing and monitoring NGINX instances across environments from a single console, including configuration management, performance metrics, security vulnerability tracking, and SSL certificate management.
+  description: >-
+    API for managing and monitoring NGINX instances across environments from a single console, including
+    configuration management, performance metrics, security vulnerability tracking, and SSL certificate
+    management.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://docs.nginx.com/nginx-one-console/
   baseURL: https://{{nginx-one-host}}/api
@@ -426,7 +341,9 @@ apis:
   - FN: NGINX Support
     email: nginx-support@f5.com
 - name: F5 NGINX Ingress Controller API
-  description: Kubernetes Ingress Controller implementation for NGINX and NGINX Plus providing load balancing, SSL/TLS termination, content-based routing, and advanced traffic management for containerized applications.
+  description: >-
+    Kubernetes Ingress Controller implementation for NGINX and NGINX Plus providing load balancing, SSL/TLS
+    termination, content-based routing, and advanced traffic management for containerized applications.
   image: https://www.f5.com/content/dam/f5-com/global-assets/images/f5-logo.svg
   humanURL: https://docs.nginx.com/nginx-ingress-controller/
   baseURL: https://{{kubernetes_host}}
@@ -486,7 +403,9 @@ apis:
     url: https://docs.cloud.f5.com/docs-v2/platform/changelogs/saas-release-notes
 - aid: f5-networks:f5-networks-pool-members-api
   name: F5 Networks Pool Members API
-  description: Manage individual members within a pool, including their health status, session state, and load balancing weight.
+  description: >-
+    Manage individual members within a pool, including their health status, session state, and load balancing
+    weight.
   humanURL: https://www.f5.com/services/resources/api
   baseURL: https://{{bigip_host}}/mgmt/tm
   tags:
@@ -566,7 +485,9 @@ apis:
     url: https://docs.cloud.f5.com/docs-v2/platform/changelogs/saas-release-notes
 - aid: f5-networks:f5-networks-profiles-api
   name: F5 Networks Profiles API
-  description: Manage profiles that define traffic handling behavior for virtual servers, including HTTP, TCP, UDP, client SSL, and persistence profiles.
+  description: >-
+    Manage profiles that define traffic handling behavior for virtual servers, including HTTP, TCP, UDP,
+    client SSL, and persistence profiles.
   humanURL: https://www.f5.com/services/resources/api
   baseURL: https://{{bigip_host}}/mgmt/tm
   tags:
@@ -606,7 +527,9 @@ apis:
     url: https://docs.cloud.f5.com/docs-v2/platform/changelogs/saas-release-notes
 - aid: f5-networks:f5-networks-virtual-servers-api
   name: F5 Networks Virtual Servers API
-  description: Manage virtual servers that direct client traffic to appropriate server pools based on configured rules and profiles.
+  description: >-
+    Manage virtual servers that direct client traffic to appropriate server pools based on configured
+    rules and profiles.
   humanURL: https://www.f5.com/services/resources/api
   baseURL: https://{{bigip_host}}/mgmt/tm
   tags:
@@ -644,7 +567,1146 @@ apis:
     url: https://docs.cloud.f5.com/docs-v2/api/authentication
   - type: ChangeLog
     url: https://docs.cloud.f5.com/docs-v2/platform/changelogs/saas-release-notes
+- aid: f5:f5-application-management-api
+  name: F5 Application Management API
+  description: The Application Management API from F5 — 3 operation(s) for application management.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Application Management
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-application-management-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-configuration-api
+  name: F5 Configuration API
+  description: The Configuration API from F5 — 7 operation(s) for configuration.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Configuration
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-configuration-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-connections-api
+  name: F5 Connections API
+  description: The Connections API from F5 — 1 operation(s) for connections.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Connections
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-connections-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-fast-extension-api
+  name: F5 FAST Extension API
+  description: The FAST Extension API from F5 — 3 operation(s) for fast extension.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - FAST Extension
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-fast-extension-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-general-info-api
+  name: F5 General Info API
+  description: The General Info API from F5 — 2 operation(s) for general info.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - General Info
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-general-info-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-api
+  name: F5 HTTP API
+  description: The HTTP API from F5 — 1 operation(s) for http.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-caches-api
+  name: F5 HTTP Caches API
+  description: The HTTP Caches API from F5 — 2 operation(s) for http caches.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Caches
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-caches-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-keyvals-api
+  name: F5 HTTP Keyvals API
+  description: The HTTP Keyvals API from F5 — 2 operation(s) for http keyvals.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Keyvals
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-keyvals-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-limit-conns-api
+  name: F5 HTTP Limit Conns API
+  description: The HTTP Limit Conns API from F5 — 2 operation(s) for http limit conns.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Limit Conns
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-limit-conns-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-limit-reqs-api
+  name: F5 HTTP Limit Reqs API
+  description: The HTTP Limit Reqs API from F5 — 2 operation(s) for http limit reqs.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Limit Reqs
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-limit-reqs-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-location-zones-api
+  name: F5 HTTP Location Zones API
+  description: The HTTP Location Zones API from F5 — 2 operation(s) for http location zones.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Location Zones
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-location-zones-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-requests-api
+  name: F5 HTTP Requests API
+  description: The HTTP Requests API from F5 — 1 operation(s) for http requests.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Requests
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-requests-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-server-zones-api
+  name: F5 HTTP Server Zones API
+  description: The HTTP Server Zones API from F5 — 2 operation(s) for http server zones.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Server Zones
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-server-zones-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-http-upstreams-api
+  name: F5 HTTP Upstreams API
+  description: The HTTP Upstreams API from F5 — 4 operation(s) for http upstreams.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - HTTP Upstreams
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-http-upstreams-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-information-api
+  name: F5 Information API
+  description: The Information API from F5 — 1 operation(s) for information.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Information
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-information-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-inspect-api
+  name: F5 Inspect API
+  description: The Inspect API from F5 — 1 operation(s) for inspect.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Inspect
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-inspect-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-license-api
+  name: F5 License API
+  description: The License API from F5 — 1 operation(s) for license.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - License
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-license-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-offbox-templatesets-management-api
+  name: F5 Offbox Templatesets Management API
+  description: >-
+    The Offbox Templatesets Management API from F5 — 1 operation(s) for offbox templatesets management.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Offbox Templatesets Management
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-offbox-templatesets-management-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-processes-api
+  name: F5 Processes API
+  description: The Processes API from F5 — 1 operation(s) for processes.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Processes
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-processes-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-resolvers-api
+  name: F5 Resolvers API
+  description: The Resolvers API from F5 — 2 operation(s) for resolvers.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Resolvers
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-resolvers-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-settings-api
+  name: F5 Settings API
+  description: The Settings API from F5 — 1 operation(s) for settings.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Settings
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-settings-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-slabs-api
+  name: F5 Slabs API
+  description: The Slabs API from F5 — 2 operation(s) for slabs.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Slabs
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-slabs-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-ssl-api
+  name: F5 SSL API
+  description: The SSL API from F5 — 1 operation(s) for ssl.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - SSL
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-ssl-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-api
+  name: F5 Stream API
+  description: The Stream API from F5 — 1 operation(s) for stream.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-keyvals-api
+  name: F5 Stream Keyvals API
+  description: The Stream Keyvals API from F5 — 2 operation(s) for stream keyvals.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream Keyvals
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-keyvals-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-limit-conns-api
+  name: F5 Stream Limit Conns API
+  description: The Stream Limit Conns API from F5 — 2 operation(s) for stream limit conns.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream Limit Conns
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-limit-conns-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-server-zones-api
+  name: F5 Stream Server Zones API
+  description: The Stream Server Zones API from F5 — 2 operation(s) for stream server zones.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream Server Zones
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-server-zones-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-upstreams-api
+  name: F5 Stream Upstreams API
+  description: The Stream Upstreams API from F5 — 4 operation(s) for stream upstreams.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream Upstreams
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-upstreams-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-stream-zone-sync-api
+  name: F5 Stream Zone Sync API
+  description: The Stream Zone Sync API from F5 — 1 operation(s) for stream zone sync.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Stream Zone Sync
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-stream-zone-sync-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-task-api
+  name: F5 Task API
+  description: The Task API from F5 — 2 operation(s) for task.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Task
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-task-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-task-tracking-api
+  name: F5 Task Tracking API
+  description: The Task Tracking API from F5 — 2 operation(s) for task tracking.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Task Tracking
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-task-tracking-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-template-management-api
+  name: F5 Template Management API
+  description: The Template Management API from F5 — 4 operation(s) for template management.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Template Management
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-template-management-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
+- aid: f5:f5-workers-api
+  name: F5 Workers API
+  description: The Workers API from F5 — 2 operation(s) for workers.
+  humanURL: https://clouddocs.f5.com/api/
+  baseURL: https://{bigip}/mgmt
+  tags:
+  - Workers
+  properties:
+  - type: OpenAPI
+    url: openapi/f5-workers-api-openapi.yml
+  - type: Documentation
+    url: https://nginx.org/en/docs/http/ngx_http_api_module.html
+  - type: APIReference
+    url: https://demo.nginx.com/swagger-ui/
+  - type: SourceCode
+    url: https://github.com/nginx/nginx.org/blob/main/yaml/nginx_api.yaml
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-extension
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-extension/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-templates/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-appsvcs-templates
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-appsvcs-templates/releases
+  - type: Documentation
+    url: https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/
+  - type: SourceCode
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  - type: ChangeLog
+    url: https://github.com/F5Networks/f5-declarative-onboarding/releases
 common:
+- type: Overlay
+  url: overlays/f5-nginx-plus-api-overlay.yaml
+- type: AgentSkill
+  url: skills/f5-nginx-scale-upstream.md
+- type: Overlay
+  url: overlays/f5-big-ip-as3-overlay.yaml
+- type: AgentSkill
+  url: skills/f5-as3-deploy-application.md
+- type: Overlay
+  url: overlays/f5-big-ip-fast-overlay.yaml
+- type: AgentSkill
+  url: skills/f5-fast-create-application.md
+- type: Overlay
+  url: overlays/f5-big-ip-declarative-onboarding-overlay.yaml
+- type: AgentSkill
+  url: skills/f5-do-onboard-device.md
 - type: Releases
   url: https://github.com/F5Networks/f5-appsvcs-extension/releases
 - type: License
