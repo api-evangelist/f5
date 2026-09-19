@@ -367,6 +367,8 @@ apis:
   humanURL: https://www.f5.com/services/resources/api
   baseURL: https://{{bigip_host}}/mgmt/tm
   tags:
+  - Node
+  tags_raw:
   - Nodes
   properties:
   - type: OpenAPI
