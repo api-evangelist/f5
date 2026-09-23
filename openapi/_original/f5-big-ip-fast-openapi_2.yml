@@ -1,3 +1,5 @@
+# x-archived-from: f5-big-ip-fast-openapi.yml
+# x-archived-on: 2026-09-16
 openapi: "3.0.0"
 info:
   version: 1.26.0

@@ -1,0 +1,288 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Stream Server Zones API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Stream Server Zones
+paths:
+  /stream/server_zones/:
+    get:
+      tags:
+      - Stream Server Zones
+      summary: Return status of all stream server zones
+      description: Returns status information for each stream server zone.
+      operationId: getStreamServerZones
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of server zones will be output. If the “<literal>fields</literal>” value is empty, then only server zone names will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamServerZonesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /stream/server_zones/{streamServerZoneName}:
+    parameters:
+    - name: streamServerZoneName
+      in: path
+      description: The name of a stream server zone.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Stream Server Zones
+      summary: Return status of a stream server zone
+      description: Returns status of a particular stream server zone.
+      operationId: getStreamServerZone
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the server zone will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamServerZone'
+        '404':
+          description: 'Server zone not found (*ServerZoneNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Stream Server Zones
+      summary: Reset statistics for a stream server zone
+      description: Resets statistics of accepted and discarded connections, sessions, received and sent bytes, counters of SSL handshakes and session reuses in a particular stream server zone.
+      operationId: deleteStreamServerZoneStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'Server zone not found (*ServerZoneNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxStreamServerZonesMap:
+      title: Stream Server Zones
+      description: 'Status information for all stream
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_api_module.html#status_zone">status zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxStreamServerZone'
+      example:
+        mysql-frontend:
+          processing: 2
+          connections: 270925
+          sessions:
+            2xx: 155564
+            4xx: 0
+            5xx: 0
+            total: 270925
+          discarded: 0
+          received: 28988975
+          sent: 3879346317
+          ssl:
+            handshakes: 76455
+            handshakes_failed: 432
+            session_reuses: 28770
+            no_common_protocol: 4
+            no_common_cipher: 2
+            handshake_timeout: 0
+            peer_rejected_cert: 0
+            verify_failures:
+              no_cert: 0
+              expired_cert: 2
+              revoked_cert: 1
+              other: 1
+        dns:
+          processing: 1
+          connections: 155569
+          sessions:
+            2xx: 155564
+            4xx: 0
+            5xx: 0
+            total: 155569
+          discarded: 0
+          received: 4200363
+          sent: 20489184
+          ssl:
+            handshakes: 2040
+            handshakes_failed: 23
+            session_reuses: 65
+            no_common_protocol: 4
+            no_common_cipher: 2
+            handshake_timeout: 0
+            peer_rejected_cert: 0
+            verify_failures:
+              no_cert: 0
+              expired_cert: 2
+              revoked_cert: 1
+              other: 1
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxStreamServerZone:
+      title: Stream Server Zone
+      type: object
+      properties:
+        processing:
+          type: integer
+          description: The number of client connections that are currently being processed.
+        connections:
+          type: integer
+          description: The total number of connections accepted from clients.
+        sessions:
+          type: object
+          description: The total number of completed sessions, and the number of sessions completed with status codes “<code>2xx</code>”, “<code>4xx</code>”, or “<code>5xx</code>”.
+          properties:
+            2xx:
+              type: integer
+              description: The total number of sessions completed with <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#var_status">status codes</a> “<code>2xx</code>”.
+            4xx:
+              type: integer
+              description: The total number of sessions completed with <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#var_status">status codes</a> “<code>4xx</code>”.
+            5xx:
+              type: integer
+              description: The total number of sessions completed with <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#var_status">status codes</a> “<code>5xx</code>”.
+            total:
+              type: integer
+              description: The total number of completed client sessions.
+        discarded:
+          type: integer
+          description: The total number of connections completed without creating a session.
+        received:
+          type: integer
+          description: The total number of bytes received from clients.
+        sent:
+          type: integer
+          description: The total number of bytes sent to clients.
+        ssl:
+          type: object
+          readOnly: true
+          properties:
+            handshakes:
+              type: integer
+              description: The total number of successful SSL handshakes.
+              readOnly: true
+            handshakes_failed:
+              type: integer
+              description: The total number of failed SSL handshakes.
+              readOnly: true
+            session_reuses:
+              type: integer
+              description: The total number of session reuses during SSL handshake.
+              readOnly: true
+            no_common_protocol:
+              type: integer
+              description: The number of SSL handshakes failed because of no common protocol.
+            no_common_cipher:
+              type: integer
+              description: The number of SSL handshakes failed because of no shared cipher.
+            handshake_timeout:
+              type: integer
+              description: The number of SSL handshakes failed because of a timeout.
+            peer_rejected_cert:
+              type: integer
+              description: The number of failed SSL handshakes when nginx presented the certificate to the client but it was rejected with a corresponding alert message.
+            verify_failures:
+              type: object
+              description: SSL certificate verification errors
+              properties:
+                no_cert:
+                  type: integer
+                  description: A client did not provide the required certificate.
+                expired_cert:
+                  type: integer
+                  description: An expired or not yet valid certificate was presented by a client.
+                revoked_cert:
+                  type: integer
+                  description: A revoked certificate was presented by a client.
+                other:
+                  type: integer
+                  description: Other SSL certificate verification errors.
+      example:
+        dns:
+          processing: 1
+          connections: 155569
+          sessions:
+            2xx: 155564
+            4xx: 0
+            5xx: 0
+            total: 155569
+          discarded: 0
+          received: 4200363
+          sent: 20489184
+          ssl:
+            handshakes: 76455
+            handshakes_failed: 432
+            session_reuses: 28770
+            no_common_protocol: 4
+            no_common_cipher: 2
+            handshake_timeout: 0
+            peer_rejected_cert: 0
+            verify_failures:
+              no_cert: 0
+              expired_cert: 2
+              revoked_cert: 1
+              other: 1

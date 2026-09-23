@@ -1,0 +1,935 @@
+openapi: 3.2.0
+info:
+  version: 1.26.0
+  title: F5 BIG-IP Application Services Templates FAST Extension API
+  license:
+    name: Apache 2.0
+  description: '# F5 BIG-IP Application Services Templates (FAST)
+
+
+    This is the documentation for the FAST templating extension.'
+servers:
+- url: http://localhost:8100/mgmt/shared/fast
+tags:
+- name: FAST Extension
+paths:
+  /settings:
+    get:
+      tags:
+      - FAST Extension
+      summary: Get FAST Settings
+      description: Get an object that represents the current FAST configuration.
+      operationId: getFASTSettings
+      responses:
+        '200':
+          description: The FAST Settings configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Settings'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    delete:
+      tags:
+      - FAST Extension
+      summary: Delete/Reset FAST Settings
+      description: Reset FAST configuration to defaults.
+      operationId: deleteFASTSettings
+      responses:
+        '200':
+          description: Delete/Reset the FAST Settings configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    post:
+      tags:
+      - FAST Extension
+      summary: Replace FAST settings (Full overwrite)
+      description: Replace the full FAST configuration with supplied body.
+      operationId: postFASTSettings
+      responses:
+        '200':
+          description: Replace the FAST Settings configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '422':
+          description: supplied configuration was invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse422'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    put:
+      tags:
+      - FAST Extension
+      summary: Replace FAST settings (Full overwrite)
+      description: Replace the full FAST configuration with supplied body.
+      operationId: putFASTSettings
+      responses:
+        '200':
+          description: Replace the FAST Settings configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '422':
+          description: supplied configuration was invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse422'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    patch:
+      tags:
+      - FAST Extension
+      summary: Update existing FAST Settings
+      description: Update existing FAST configuration with the supplied body. Allows updates of individual properties.
+      operationId: patchFASTSettings
+      responses:
+        '200':
+          description: Update the FAST Settings configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '422':
+          description: supplied configuration was invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse422'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /settings-schema:
+    get:
+      tags:
+      - FAST Extension
+      summary: Get settings schema
+      description: Get JSON schema for the /settings endpoint.
+      operationId: getFastSettingsSchema
+      responses:
+        '200':
+          description: The FAST Settings schema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SettingsSchema'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /info:
+    get:
+      tags:
+      - FAST Extension
+      summary: Information about the FAST Extension
+      description: This endpoint returns data pertaining to the version of FAST currently in use, as well as loaded Template Sets and other information useful for debug. This endpoint is recommended for use when verifying that FAST is installed and ready to use.
+      operationId: getFASTInfo
+      responses:
+        '200':
+          description: Information about the extension was gathered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+components:
+  schemas:
+    Settings:
+      type: object
+      description: current config for the FAST iApps LX
+      properties:
+        deletedTemplateSets:
+          type: array
+          description: Template Sets that have been deleted.
+          items:
+            type: string
+          example: []
+        enableIpam:
+          type: boolean
+          description: Enable IPAM for Official F5 FAST Templates (Experimental/Beta).
+          example: false
+        ipamProviders:
+          type: array
+          description: IPAM Providers configuration (Experimental/Beta).
+          items:
+            oneOf:
+            - $ref: '#/components/schemas/IpamInfoblox'
+            - $ref: '#/components/schemas/IpamGeneric'
+          example: []
+        disableDeclarationCache:
+          type: boolean
+          description: Do not cache AS3 declarations.
+          example: false
+        pendingTasksMaxNumber:
+          type: number
+          minimum: 0
+          description: Specifies max number of pending tasks which can be accepted by FAST. When max limit reached, FAST would return 503 error. This can be disabled by setting to 0.
+          example: 10
+        enable_telemetry:
+          type: boolean
+          description: Enable Telemetry Streaming related options in templates.
+          example: false
+        tsIpAddress:
+          type: string
+          description: Telemetry Service ip address.
+          default: 255.255.255.254
+          example: 255.255.255.254
+        log_asm:
+          type: boolean
+          description: Enable ASM related options in templates.
+          example: false
+        log_afm:
+          type: boolean
+          description: Enable AFM related options in templates.
+          example: false
+    TemplateSet:
+      type: object
+      description: Template Set.
+      required:
+      - name
+      - hash
+      - supported
+      - templates
+      - schemas
+      - dataFiles
+      - enabled
+      properties:
+        name:
+          type: string
+          description: Name of the Template Set.
+          example: examples
+        hash:
+          type: string
+          description: A sha256 hash of the Template hashes.
+          example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+        supported:
+          type: boolean
+          description: the Template Set is officially supported by F5
+          example: false
+        templates:
+          $ref: '#/components/schemas/TemplateList'
+        schemas:
+          type: array
+          description: a list of user-supplied schema
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: schema name
+              hash:
+                type: string
+                description: A sha256 hash of the schema
+          example:
+          - name: examples/types
+            hash: 0105f0af93b9c27e737cb8337d3af5f67d9379668d4bf84a1b091306fbf9055c
+        dataFiles:
+          type: array
+          description: A list of data files associated with the Template Set.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: data file name
+              hash:
+                type: string
+                description: A sha256 hash of the data file
+            example:
+            - name: testSet/test
+              hash: 0105f0af93b9c27e737cb8337d3af5f67d9379668d4bf84a1b091306fbf9055c
+        gitHubRepo:
+          title: GitHub Repository
+          description: The GitHub repository used to install the template set
+          type: string
+          example: org/templateset
+        gitLabRepo:
+          title: GitLab Repository
+          description: The GitLab repository used to install the template set
+          type: string
+          example: org/templateset
+        gitSubDir:
+          title: Git sub-directory
+          description: The sub-directory in the git repo from which the template set was installed
+          type: string
+          default: ''
+          example: org-templates
+        gitRef:
+          title: Git ref
+          description: The Git ref used to fetch the repository
+          default: master
+          type: string
+          example: master
+        unprotected:
+          description: Template Set is installed from publicly availabe GitHub/GitLab repo.
+          type: boolean
+          default: false
+          example: true
+        enabled:
+          type: boolean
+          description: Template Set is installed and ready to use
+          example: true
+    FastApplicationDefinition:
+      type: object
+      title: Application Definition
+      description: Application Definition.
+      required:
+      - name
+      - parameters
+      properties:
+        name:
+          description: Must be valid Template in the system.
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        allowOverwrite:
+          description: Do not error if an Application with the same name already exists in the tenant.
+          type: boolean
+          default: true
+      example:
+        name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    SettingsSchema:
+      type: object
+      description: JSON Schema for FAST Settings
+      properties:
+        type:
+          type: string
+          description: 'Type of Settings: JSON object.'
+        properties:
+          type: object
+          description: Schema of all possible Settings.
+        required:
+          type: array
+          description: List of required Settings.
+          items:
+            type: string
+        dependencies:
+          type: object
+          description: Description of dependencies.
+        title:
+          type: string
+        description:
+          type: string
+        definitions:
+          type: object
+        $schema:
+          type: string
+      example:
+        type: object
+        properties:
+          enable_telemetry:
+            type: boolean
+            title: Enable Telemetry Streaming log forwarding
+            description: 'Automatically setup log forwarding for Telemetry Streaming when deploying FAST applications.
+
+              More information can be found [here](https://clouddocs.f5.com/products/extensions/f5-telemetry-streaming/latest/event-listener.html)
+
+              '
+            propertyOrder: 0
+            format: checkbox
+          log_afm:
+            type: boolean
+            title: Forward AFM logs to Telemetry Streaming
+            description: Requires AFM and ASM to be provisioned
+            options:
+              hidden: true
+              dependencies:
+                enable_telemetry: true
+            propertyOrder: 1
+            format: checkbox
+          log_asm:
+            type: boolean
+            title: Forward ASM logs to Telemetry Streaming
+            description: Requires ASM to be provisioned
+            options:
+              hidden: true
+              dependencies:
+                enable_telemetry: true
+            propertyOrder: 2
+            format: checkbox
+          deletedTemplateSets:
+            type: array
+            items:
+              type: string
+            \uniqueItems: true
+            options:
+              hidden: true
+            propertyOrder: 0
+            format: table
+          disableDeclarationCache:
+            title: Disable AS3 Declaration Cache
+            type: boolean
+            description: Do not cache AS3 declarations. This ensures FAST is always using up-to-date declarations from AS3, which is only an issue if something other than FAST (e.g., config sync) is modifying AS3 config. Disabling declaration caching will negatively impact FAST performance.
+            propertyOrder: 1
+            format: checkbox
+          pendingTasksMaxNumber:
+            title: Maximum number of pending tasks
+            type: number
+            description: Specifies max number of pending tasks which can be accepted by FAST. When max limit reached, FAST would return 503 error.
+          enableIpam:
+            title: Enable IPAM for Official F5 FAST Templates (Experimental/Beta)
+            description: '**NOTE: An IPAM provider must be configured to deploy a valid application using IPAM.**'
+            type: boolean
+            propertyOrder: 2
+            format: checkbox
+          ipamProviders:
+            title: IPAM Providers (Experimental/Beta)
+            description: Configure IPAM providers that can be used in FAST templates to automatically manage IP addresses
+            type: array
+            items:
+              oneOf:
+              - type: object
+                title: Infoblox
+                format: grid-strict
+                properties:
+                  serviceType:
+                    title: Service Type
+                    type: string
+                    enum:
+                    - Infoblox
+                    default: Infoblox
+                    options:
+                      hidden: true
+                  name:
+                    title: Name
+                    type: string
+                    options:
+                      grid_columns: 2
+                      grid_break: true
+                  host:
+                    title: Host
+                    type: string
+                    options:
+                      grid_columns: 4
+                  username:
+                    title: Username
+                    type: string
+                    options:
+                      grid_columns: 4
+                  password:
+                    title: Password
+                    type: string
+                    format: password
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                  retrieveUrl:
+                    title: Retrieve URL
+                    type: string
+                    format: textarea
+                    options:
+                      grid_columns: 4
+                      hidden: true
+                    default: '{{host}}/wapi/{{apiVersion}}/fixedaddress?_return_as_object=1&_return_fields=ipv4addr'
+                  retrieveBody:
+                    title: Retrieve Body
+                    type: string
+                    format: textarea
+                    default: '{''ipv4addr'': ''func: nextavailableip: network/{{network}}'',''mac'': ''00: 00: 00: 00: 00: 00'',''comment'': ''Created by F5 Application Services Templates''}'
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                      hidden: true
+                  retrievePathQuery:
+                    title: Retrieve Path Query
+                    type: string
+                    format: textarea
+                    default: $.result.ipv4addr
+                    options:
+                      grid_columns: 4
+                      hidden: true
+                  retrieveRefPathQuery:
+                    title: Retrieve Reference Path Query
+                    type: string
+                    format: textarea
+                    default: $.result._ref
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                      hidden: true
+                  releaseUrl:
+                    title: Release URL
+                    type: string
+                    format: textarea
+                    options:
+                      grid_columns: 4
+                      hidden: true
+                    default: '{{host}}/wapi/{{apiVersion}}/{{addressRef}}'
+                  releaseBody:
+                    title: Release Body
+                    type: string
+                    format: textarea
+                    default: '{}'
+                    options:
+                      grid_columns: 4
+                      hidden: true
+                  releaseMethod:
+                    title: Release Method
+                    type: string
+                    enum:
+                    - get
+                    - post
+                    - put
+                    - patch
+                    - delete
+                    default: delete
+                    options:
+                      hidden: true
+                  authHeaderName:
+                    title: Authorization Header Name
+                    type: string
+                    default: ''
+                    options:
+                      hidden: true
+                  authHeaderValue:
+                    title: Authorization Header Value
+                    type: string
+                    default: ''
+                    options:
+                      hidden: true
+                  apiVersion:
+                    title: API Version
+                    type: string
+                    default: v2.4
+                    options:
+                      grid_columns: 2
+                  network:
+                    title: Network Name
+                    type: string
+                    options:
+                      grid_columns: 3
+                      grid_break: true
+              - type: object
+                title: Generic
+                format: grid-strict
+                properties:
+                  serviceType:
+                    title: Service Type
+                    type: string
+                    enum:
+                    - Generic
+                    default: Generic
+                    options:
+                      hidden: true
+                  name:
+                    title: Name
+                    type: string
+                    options:
+                      grid_columns: 2
+                      grid_break: true
+                  host:
+                    title: Host
+                    type: string
+                    options:
+                      grid_columns: 4
+                  username:
+                    title: Username
+                    type: string
+                    options:
+                      grid_columns: 4
+                  password:
+                    title: Password
+                    type: string
+                    format: password
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                  retrieveUrl:
+                    title: Retrieve URL
+                    type: string
+                    format: textarea
+                    options:
+                      grid_columns: 4
+                  retrieveBody:
+                    title: Retrieve Body
+                    type: string
+                    format: textarea
+                    default: '{}'
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                  retrievePathQuery:
+                    title: Retrieve Path Query
+                    type: string
+                    format: textarea
+                    default: $
+                    options:
+                      grid_columns: 4
+                  retrieveRefPathQuery:
+                    title: Retrieve Reference Path Query
+                    type: string
+                    format: textarea
+                    default: ''
+                    options:
+                      grid_columns: 4
+                      grid_break: true
+                  releaseUrl:
+                    title: Release URL
+                    type: string
+                    format: textarea
+                    options:
+                      grid_columns: 4
+                  releaseBody:
+                    title: Release Body
+                    type: string
+                    format: textarea
+                    default: '{}'
+                    options:
+                      grid_columns: 4
+                  releaseMethod:
+                    title: Release Method
+                    type: string
+                    enum:
+                    - get
+                    - post
+                    - put
+                    - patch
+                    - delete
+                    default: post
+                    options:
+                      hidden: true
+                  authHeaderName:
+                    title: Authorization Header Name
+                    type: string
+                    default: Authorization
+                  authHeaderValue:
+                    title: Authorization Header Value
+                    type: string
+            propertyOrder: 3
+            format: table
+        required:
+        - enable_telemetry
+        - deletedTemplateSets
+        dependencies:
+          log_afm:
+          - enable_telemetry
+          log_asm:
+          - enable_telemetry
+        title: FAST Settings
+        description: ''
+        definitions: {}
+        $schema: http://json-schema.org/schema#
+    IpamInfoblox:
+      type: object
+      title: IPAM - Infoblox
+      description: IPAM Provider settings - Infoblox.
+      properties:
+        serviceType:
+          title: Service Type
+          type: string
+          enum:
+          - Infoblox
+          default: Infoblox
+        name:
+          title: Name
+          type: string
+        host:
+          title: Host
+          type: string
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+          writeOnly: true
+        retrieveUrl:
+          title: Retrieve URL
+          type: string
+        retrieveBody:
+          title: Retrieve Body
+          type: string
+        retrievePathQuery:
+          title: Retrieve Path Query
+          type: string
+          default: $.result.ipv4addr
+        retrieveRefPathQuery:
+          title: Retrieve Reference Path Query
+          type: string
+          default: $.result._ref
+        releaseUrl:
+          title: Release URL
+          type: string
+          default: '{{host}}/wapi/{{apiVersion}}/{{addressRef}}'
+        releaseBody:
+          title: Release Body
+          type: string
+          default: '{}'
+        releaseMethod:
+          title: Release Method
+          type: string
+          enum:
+          - get
+          - post
+          - put
+          - patch
+          - delete
+          default: delete
+        authHeaderName:
+          title: Authorization Header Name
+          type: string
+          default: ''
+        authHeaderValue:
+          title: Authorization Header Value
+          type: string
+          default: ''
+        apiVersion:
+          title: API Version
+          type: string
+          default: v2.4
+        network:
+          title: Network Name
+          type: string
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    IpamGeneric:
+      type: object
+      title: IPAM - Generic Provider
+      description: IPAM Provider settings - Generic.
+      properties:
+        serviceType:
+          title: Service Type
+          type: string
+          enum:
+          - Generic
+          default: Generic
+        name:
+          title: Name
+          type: string
+        host:
+          title: Host
+          type: string
+        username:
+          title: Username
+          type: string
+        password:
+          title: Password
+          type: string
+          writeOnly: true
+        retrieveUrl:
+          title: Retrieve URL
+          type: string
+        retrieveBody:
+          title: Retrieve Body
+          type: string
+          default: '{}'
+        retrievePathQuery:
+          title: Retrieve Path Query
+          type: string
+          default: $
+        retrieveRefPathQuery:
+          title: Retrieve Reference Path Query
+          type: string
+          default: ''
+        releaseUrl:
+          title: Release URL
+          type: string
+        releaseBody:
+          title: Release Body
+          type: string
+          default: '{}'
+        releaseMethod:
+          title: Release Method
+          type: string
+          enum:
+          - get
+          - post
+          - put
+          - patch
+          - delete
+          default: post
+        authHeaderName:
+          title: Authorization Header Name
+          type: string
+          default: Authorization
+        authHeaderValue:
+          title: Authorization Header Value
+          type: string
+    TemplateList:
+      type: array
+      title: Templates
+      description: A list of template objects.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the template.
+          hash:
+            type: string
+            description: The sha256 of the template source text.
+          description:
+            type: string
+            description: Template description
+            example: '** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.'
+          title:
+            type: string
+            description: A "pretty name" for the Template
+            example: Simple UDP Application
+          appsList:
+            type: array
+            description: A list of applications using the template.
+            items:
+              $ref: '#/components/schemas/FastApplicationDefinition'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
+    Info:
+      type: object
+      description: Info about FAST api.
+      properties:
+        version:
+          type: string
+          description: The version string for FAST.
+          pattern: .*
+          example: 1.0.0
+        as3Info:
+          type: object
+          description: data from AS3's /info endpoint
+        installedTemplates:
+          $ref: '#/components/schemas/TemplateSetList'
+        config:
+          $ref: '#/components/schemas/Settings'
+    TemplateSetList:
+      type: array
+      description: Template Set List.
+      items:
+        $ref: '#/components/schemas/TemplateSet'
+    FastResponse200:
+      title: Response 200
+      type: object
+      description: OK - Request was successful.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 200
+          example: 200
+        message:
+          type: string
+          example: success
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastResponse422:
+      title: Response 422
+      type: object
+      description: Unprocessable Content
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 422
+        message:
+          type: string
+          example: request was well-formed, but had semantic errors
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'

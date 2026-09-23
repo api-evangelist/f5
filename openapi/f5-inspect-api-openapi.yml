@@ -1,0 +1,119 @@
+openapi: 3.2.0
+info:
+  title: F5 BIG-IP Declarative Onboarding Inspect API
+  description: This reference describes the BIG-IP DO API and available endpoints. For more details, see https://clouddocs.f5.com/products/extensions/f5-declarative-onboarding/latest/using-do.html.
+  version: 1.47.0
+  contact:
+    name: BIG-IP Declarative Onboarding
+    email: solutionsfeedback@f5.com
+    url: https://github.com/F5Networks/f5-declarative-onboarding
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+servers:
+- url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+tags:
+- name: Inspect
+paths:
+  /inspect:
+    get:
+      summary: Return current configuration
+      description: Retrieve the current configuration of a device.
+      operationId: getInspect
+      tags:
+      - Inspect
+      parameters:
+      - name: targetHost
+        in: query
+        required: false
+        description: The IP address or domain name of the host from which to retrieve the current configuration.
+        schema:
+          type: string
+          default: localhost
+      - name: targetPort
+        in: query
+        required: false
+        description: The port that is used with the targetHost to establish a connection to the device. By default, BIG-IP DO tries to establish a connection to the device using ports 443 and 8443.
+        schema:
+          type: integer
+          minimum: 0
+          maximum: 65535
+      - name: targetUsername
+        in: query
+        required: false
+        description: The username for the targetHost.
+        schema:
+          type: string
+          default: admin
+      - name: targetPassword
+        in: query
+        required: false
+        description: The password for the targetHost.
+        schema:
+          type: string
+          default: admin
+      responses:
+        200:
+          description: Retrieval was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inspect'
+        500:
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    result:
+      title: Result
+      description: Standard result object in responses.
+      type: object
+      properties:
+        class:
+          type: string
+          enum:
+          - Result
+        code:
+          description: Status code.
+          type: integer
+        status:
+          description: Status string.
+          type: string
+          enum:
+          - OK
+          - ERROR
+          - ROLLING_BACK
+          - RUNNING
+          - REBOOTING
+          - REVOKING
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+    inspect:
+      title: Inspect
+      description: The current configuration of a device.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        selfLink:
+          type: string
+          format: uri
+        result:
+          $ref: '#/components/schemas/result'
+        declaration:
+          type: object
+          properties:
+            class:
+              type: string
+              enum:
+              - DO
+            declaration:
+              $ref: '#/components/schemas/device'
+    device:
+      $ref: base.schema.json

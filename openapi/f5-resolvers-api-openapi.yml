@@ -1,0 +1,240 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Resolvers API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Resolvers
+paths:
+  /resolvers/:
+    get:
+      tags:
+      - Resolvers
+      summary: Return status for all resolver zones
+      description: Returns status information for each resolver zone.
+      operationId: getResolverZones
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxResolverZonesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of resolvers statistics will be output.
+        schema:
+          type: string
+  /resolvers/{resolverZoneName}:
+    parameters:
+    - name: resolverZoneName
+      in: path
+      description: The name of a resolver zone.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Resolvers
+      summary: Return statistics of a resolver zone
+      description: Returns statistics stored in a particular resolver zone.
+      operationId: getResolverZone
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the resolver zone will be output (requests, responses, or both).
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxResolverZone'
+        '404':
+          description: 'Resolver zone not found (*ResolverZoneNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Resolvers
+      summary: Reset statistics for a resolver zone
+      description: Resets statistics in a particular resolver zone.
+      operationId: deleteResolverZoneStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'Resolver zone not found (*ResolverZoneNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxResolverZone:
+      title: Resolver Zone
+      description: 'Statistics of DNS requests and responses per particular
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#resolver_status_zone">resolver zone</a>.
+
+        '
+      type: object
+      properties:
+        requests:
+          type: object
+          readOnly: true
+          properties:
+            name:
+              type: integer
+              description: The total number of requests to resolve names to addresses.
+              readOnly: true
+            srv:
+              type: integer
+              description: The total number of requests to resolve SRV records.
+              readOnly: true
+            addr:
+              type: integer
+              description: The total number of requests to resolve addresses to names.
+              readOnly: true
+        responses:
+          type: object
+          readOnly: true
+          properties:
+            noerror:
+              type: integer
+              description: The total number of successful responses.
+              readOnly: true
+            formerr:
+              type: integer
+              description: The total number of FORMERR (<literal>Format error</literal>) responses.
+              readOnly: true
+            servfail:
+              type: integer
+              description: The total number of SERVFAIL (<literal>Server failure</literal>) responses.
+              readOnly: true
+            nxdomain:
+              type: integer
+              description: The total number of NXDOMAIN (<literal>Host not found</literal>) responses.
+              readOnly: true
+            notimp:
+              type: integer
+              description: The total number of NOTIMP (<literal>Unimplemented</literal>) responses.
+              readOnly: true
+            refused:
+              type: integer
+              description: The total number of REFUSED (<literal>Operation refused</literal>) responses.
+              readOnly: true
+            timedout:
+              type: integer
+              description: The total number of timed out requests.
+              readOnly: true
+            unknown:
+              type: integer
+              description: The total number of requests completed with an unknown error.
+              readOnly: true
+      example:
+        resolver_zone1:
+          requests:
+            name: 25460
+            srv: 130
+            addr: 2580
+          responses:
+            noerror: 26499
+            formerr: 0
+            servfail: 3
+            nxdomain: 0
+            notimp: 0
+            refused: 0
+            timedout: 243
+            unknown: 478
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxResolverZonesMap:
+      title: Resolver Zones
+      description: 'Status data for all
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#resolver_status_zone">resolver zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxResolverZone'
+      example:
+        resolver_zone1:
+          requests:
+            name: 25460
+            srv: 130
+            addr: 2580
+          responses:
+            noerror: 26499
+            formerr: 0
+            servfail: 3
+            nxdomain: 0
+            notimp: 0
+            refused: 0
+            timedout: 243
+            unknown: 478
+        resolver_zone2:
+          requests:
+            name: 325460
+            srv: 1130
+            addr: 12580
+          responses:
+            noerror: 226499
+            formerr: 0
+            servfail: 283
+            nxdomain: 0
+            notimp: 0
+            refused: 0
+            timedout: 743
+            unknown: 1478

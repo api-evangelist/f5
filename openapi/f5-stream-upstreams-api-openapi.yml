@@ -1,0 +1,880 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Stream Upstreams API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Stream Upstreams
+paths:
+  /stream/upstreams/:
+    get:
+      tags:
+      - Stream Upstreams
+      summary: Return status of all stream upstream server groups
+      description: Returns status of each stream upstream server group and its servers.
+      operationId: getStreamUpstreams
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of upstream server groups will be output. If the “<literal>fields</literal>” value is empty, only names of upstreams will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /stream/upstreams/{streamUpstreamName}/:
+    parameters:
+    - name: streamUpstreamName
+      in: path
+      description: The name of a stream upstream server group.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Stream Upstreams
+      summary: Return status of a stream upstream server group
+      description: Returns status of a particular stream upstream server group and its servers.
+      operationId: getStreamUpstream
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the upstream server group will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstream'
+        '400':
+          description: Upstream is static (*UpstreamStatic*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Stream Upstreams
+      summary: Reset statistics of a stream upstream server group
+      description: Resets the statistics for each upstream server in an upstream server group.
+      operationId: deleteStreamUpstreamStat
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: Upstream is static (*UpstreamStatic*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /stream/upstreams/{streamUpstreamName}/servers/:
+    parameters:
+    - name: streamUpstreamName
+      in: path
+      description: The name of an upstream server group.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Stream Upstreams
+      summary: Return configuration of all servers in a stream upstream server group
+      description: Returns configuration of each server in a particular stream upstream server group.
+      operationId: getStreamUpstreamServers
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamConfServerMap'
+        '400':
+          description: Upstream is static (*UpstreamStatic*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    post:
+      tags:
+      - Stream Upstreams
+      summary: Add a server to a stream upstream server group
+      description: Adds a new server to a stream upstream server group. Server parameters are specified in the JSON format.
+      operationId: postStreamUpstreamServer
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+        '400':
+          description: 'Upstream is static (*UpstreamStatic*),
+
+            invalid “**parameter**” value (*UpstreamConfFormatError*),
+
+            missing “*server*” argument (*UpstreamConfFormatError*),
+
+            unknown parameter “**name**” (*UpstreamConfFormatError*),
+
+            nested object or list (*UpstreamConfFormatError*),
+
+            “*error*” while parsing (*UpstreamBadAddress*),
+
+            no port in server “*host*” (*UpstreamBadAddress*),
+
+            service upstream “*host*” may not have port (*UpstreamBadAddress*),
+
+            service upstream “*host*” requires domain name (*UpstreamBadAddress*),
+
+            invalid “*weight*” (*UpstreamBadWeight*),
+
+            invalid “*max_conns*” (*UpstreamBadMaxConns*),
+
+            invalid “*max_fails*” (*UpstreamBadMaxFails*),
+
+            invalid “*fail_timeout*” (*UpstreamBadFailTimeout*),
+
+            invalid “*slow_start*” (*UpstreamBadSlowStart*),
+
+            “*service*” is empty (*UpstreamBadService*),
+
+            no resolver defined to resolve (*UpstreamConfNoResolver*),
+
+            upstream “**name**” has no backup (*UpstreamNoBackup*),
+
+            upstream “**name**” memory exhausted (*UpstreamOutOfMemory*),
+
+            reading request body failed *BodyReadError*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '409':
+          description: Entry exists (*EntryExists*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '415':
+          description: JSON error (*JsonError*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+        description: Address of a new server and other optional parameters in the JSON format. The “*ID*”, “*backup*”, and “*service*” parameters cannot be changed.
+        required: true
+  /stream/upstreams/{streamUpstreamName}/servers/{streamUpstreamServerId}:
+    parameters:
+    - name: streamUpstreamName
+      in: path
+      description: The name of the upstream server group.
+      required: true
+      schema:
+        type: string
+    - name: streamUpstreamServerId
+      in: path
+      description: The ID of the server.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Stream Upstreams
+      summary: Return configuration of a server in a stream upstream server group
+      description: Returns configuration of a particular server in the stream upstream server group.
+      operationId: getStreamUpstreamServer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+        '400':
+          description: 'Upstream is static (*UpstreamStatic*),
+
+            invalid server ID (*UpstreamBadServerId*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*),
+
+            server with ID “**id**” does not exist (*UpstreamServerNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    patch:
+      tags:
+      - Stream Upstreams
+      summary: Modify a server in a stream upstream server group
+      description: Modifies settings of a particular server in a stream upstream server group. Server parameters are specified in the JSON format.
+      operationId: patchStreamUpstreamServer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+        '400':
+          description: 'Upstream is static (*UpstreamStatic*),
+
+            invalid “**parameter**” value (*UpstreamConfFormatError*),
+
+            unknown parameter “**name**” (*UpstreamConfFormatError*),
+
+            nested object or list (*UpstreamConfFormatError*),
+
+            “*error*” while parsing (*UpstreamBadAddress*),
+
+            invalid “*server*” argument (*UpstreamBadAddress*),
+
+            no port in server “*host*” (*UpstreamBadAddress*),
+
+            invalid server ID (*UpstreamBadServerId*),
+
+            invalid “*weight*” (*UpstreamBadWeight*),
+
+            invalid “*max_conns*” (*UpstreamBadMaxConns*),
+
+            invalid “*max_fails*” (*UpstreamBadMaxFails*),
+
+            invalid “*fail_timeout*” (*UpstreamBadFailTimeout*),
+
+            invalid “*slow_start*” (*UpstreamBadSlowStart*),
+
+            reading request body failed *BodyReadError*),
+
+            “*service*” is empty (*UpstreamBadService*),
+
+            server “**ID**” address is immutable (*UpstreamServerImmutable*),
+
+            server “**ID**” weight is immutable (*UpstreamServerWeightImmutable*),
+
+            upstream “*name*” memory exhausted (*UpstreamOutOfMemory*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Server with ID “**id**” does not exist (*UpstreamServerNotFound*),
+
+            unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '415':
+          description: JSON error (*JsonError*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+        description: Server parameters, specified in the JSON format. The “*ID*”, “*backup*”, and “*service*” parameters cannot be changed.
+        required: true
+    delete:
+      tags:
+      - Stream Upstreams
+      summary: Remove a server from a stream upstream server group
+      description: Removes a server from a stream server group.
+      operationId: deleteStreamUpstreamServer
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamUpstreamConfServerMap'
+        '400':
+          description: 'Upstream is static (*UpstreamStatic*),
+
+            invalid server ID (*UpstreamBadServerId*),
+
+            server “**id**” not removable (*UpstreamServerImmutable*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Server with ID “**id**” does not exist (*UpstreamServerNotFound*),
+
+            unknown version (*UnknownVersion*),
+
+            upstream not found (*UpstreamNotFound*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxStreamUpstreamConfServer:
+      title: Stream Upstream Server
+      description: 'Dynamically configurable parameters of a stream upstream
+
+        <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">server</a>:
+
+        '
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the stream upstream server. The ID is assigned automatically and cannot be changed.
+          readOnly: true
+        server:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">address</a> parameter of the stream upstream server. When adding a server, it is possible to specify it as a domain name. In this case, changes of the IP addresses that correspond to a domain name will be monitored and automatically applied to the upstream configuration without the need of restarting nginx. This requires the <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#resolver">resolver</a> directive in the “<code>stream</code>” block. See also the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#resolve">resolve</a> parameter of the stream upstream server.
+        service:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#service">service</a> parameter of the stream upstream server. This parameter cannot be changed.
+          readOnly: true
+        weight:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#weight">weight</a> parameter of the stream upstream server.
+        max_conns:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_conns">max_conns</a> parameter of the stream upstream server.
+        max_fails:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_fails">max_fails</a> parameter of the stream upstream server.
+        fail_timeout:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#fail_timeout">fail_timeout</a> parameter of the stream upstream server.
+        slow_start:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#slow_start">slow_start</a> parameter of the stream upstream server.
+        backup:
+          type: boolean
+          description: When <code>true</code>, adds a <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#backup">backup</a> server. This parameter cannot be changed.
+          readOnly: true
+        down:
+          type: boolean
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#down">down</a> parameter of the stream upstream server.
+        parent:
+          type: string
+          description: Parent server ID of the resolved server. The ID is assigned automatically and cannot be changed.
+          readOnly: true
+        host:
+          type: string
+          description: Hostname of the resolved server. The hostname is assigned automatically and cannot be changed.
+          readOnly: true
+      example:
+        id: 0
+        server: 10.0.0.1:12348
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+    NginxStreamUpstream:
+      title: Stream Upstream
+      type: object
+      properties:
+        peers:
+          $ref: '#/components/schemas/NginxStreamUpstreamPeerMap'
+        zombies:
+          type: integer
+          description: The current number of servers removed from the group but still processing active client connections.
+        zone:
+          type: string
+          description: The name of the shared memory <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#zone">zone</a> that keeps the group’s configuration and run-time state.
+      example:
+        dns:
+          peers:
+          - id: 0
+            server: 10.0.0.1:12347
+            name: 10.0.0.1:12347
+            backup: false
+            weight: 5
+            state: up
+            active: 0
+            ssl:
+              handshakes: 200
+              handshakes_failed: 4
+              session_reuses: 189
+              no_common_protocol: 4
+              handshake_timeout: 0
+              peer_rejected_cert: 0
+              verify_failures:
+                expired_cert: 2
+                revoked_cert: 1
+                hostname_mismatch: 2
+                other: 1
+            max_conns: 50
+            connections: 667231
+            sent: 251946292
+            received: 19222475454
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26214
+              fails: 0
+              unhealthy: 0
+              last_passed: true
+            downtime: 0
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          - id: 1
+            server: 10.0.0.1:12348
+            name: 10.0.0.1:12348
+            backup: true
+            weight: 1
+            state: unhealthy
+            active: 0
+            max_conns: 50
+            connections: 0
+            sent: 0
+            received: 0
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26284
+              fails: 26284
+              unhealthy: 1
+              last_passed: false
+            downtime: 262925617
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          zombies: 0
+          zone: dns
+    NginxStreamUpstreamPeerMap:
+      title: Stream Upstream Servers
+      description: Array of stream upstream servers.
+      type: array
+      items:
+        $ref: '#/components/schemas/NginxStreamUpstreamPeer'
+    NginxStreamUpstreamMap:
+      title: Stream Upstreams
+      description: Status information of stream upstream server groups.
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxStreamUpstream'
+      example:
+        mysql_backends:
+          peers:
+          - id: 0
+            server: 10.0.0.1:12345
+            name: 10.0.0.1:12345
+            backup: false
+            weight: 5
+            state: up
+            active: 0
+            ssl:
+              handshakes: 1045
+              handshakes_failed: 89
+              session_reuses: 321
+              no_common_protocol: 4
+              handshake_timeout: 0
+              peer_rejected_cert: 0
+              verify_failures:
+                expired_cert: 2
+                revoked_cert: 1
+                hostname_mismatch: 2
+                other: 1
+            max_conns: 30
+            connecions: 1231
+            sent: 251946292
+            received: 19222475454
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26214
+              fails: 0
+              unhealthy: 0
+              last_passed: true
+            downtime: 0
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          - id: 1
+            server: 10.0.0.1:12346
+            name: 10.0.0.1:12346
+            backup: true
+            weight: 1
+            state: unhealthy
+            active: 0
+            max_conns: 30
+            connections: 0
+            sent: 0
+            received: 0
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26284
+              fails: 26284
+              unhealthy: 1
+              last_passed: false
+            downtime: 262925617
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          zombies: 0
+          zone: mysql_backends
+        dns:
+          peers:
+          - id: 0
+            server: 10.0.0.1:12347
+            name: 10.0.0.1:12347
+            backup: false
+            weight: 5
+            state: up
+            active: 0
+            ssl:
+              handshakes: 5268
+              handshakes_failed: 121
+              session_reuses: 854
+              no_common_protocol: 4
+              handshake_timeout: 0
+              peer_rejected_cert: 0
+              verify_failures:
+                expired_cert: 2
+                revoked_cert: 1
+                hostname_mismatch: 2
+                other: 1
+            max_conns: 30
+            connections: 667231
+            sent: 251946292
+            received: 19222475454
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26214
+              fails: 0
+              unhealthy: 0
+              last_passed: true
+            downtime: 0
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          - id: 1
+            server: 10.0.0.1:12348
+            name: 10.0.0.1:12348
+            backup: true
+            weight: 1
+            state: unhealthy
+            active: 0
+            connections: 0
+            max_conns: 30
+            sent: 0
+            received: 0
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26284
+              fails: 26284
+              unhealthy: 1
+              last_passed: false
+            downtime: 262925617
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          zombies: 0
+          zone: dns
+    NginxStreamUpstreamConfServerMap:
+      title: Stream Upstream Servers
+      description: 'An array of stream upstream servers for dynamic configuration.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+      example:
+      - id: 0
+        server: 10.0.0.1:12348
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+      - id: 1
+        server: 10.0.0.1:12349
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+    NginxStreamUpstreamPeer:
+      title: Stream Upstream Server
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the server.
+          readOnly: true
+        server:
+          type: string
+          description: An <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">address</a> of the server.
+        service:
+          type: string
+          description: The <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#service">service</a> parameter value of the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">server</a> directive.
+        name:
+          type: string
+          format: hostname
+          description: The name of the server specified in the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">server</a> directive.
+          readOnly: true
+        backup:
+          type: boolean
+          description: A boolean value indicating whether the server is a <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#backup">backup</a> server.
+        weight:
+          type: integer
+          description: <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#weight">Weight</a> of the server.
+        state:
+          type: string
+          readOnly: true
+          enum:
+          - up
+          - down
+          - unavail
+          - checking
+          - unhealthy
+          description: Current state, which may be one of “<code>up</code>”, “<code>down</code>”, “<code>unavail</code>”, “<code>checking</code>”, or “<code>unhealthy</code>”.
+        active:
+          type: integer
+          description: The current number of connections.
+          readOnly: true
+        ssl:
+          type: object
+          readOnly: true
+          properties:
+            handshakes:
+              type: integer
+              description: The total number of successful SSL handshakes.
+              readOnly: true
+            handshakes_failed:
+              type: integer
+              description: The total number of failed SSL handshakes.
+              readOnly: true
+            session_reuses:
+              type: integer
+              description: The total number of session reuses during SSL handshake.
+              readOnly: true
+            no_common_protocol:
+              type: integer
+              description: The number of SSL handshakes failed because of no common protocol.
+            handshake_timeout:
+              type: integer
+              description: The number of SSL handshakes failed because of a timeout.
+            peer_rejected_cert:
+              type: integer
+              description: The number of failed SSL handshakes when nginx presented the certificate to the upstream server but it was rejected with a corresponding alert message.
+            verify_failures:
+              type: object
+              description: SSL certificate verification errors
+              properties:
+                expired_cert:
+                  type: integer
+                  description: An expired or not yet valid certificate was presented by an upstream server.
+                revoked_cert:
+                  type: integer
+                  description: A revoked certificate was presented by an upstream server.
+                hostname_mismatch:
+                  type: integer
+                  description: Server's certificate doesn't match the hostname.
+                other:
+                  type: integer
+                  description: Other SSL certificate verification errors.
+        max_conns:
+          type: integer
+          description: The <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_conns">max_conns</a> limit for the server.
+        connections:
+          type: integer
+          description: The total number of client connections forwarded to this server.
+          readOnly: true
+        connect_time:
+          type: integer
+          description: The average time to connect to the upstream server.
+          readOnly: true
+        first_byte_time:
+          type: integer
+          description: The average time to receive the first byte of data.
+          readOnly: true
+        response_time:
+          type: integer
+          description: The average time to receive the last byte of data.
+          readOnly: true
+        sent:
+          type: integer
+          description: The total number of bytes sent to this server.
+          readOnly: true
+        received:
+          type: integer
+          description: The total number of bytes received from this server.
+          readOnly: true
+        fails:
+          type: integer
+          description: The total number of unsuccessful attempts to communicate with the server.
+          readOnly: true
+        unavail:
+          type: integer
+          description: How many times the server became unavailable for client connections (state “<code>unavail</code>”) due to the number of unsuccessful attempts reaching the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_fails">max_fails</a> threshold.
+          readOnly: true
+        health_checks:
+          type: object
+          readOnly: true
+          properties:
+            checks:
+              type: integer
+              description: The total number of <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_hc_module.html#health_check">health check</a> requests made.
+              readOnly: true
+            fails:
+              type: integer
+              description: The number of failed health checks.
+              readOnly: true
+            unhealthy:
+              type: integer
+              description: How many times the server became unhealthy (state “<code>unhealthy</code>”).
+              readOnly: true
+            last_passed:
+              type: boolean
+              description: Boolean indicating whether the last health check request was successful and passed <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_hc_module.html#match">tests</a>.
+              readOnly: true
+        downtime:
+          type: integer
+          description: Total time the server was in the “<code>unavail</code>”, “<code>checking</code>”, and “<code>unhealthy</code>” states.
+          readOnly: true
+        downstart:
+          type: string
+          format: date-time
+          description: The time when the server became “<code>unavail</code>”, “<code>checking</code>”, or “<code>unhealthy</code>”, in the ISO 8601 format with millisecond resolution.
+          readOnly: true
+        selected:
+          type: string
+          format: date-time
+          description: The time when the server was last selected to process a connection, in the ISO 8601 format with millisecond resolution.
+          readOnly: true

@@ -1,0 +1,97 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST License API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: License
+paths:
+  /license:
+    get:
+      tags:
+      - License
+      summary: Return license info
+      operationId: getLicense
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxLicenseObject'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxLicenseObject:
+      title: License
+      description: 'License and usage reporting status of NGINX Plus instance.
+
+        '
+      properties:
+        eval:
+          type: boolean
+          description: Indicates whether NGINX Plus license is trial.
+          readOnly: true
+        active_till:
+          type: integer
+          description: The Unix timestamp of license expiration.
+          readOnly: true
+        reporting:
+          type: object
+          properties:
+            healthy:
+              type: boolean
+              description: Indicates whether the reporting state is still considered healthy despite recent failed attempts.
+              readOnly: true
+            fails:
+              type: integer
+              description: The number of failed reporting attempts, reset each time the usage report is successfully sent.
+              readOnly: true
+            grace:
+              type: integer
+              description: The number of seconds before traffic processing is stopped after unsuccessful report attempt.
+              readOnly: true
+            uuid:
+              type: string
+              description: The ID of NGINX Plus instance in the UUID format.
+              readOnly: true
+      example:
+        eval: false
+        active_till: 1749268757
+        reporting:
+          healthy: true
+          fails: 2
+          grace: 15551961
+          uuid: 13754cba-29fb-53e5-c32e-a6cf57c84b01

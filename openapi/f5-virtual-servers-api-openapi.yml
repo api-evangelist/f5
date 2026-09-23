@@ -531,14 +531,20 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
-    InternalServerError:
-      description: An unexpected error occurred on the BIG-IP system while processing the request.
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     Conflict:
       description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
         application/json:
           schema:
@@ -555,21 +561,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
     ExpandSubcollectionsParam:
       name: expandSubcollections
       in: query
@@ -581,23 +573,6 @@ components:
         - 'true'
         - 'false'
       example: 'true'
-    TopParam:
-      name: $top
-      in: query
-      required: false
-      description: Maximum number of resources to return.
-      schema:
-        type: integer
-        minimum: 1
-      example: 10
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
     SkipParam:
       name: $skip
       in: query
@@ -607,6 +582,15 @@ components:
         type: integer
         minimum: 0
       example: 0
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
     VirtualNameParam:
       name: virtualName
       in: path
@@ -615,7 +599,45 @@ components:
       schema:
         type: string
       example: my_virtual_server
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
   schemas:
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
     VirtualServerUpdate:
       type: object
       description: Request body for updating a virtual server.
@@ -724,143 +746,6 @@ components:
         fallbackPersistence:
           type: string
           example: example_value
-    VirtualServerCreate:
-      type: object
-      description: Request body for creating a new virtual server.
-      required:
-      - name
-      - destination
-      properties:
-        name:
-          type: string
-          description: Name of the virtual server.
-          example: my_virtual_server
-        partition:
-          type: string
-          description: Administrative partition.
-          default: Common
-          example: example_value
-        destination:
-          type: string
-          description: Destination address and port in /partition/address:port format.
-          example: /Common/10.0.0.100:80
-        description:
-          type: string
-          description: User-defined description.
-          example: A sample description.
-        ipProtocol:
-          type: string
-          description: IP protocol.
-          enum:
-          - tcp
-          - udp
-          - sctp
-          - any
-          example: tcp
-        mask:
-          type: string
-          description: Destination network mask.
-          example: 255.255.255.255
-        pool:
-          type: string
-          description: Default pool full path.
-          example: /Common/my_pool
-        profiles:
-          type: array
-          description: Profiles to apply.
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              context:
-                type: string
-                enum:
-                - all
-                - clientside
-                - serverside
-          example: []
-        persist:
-          type: array
-          description: Persistence profiles to apply.
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              tmDefault:
-                type: string
-                enum:
-                - 'yes'
-                - 'no'
-          example: []
-        source:
-          type: string
-          description: Source address filter.
-          default: 0.0.0.0/0
-          example: example_value
-        sourcePort:
-          type: string
-          description: Source port translation behavior.
-          enum:
-          - preserve
-          - preserve-strict
-          - change
-          example: preserve
-        translateAddress:
-          type: string
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        translatePort:
-          type: string
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        connectionLimit:
-          type: integer
-          minimum: 0
-          example: 10
-        rules:
-          type: array
-          items:
-            type: string
-          example: []
-        vlans:
-          type: array
-          items:
-            type: string
-          example: []
-        vlansEnabled:
-          type: boolean
-          example: true
-        vlansDisabled:
-          type: boolean
-          example: true
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     VirtualServer:
       type: object
       description: A virtual server resource that directs client traffic to a pool of backend servers based on an IP address and port combination.
@@ -1099,6 +984,121 @@ components:
           description: System-assigned index for the virtual server.
           readOnly: true
           example: 10
+    VirtualServerCreate:
+      type: object
+      description: Request body for creating a new virtual server.
+      required:
+      - name
+      - destination
+      properties:
+        name:
+          type: string
+          description: Name of the virtual server.
+          example: my_virtual_server
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        destination:
+          type: string
+          description: Destination address and port in /partition/address:port format.
+          example: /Common/10.0.0.100:80
+        description:
+          type: string
+          description: User-defined description.
+          example: A sample description.
+        ipProtocol:
+          type: string
+          description: IP protocol.
+          enum:
+          - tcp
+          - udp
+          - sctp
+          - any
+          example: tcp
+        mask:
+          type: string
+          description: Destination network mask.
+          example: 255.255.255.255
+        pool:
+          type: string
+          description: Default pool full path.
+          example: /Common/my_pool
+        profiles:
+          type: array
+          description: Profiles to apply.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              context:
+                type: string
+                enum:
+                - all
+                - clientside
+                - serverside
+          example: []
+        persist:
+          type: array
+          description: Persistence profiles to apply.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              tmDefault:
+                type: string
+                enum:
+                - 'yes'
+                - 'no'
+          example: []
+        source:
+          type: string
+          description: Source address filter.
+          default: 0.0.0.0/0
+          example: example_value
+        sourcePort:
+          type: string
+          description: Source port translation behavior.
+          enum:
+          - preserve
+          - preserve-strict
+          - change
+          example: preserve
+        translateAddress:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        translatePort:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        rules:
+          type: array
+          items:
+            type: string
+          example: []
+        vlans:
+          type: array
+          items:
+            type: string
+          example: []
+        vlansEnabled:
+          type: boolean
+          example: true
+        vlansDisabled:
+          type: boolean
+          example: true
   securitySchemes:
     basicAuth:
       type: http

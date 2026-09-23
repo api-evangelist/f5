@@ -1,0 +1,169 @@
+openapi: 3.2.0
+info:
+  version: 1.26.0
+  title: F5 BIG-IP Application Services Templates Offbox…
+  license:
+    name: Apache 2.0
+  description: '# F5 BIG-IP Application Services Templates (FAST)
+
+
+    This is the documentation for the FAST templating extension.'
+servers:
+- url: http://localhost:8100/mgmt/shared/fast
+tags:
+- name: Offbox Templatesets Management
+paths:
+  /offbox-templatesets:
+    post:
+      tags:
+      - Offbox Templatesets Management
+      summary: Provides a set of methods intended for managing Offbox Templatesets
+      description: Intended for managing Offbox Templatesets.
+      operationId: postFASTOffboxTemplates
+      requestBody:
+        description: An object which defines methods to execute for Offbox Templates management
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FastOffboxTemplatesets'
+      responses:
+        '200':
+          description: The rendered Templates as an array of JSON objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastOffboxTemplatesetsResponse'
+        '400':
+          description: An improper payload was submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+components:
+  schemas:
+    FastResponse400:
+      title: Response 400
+      type: object
+      description: Bad Request
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 400
+        message:
+          type: string
+          example: the request was not successful
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastOffboxTemplatesetsResponse:
+      title: Offbox Templates Response
+      type: object
+      description: Offbox Templates response
+      required:
+      - code
+      - requestId
+      - methods
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        code:
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 599
+          example: 200
+        methods:
+          type: array
+          description: a list of methods executed for Offbox Templates management
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: method name
+                example: status
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    FastOffboxTemplatesets:
+      title: Offbox Templates
+      description: Offbox Templates management
+      type: object
+      required:
+      - methods
+      properties:
+        methods:
+          type: array
+          description: a list of methods for Offbox Templates management
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: method name
+                example: status

@@ -11,9 +11,7 @@ info:
 
     over HTTPS. Authentication uses HTTP Basic over TLS or a token
 
-    obtained from /mgmt/shared/authn/login.
-
-    '
+    obtained from /mgmt/shared/authn/login.'
   version: 1.0.0
   contact:
     name: F5 CloudDocs

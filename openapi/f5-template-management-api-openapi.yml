@@ -1,0 +1,776 @@
+openapi: 3.2.0
+info:
+  version: 1.26.0
+  title: F5 BIG-IP Application Services Templates Template…
+  license:
+    name: Apache 2.0
+  description: '# F5 BIG-IP Application Services Templates (FAST)
+
+
+    This is the documentation for the FAST templating extension.'
+servers:
+- url: http://localhost:8100/mgmt/shared/fast
+tags:
+- name: Template Management
+paths:
+  /templates:
+    get:
+      summary: List all Templates
+      description: List all installed Templates.
+      operationId: getFASTTemplates
+      tags:
+      - Template Management
+      responses:
+        '200':
+          description: An array of Template names.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateNameList'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /templates/{setName}/{templateName}:
+    parameters:
+    - name: templateName
+      in: path
+      required: true
+      description: The name of the Template to retrieve.
+      schema:
+        type: string
+        pattern: .*
+    - name: setName
+      in: path
+      required: true
+      description: The name of Template Set the Template belongs to.
+      schema:
+        type: string
+        pattern: .*
+    get:
+      summary: Get specified Template
+      description: Get the Template by Template name and Template Set name.
+      operationId: getFASTTemplateBySetAndTemplateName
+      tags:
+      - Template Management
+      responses:
+        '200':
+          description: A Template object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Template'
+        '404':
+          description: Set or Template was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /templatesets:
+    get:
+      parameters:
+      - name: showDisabled
+        in: query
+        required: false
+        description: Whether to show only disabled Template Sets.
+        schema:
+          type: boolean
+      summary: Get Template Sets
+      description: List all installed Template Sets.
+      operationId: getFASTTemplateSets
+      tags:
+      - Template Management
+      responses:
+        '200':
+          description: A list of installed Template Sets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateSetList'
+        '400':
+          description: Invalid Template Set request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: Template Set not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    post:
+      summary: Install Template Set
+      description: Installs a new template set from a variety of sources
+      operationId: postFASTTemplateSets
+      tags:
+      - Template Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - title: File Upload
+                description: Install a previously uploaded zip archive as a template set
+                required:
+                - name
+                properties:
+                  name:
+                    title: Template Set name
+                    description: The name of the Template Set to install (excluding the .zip extension).
+                    type: string
+                    example: new_template_set
+              - title: GitHub Repository
+                description: Install a GitHub repository (or sub-directory in a repository) as a template set
+                required:
+                - gitHubRepo
+                properties:
+                  gitHubRepo:
+                    title: GitHub Repository
+                    description: A GitHub repository to use as a template set
+                    type: string
+                    example: org/templateset
+                  gitToken:
+                    title: GitHub API token
+                    description: An API token used to access private repositories
+                    type: string
+                    default: null
+                  gitSubDir:
+                    title: Git sub-directory
+                    description: The sub-directory in the git repo to install as a template set
+                    default: null
+                    example: org-templates
+                    oneOf:
+                    - type: string
+                  gitRef:
+                    title: Git ref
+                    description: The Git ref to use when fetching the repository
+                    default: master
+                    type: string
+                    example: master
+                  name:
+                    title: Template set name
+                    description: Template set name to use (defaults gitSubDir if available or the repo name)
+                    type: string
+                    example: newTemplateSet
+              - title: GitLab Repository
+                description: Install a GitLab repository (or sub-directory in a repository) as a template set
+                required:
+                - gitLabRepo
+                properties:
+                  gitLabRepo:
+                    title: GitLab Repository
+                    description: A GitLab repository to use as a template set
+                    type: string
+                    example: org/templateset
+                  gitLabUrl:
+                    title: GitLab URL
+                    description: URL to the GitLab instance
+                    type: string
+                    default: https://gitlab.com
+                  gitToken:
+                    title: GitLab API token
+                    description: An API token used to access private repositories
+                    type: string
+                    default: null
+                  gitSubDir:
+                    title: Git sub-directory
+                    description: The sub-directory in the git repo to install as a template set
+                    default: null
+                    example: org-templates
+                    oneOf:
+                    - type: string
+                  gitRef:
+                    title: Git ref
+                    description: The Git ref to use when fetching the repository
+                    default: master
+                    type: string
+                    example: master
+                  name:
+                    title: Template set name
+                    description: Template set name to use (defaults gitSubDir if available or the repo name)
+                    type: string
+                    example: newTemplateSet
+      responses:
+        '200':
+          description: The Template Set installed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '400':
+          description: The supplied Template Set name is invalid or missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: The supplied Template name was not found in /var/config/rest/downloads.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    put:
+      summary: Install Template Set
+      description: Installs a new template set or updates existent templateset from a variety of sources
+      operationId: putFASTTemplateSets
+      tags:
+      - Template Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - title: File Upload
+                description: Install a previously uploaded zip archive as a template set
+                required:
+                - name
+                properties:
+                  name:
+                    title: Template Set name
+                    description: The name of the Template Set to install (excluding the .zip extension).
+                    type: string
+                    example: new_template_set
+              - title: GitHub Repository
+                description: Install a GitHub repository (or sub-directory in a repository) as a template set
+                required:
+                - gitHubRepo
+                properties:
+                  gitHubRepo:
+                    title: GitHub Repository
+                    description: A GitHub repository to use as a template set
+                    type: string
+                    example: org/templateset
+                  gitToken:
+                    title: GitHub API token
+                    description: An API token used to access private repositories
+                    type: string
+                    default: null
+                  gitSubDir:
+                    title: Git sub-directory
+                    description: The sub-directory in the git repo to install as a template set
+                    default: null
+                    example: org-templates
+                    oneOf:
+                    - type: string
+                  gitRef:
+                    title: Git ref
+                    description: The Git ref to use when fetching the repository
+                    default: master
+                    type: string
+                    example: master
+                  name:
+                    title: Template set name
+                    description: Template set name to use (defaults gitSubDir if available or the repo name)
+                    type: string
+                    example: newTemplateSet
+              - title: GitLab Repository
+                description: Install a GitLab repository (or sub-directory in a repository) as a template set
+                required:
+                - gitLabRepo
+                properties:
+                  gitLabRepo:
+                    title: GitLab Repository
+                    description: A GitLab repository to use as a template set
+                    type: string
+                    example: org/templateset
+                  gitLabUrl:
+                    title: GitLab URL
+                    description: URL to the GitLab instance
+                    type: string
+                    default: https://gitlab.com
+                  gitToken:
+                    title: GitLab API token
+                    description: An API token used to access private repositories
+                    type: string
+                    default: null
+                  gitSubDir:
+                    title: Git sub-directory
+                    description: The sub-directory in the git repo to install as a template set
+                    default: null
+                    example: org-templates
+                    oneOf:
+                    - type: string
+                  gitRef:
+                    title: Git ref
+                    description: The Git ref to use when fetching the repository
+                    default: master
+                    type: string
+                    example: master
+                  name:
+                    title: Template set name
+                    description: Template set name to use (defaults gitSubDir if available or the repo name)
+                    type: string
+                    example: newTemplateSet
+      responses:
+        '200':
+          description: The Template Set installed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '400':
+          description: The supplied Template Set name is invalid or missing.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: The supplied Template name was not found in /var/config/rest/downloads.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    delete:
+      tags:
+      - Template Management
+      summary: Delete Template Sets
+      description: Delete all installed Template Sets.
+      operationId: deleteFASTTemplateSets
+      responses:
+        '200':
+          description: All Template Sets were deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /templatesets/{setName}:
+    parameters:
+    - name: setName
+      in: path
+      required: true
+      description: The name of the Template Set.
+      schema:
+        type: string
+        pattern: .*
+    get:
+      tags:
+      - Template Management
+      summary: Get Template information
+      description: Get information of Template Set with {setName}.
+      operationId: getFASTTemplateSetsByName
+      responses:
+        '200':
+          description: A Template Set object.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TemplateSet'
+        '400':
+          description: Template Set in use.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: Template Set not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    delete:
+      tags:
+      - Template Management
+      summary: Delete specified Template Set
+      description: Deletes an installed Template Set specified by its name.
+      operationId: deleteFASTTemplateSetByName
+      responses:
+        '200':
+          description: The specified Template Set was deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse200'
+        '400':
+          description: Cannot delete Template Set, it is being used
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: The Set name was not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+components:
+  schemas:
+    TemplateSet:
+      type: object
+      description: Template Set.
+      required:
+      - name
+      - hash
+      - supported
+      - templates
+      - schemas
+      - dataFiles
+      - enabled
+      properties:
+        name:
+          type: string
+          description: Name of the Template Set.
+          example: examples
+        hash:
+          type: string
+          description: A sha256 hash of the Template hashes.
+          example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+        supported:
+          type: boolean
+          description: the Template Set is officially supported by F5
+          example: false
+        templates:
+          $ref: '#/components/schemas/TemplateList'
+        schemas:
+          type: array
+          description: a list of user-supplied schema
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: schema name
+              hash:
+                type: string
+                description: A sha256 hash of the schema
+          example:
+          - name: examples/types
+            hash: 0105f0af93b9c27e737cb8337d3af5f67d9379668d4bf84a1b091306fbf9055c
+        dataFiles:
+          type: array
+          description: A list of data files associated with the Template Set.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: data file name
+              hash:
+                type: string
+                description: A sha256 hash of the data file
+            example:
+            - name: testSet/test
+              hash: 0105f0af93b9c27e737cb8337d3af5f67d9379668d4bf84a1b091306fbf9055c
+        gitHubRepo:
+          title: GitHub Repository
+          description: The GitHub repository used to install the template set
+          type: string
+          example: org/templateset
+        gitLabRepo:
+          title: GitLab Repository
+          description: The GitLab repository used to install the template set
+          type: string
+          example: org/templateset
+        gitSubDir:
+          title: Git sub-directory
+          description: The sub-directory in the git repo from which the template set was installed
+          type: string
+          default: ''
+          example: org-templates
+        gitRef:
+          title: Git ref
+          description: The Git ref used to fetch the repository
+          default: master
+          type: string
+          example: master
+        unprotected:
+          description: Template Set is installed from publicly availabe GitHub/GitLab repo.
+          type: boolean
+          default: false
+          example: true
+        enabled:
+          type: boolean
+          description: Template Set is installed and ready to use
+          example: true
+    FastApplicationDefinition:
+      type: object
+      title: Application Definition
+      description: Application Definition.
+      required:
+      - name
+      - parameters
+      properties:
+        name:
+          description: Must be valid Template in the system.
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        allowOverwrite:
+          description: Do not error if an Application with the same name already exists in the tenant.
+          type: boolean
+          default: true
+      example:
+        name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
+    FastResponse400:
+      title: Response 400
+      type: object
+      description: Bad Request
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 400
+        message:
+          type: string
+          example: the request was not successful
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    TemplateNameList:
+      type: array
+      title: Template Names
+      description: A list of template names.
+      items:
+        type: string
+      example:
+      - example/httpTemplate
+      - example/httpsTemplate
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastResponse404:
+      title: Response 404
+      type: object
+      description: Not Found
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 404
+        message:
+          type: string
+          example: resource not found
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    StringDefinition:
+      title: String Definition
+      type: string
+      description: A generic definition for a string.
+    Template:
+      type: object
+      description: An JSON-serialized, f5-fast-core Template object. All fields prefixed with an underscore should be treated as internal/private and only intended for Template.fromJson(). As such, they are not documented here.
+      properties:
+        title:
+          type: string
+          description: A "pretty name" for the Template
+          example: Simple UDP Application
+        description:
+          type: string
+          description: Template description
+          example: '** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.'
+        definitions:
+          $ref: '#/components/schemas/ParametersDefinition'
+        target:
+          type: string
+          default: as3
+          description: A hint to Template consumers about the intended purpose of the Template
+          example: as3
+        templateText:
+          type: string
+          description: A Mustache-templated string
+          example: "{\n  \"class\": \"ADC\",\n  \"schemaVersion\": \"3.0.0\",\n  \"{{tenant_name}}\": {\n    \"class\": \"Tenant\",\n    \"{{application_name}}\": {\n      \"class\": \"Application\",\n      \"template\": \"udp\",\n      \"serviceMain\": {\n        \"class\": \"Service_UDP\",\n        \"virtualAddresses\": [\n          \"{{virtual_address}}\"\n        ],\n        \"virtualPort\": {{virtual_port:types:port}},\n        \"pool\": \"{{application_name}}_Pool1\"\n      },\n      \"{{application_name}}_Pool1\": {\n        \"class\": \"Pool\",\n        \"monitors\": [\n          \"icmp\"\n        ],\n        \"members\": [\n          {\n            \"serverAddresses\": {{server_addresses::array}},\n            \"servicePort\": {{service_port:types:port}}\n          }\n        ]\n      }\n    }\n  }\n}\n"
+        defaultParameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        sourceType:
+          type: string
+          description: A hint on where templateText originated from (e.g., "MST" for loading via Template.loadMst())
+          example: YAML
+        sourceText:
+          type: string
+          description: The raw text of the source the Template class parsed
+          example: "# Simple UDP Template with parameters defined outside of the Template\ntitle: Simple UDP Application\ndescription:  \"** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.\"\nparameters:\n  tenant_name: foo\n  application_name: bar\n  virtual_address: 192.0.2.11\n  virtual_port: 5555\n  server_addresses:\n    - 192.0.2.22\n  service_port: 5555\ntemplate: |\n  {\n    \"class\": \"ADC\",\n    \"schemaVersion\": \"3.0.0\",\n    \"{{tenant_name}}\": {\n      \"class\": \"Tenant\",\n      \"{{application_name}}\": {\n        \"class\": \"Application\",\n        \"template\": \"udp\",\n        \"serviceMain\": {\n          \"class\": \"Service_UDP\",\n          \"virtualAddresses\": [\n            \"{{virtual_address}}\"\n          ],\n          \"virtualPort\": {{virtual_port:types:port}},\n          \"pool\": \"{{application_name}}_Pool1\"\n        },\n        \"{{application_name}}_Pool1\": {\n          \"class\": \"Pool\",\n          \"monitors\": [\n            \"icmp\"\n          ],\n          \"members\": [\n            {\n              \"serverAddresses\": {{server_addresses::array}},\n              \"servicePort\": {{service_port:types:port}}\n            }\n          ]\n        }\n      }\n    }\n  }\n"
+        sourceHash:
+          type: string
+          description: A sha256 hash of the sourceText (useful for determining if a Template has changed)
+          example: a52a2f6cd3d03f7cdec09248fd59fc75b30fa14fa067a137628e7e6ee0b43b4f
+        contentType:
+          type: string
+          description: A MIME type for the intended output of Template.render()
+          default: text/plain
+        httpForward:
+          description: Information for forwarding the rendered result to an HTTP endpoint. Either a URL string or an Axios config object
+          oneOf:
+          - $ref: '#/components/schemas/StringDefinition'
+          - $ref: '#/components/schemas/ObjectDefinition'
+          example: null
+    ObjectDefinition:
+      title: Object Definition
+      type: object
+      description: A generic definition for an object.
+    TemplateList:
+      type: array
+      title: Templates
+      description: A list of template objects.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the template.
+          hash:
+            type: string
+            description: The sha256 of the template source text.
+          description:
+            type: string
+            description: Template description
+            example: '** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.'
+          title:
+            type: string
+            description: A "pretty name" for the Template
+            example: Simple UDP Application
+          appsList:
+            type: array
+            description: A list of applications using the template.
+            items:
+              $ref: '#/components/schemas/FastApplicationDefinition'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
+    FastResponse200:
+      title: Response 200
+      type: object
+      description: OK - Request was successful.
+      required:
+      - code
+      - message
+      properties:
+        code:
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 200
+          example: 200
+        message:
+          type: string
+          example: success
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    TemplateSetList:
+      type: array
+      description: Template Set List.
+      items:
+        $ref: '#/components/schemas/TemplateSet'

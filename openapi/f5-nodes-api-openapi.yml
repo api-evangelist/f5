@@ -388,14 +388,20 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
-    InternalServerError:
-      description: An unexpected error occurred on the BIG-IP system while processing the request.
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     Conflict:
       description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
         application/json:
           schema:
@@ -412,55 +418,6 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-  parameters:
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
-    TopParam:
-      name: $top
-      in: query
-      required: false
-      description: Maximum number of resources to return.
-      schema:
-        type: integer
-        minimum: 1
-      example: 10
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
-    SkipParam:
-      name: $skip
-      in: query
-      required: false
-      description: Number of resources to skip before returning results.
-      schema:
-        type: integer
-        minimum: 0
-      example: 0
-    NodeNameParam:
-      name: nodeName
-      in: path
-      required: true
-      description: Name of the node resource. Can be the IP address or a user-defined name.
-      schema:
-        type: string
-      example: 10.0.0.1
   schemas:
     NodeUpdate:
       type: object
@@ -501,83 +458,6 @@ components:
           - enabled
           - disabled
           example: enabled
-    NodeCreate:
-      type: object
-      description: Request body for creating a new node.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Name of the node. If the name is an IP address, the address property is optional.
-          example: 10.0.0.1
-        address:
-          type: string
-          description: IP address of the node. Required if the name is not an IP address.
-          example: 10.0.0.1
-        partition:
-          type: string
-          default: Common
-          example: example_value
-        description:
-          type: string
-          example: A sample description.
-        connectionLimit:
-          type: integer
-          minimum: 0
-          example: 10
-        monitor:
-          type: string
-          example: example_value
-        rateLimit:
-          type: string
-          example: example_value
-        ratio:
-          type: integer
-          minimum: 1
-          example: 10
-        fqdn:
-          type: object
-          properties:
-            addressFamily:
-              type: string
-              enum:
-              - ipv4
-              - ipv6
-            autopopulate:
-              type: string
-              enum:
-              - enabled
-              - disabled
-            downInterval:
-              type: integer
-            interval:
-              type: string
-            tmName:
-              type: string
-          example: example_value
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     Node:
       type: object
       description: A node resource representing an individual backend server by its IP address or FQDN. Nodes are automatically created when pool members are added, or can be created independently.
@@ -711,6 +591,126 @@ components:
           - down
           - unchecked
           example: up
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    NodeCreate:
+      type: object
+      description: Request body for creating a new node.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Name of the node. If the name is an IP address, the address property is optional.
+          example: 10.0.0.1
+        address:
+          type: string
+          description: IP address of the node. Required if the name is not an IP address.
+          example: 10.0.0.1
+        partition:
+          type: string
+          default: Common
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        fqdn:
+          type: object
+          properties:
+            addressFamily:
+              type: string
+              enum:
+              - ipv4
+              - ipv6
+            autopopulate:
+              type: string
+              enum:
+              - enabled
+              - disabled
+            downInterval:
+              type: integer
+            interval:
+              type: string
+            tmName:
+              type: string
+          example: example_value
+  parameters:
+    NodeNameParam:
+      name: nodeName
+      in: path
+      required: true
+      description: Name of the node resource. Can be the IP address or a user-defined name.
+      schema:
+        type: string
+      example: 10.0.0.1
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
   securitySchemes:
     basicAuth:
       type: http

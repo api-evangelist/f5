@@ -1,0 +1,76 @@
+openapi: 3.2.0
+info:
+  version: 3.56.0
+  title: F5 BIG-IP AS3 Settings API
+  description: This reference describes the BIG-IP AS3 API and available endpoints.
+servers:
+- url: /mgmt/shared/appsvcs
+tags:
+- name: Settings
+paths:
+  /settings:
+    post:
+      summary: Update BIG-IP AS3 settings
+      tags:
+      - Settings
+      description: 'Use POST to deploy simple settings changes in BIG-IP AS3. You must supply a schema appropriate JSON
+
+        object as the body of the request.'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  $ref: ../src/schema/latest/settings-schema.json
+            example:
+              $ref: '#/components/examples/settingsDefault'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  burstHandlingEnabled:
+                    type: boolean
+                    description: Indicates what the setting was set to
+              example:
+                $ref: '#/components/examples/settingsDefault'
+                burstHandlingEnabled: true
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: postSettings
+      x-operation-id-source: derived
+    get:
+      summary: Get current BIG-IP AS3 settings
+      tags:
+      - Settings
+      description: Returns the current configuration of BIG-IP AS3.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: ../src/schema/latest/settings-schema.json
+              example:
+                $ref: '#/components/examples/settingsDefault'
+        500:
+          $ref: '#/components/responses/500'
+      operationId: getSettings
+      x-operation-id-source: derived
+components:
+  examples:
+    settingsDefault:
+      value:
+        burstHandlingEnabled: false
+externalDocs:
+  description: Full AS3 documentation
+  url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/

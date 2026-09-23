@@ -1,0 +1,1090 @@
+openapi: 3.2.0
+info:
+  title: F5 Configuration API
+  version: '1.0'
+  description: 'Operations tagged Configuration across 2 of this provider''s published API definitions: f5-big-ip-as3-openapi.yml, f5-big-ip-declarative-onboarding-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /mgmt/shared/appsvcs
+- url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+tags:
+- name: Configuration
+paths:
+  /declare:
+    post:
+      summary: Apply BIG-IP AS3 configuration
+      tags:
+      - Configuration
+      description: 'Use POST to deploy a configuration to a target ADC, or for certain other actions, including *retrieve*.
+
+        You must supply a request document with each POST.
+
+        The request document may be a proper request or a ADC-only declaration'
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/controlsDryRun'
+      - $ref: '#/components/parameters/controlsLogLevel'
+      - $ref: '#/components/parameters/controlsTrace'
+      - $ref: '#/components/parameters/controlsTraceResponse'
+      - $ref: '#/components/parameters/controlsUserAgent'
+      - $ref: '#/components/parameters/show'
+      - $ref: '#/components/parameters/showHash'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  $ref: '#/components/schemas/declaration'
+            examples:
+              basicDeclaration:
+                $ref: '#/components/examples/declarationTenantPayload'
+      responses:
+        200:
+          description: Successful response to synchronous request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: The results of the task per-tenant
+                    items:
+                      $ref: '#/components/schemas/result'
+                  declaration:
+                    $ref: '#/components/schemas/declaration'
+              examples:
+                successSyncResponse:
+                  $ref: '#/components/examples/declarationTenantSyncResponse'
+        202:
+          $ref: '#/components/responses/202standard'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: postDeclare
+      x-operation-id-source: derived
+    get:
+      summary: Read current BIG-IP AS3 configuration
+      tags:
+      - Configuration
+      description: Retrieve a declaration (with all or just some Tenants) or an index of stored declarations.
+      parameters:
+      - name: show
+        description: '**base** means system returns the declaration as originally deployed (but with secrets like passphrases encrypted), **full** returns the declaration with all default schema properties populated, **expanded** includes all URLs, base64s, and other references expanded to their final static values.
+
+          The default is **base**.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: age
+        description: '?age=0-15 asks for a declaration of the given age (0 means most-recently deployed), and "list" asks for a list of available declarations with their ages.
+
+          By default, **list** only shows 4 declarations, this is configurable using **historyLimit** in the BIG-IP AS3 class.
+
+          The default is 0.
+
+          '
+        in: query
+        required: false
+        schema:
+          oneOf:
+          - type: integer
+          - type: string
+      - name: filterClass
+        description: 'You can use filterClass to retrieve results for only a specific BIG-IP AS3 class.
+
+          For example **?filterClass=HTTP_Profile** only returns the HTTP Profile portions of the declaration.
+
+          You can only use filterClass once in a single GET request.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/declaration'
+              examples:
+                basicDeclaration:
+                  $ref: '#/components/examples/declarationTenantResponse'
+        204:
+          description: No BIG-IP AS3 configured tenants exist on the target device
+        500:
+          $ref: '#/components/responses/500'
+      operationId: getDeclare
+      x-operation-id-source: derived
+    patch:
+      summary: Update current BIG-IP AS3 configuration
+      tags:
+      - Configuration
+      description: You can use the PATCH method to modify the configuration produced by a previously-sent declaration without having to resend the entire declaration
+      parameters:
+      - name: show
+        description: '**base** means system returns the declaration as originally deployed (but with secrets like passphrases encrypted), **full** returns the declaration with all default schema properties populated, **expanded** includes all URLs, base64s, and other references expanded to their final static values.
+
+          The default is **base**.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: async
+        description: 'Setting async to **true** causes BIG-IP AS3 to respond with a 202 status and a request ID which you can later use in a GET request to a new **/task** endpoint to get the results.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        200:
+          description: Successful synchronous response
+        202:
+          $ref: '#/components/responses/202standard'
+        422:
+          $ref: '#/components/responses/422'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: patchDeclare
+      x-operation-id-source: derived
+    delete:
+      summary: Remove current BIG-IP AS3 configuration
+      tags:
+      - Configuration
+      description: Use DELETE to remove configurations for one or more declared Tenants from the target ADC.
+      parameters:
+      - name: show
+        description: '**base** means system returns the declaration as originally deployed (but with secrets like passphrases encrypted), **full** returns the declaration with all default schema properties populated, **expanded** includes all URLs, base64s, and other references expanded to their final static values.
+
+          The default is **base**.
+
+          '
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: Successful synchronous response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: The results of the task per-tenant
+                    items:
+                      $ref: '#/components/schemas/result'
+                  declaration:
+                    $ref: '#/components/schemas/declaration'
+              example:
+                results:
+                - code: 200
+                  message: success
+                  lineCount: 25
+                  host: localhost
+                  tenant: tenant
+                  runTime: 1263
+                declaration:
+                  class: ADC
+                  schemaVersion: 3.0.0
+                  id: '1590774498956'
+                  updateMode: complete
+                  controls:
+                    archiveTimestamp: '2020-05-29T17:48:19.699Z'
+        202:
+          $ref: '#/components/responses/202standard'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: deleteDeclare
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+  /declare/{tenant}:
+    post:
+      summary: Apply BIG-IP AS3 configuration for a specific tenant or tenants
+      tags:
+      - Configuration
+      description: 'Use POST to deploy a configuration to a target ADC, or for certain other actions, including *retrieve*.
+
+        You must supply a request document with each POST.
+
+        The request document may be a proper request or a ADC-only declaration'
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/controlsDryRun'
+      - $ref: '#/components/parameters/controlsLogLevel'
+      - $ref: '#/components/parameters/controlsTrace'
+      - $ref: '#/components/parameters/controlsTraceResponse'
+      - $ref: '#/components/parameters/controlsUserAgent'
+      - $ref: '#/components/parameters/show'
+      - $ref: '#/components/parameters/showHash'
+      - $ref: '#/components/parameters/tenant'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  $ref: '#/components/schemas/declaration'
+            examples:
+              basicDeclaration:
+                $ref: '#/components/examples/declarationTenantPayload'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: The results of the task per-tenant
+                    items:
+                      $ref: '#/components/schemas/result'
+                  declaration:
+                    $ref: '#/components/schemas/declaration'
+              example:
+                successResponse:
+                  $ref: '#/components/examples/declarationTenantSyncResponse'
+      operationId: postDeclareByTenant
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+  /declare/{tenant}/applications:
+    post:
+      summary: Apply BIG-IP AS3 configuration on a per-application basis
+      tags:
+      - Configuration
+      description: 'Use POST to deploy a configuration to a target ADC, or for certain other actions, including *retrieve*.
+
+        You must supply a request document with each POST.
+
+        The request document may be a proper request or a ADC-only declaration'
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/controlsDryRun'
+      - $ref: '#/components/parameters/controlsLogLevel'
+      - $ref: '#/components/parameters/controlsTrace'
+      - $ref: '#/components/parameters/controlsTraceResponse'
+      - $ref: '#/components/parameters/controlsUserAgent'
+      - $ref: '#/components/parameters/show'
+      - $ref: '#/components/parameters/showHash'
+      - $ref: '#/components/parameters/tenantForApplication'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                body:
+                  $ref: '#/components/schemas/declaration'
+            examples:
+              singleApplication:
+                $ref: '#/components/examples/declarationApplicationPayloadSingle'
+              multipleApplications:
+                $ref: '#/components/examples/declarationApplicationPayloadMulti'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: The results of the task
+                    items:
+                      $ref: '#/components/schemas/result'
+                  declaration:
+                    $ref: '#/components/schemas/declaration'
+              examples:
+                successResponse:
+                  $ref: '#/components/examples/declarationApplicationResponse'
+      operationId: postDeclareByTenantApplications
+      x-operation-id-source: derived
+    get:
+      summary: Read all current BIG-IP AS3 application configurations
+      tags:
+      - Configuration
+      description: Retrieve the declarations for all applications under a tenant
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/declaration'
+              examples:
+                basicDeclaration:
+                  $ref: '#/components/examples/declarationApplicationResponseMulti'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: getDeclareByTenantApplications
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+  /declare/{tenant}/applications/{application}:
+    get:
+      summary: Read current BIG-IP AS3 application configuration
+      tags:
+      - Configuration
+      description: Retrieve the declaration for a specific application under a tenant
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/declaration'
+              examples:
+                basicDeclaration:
+                  $ref: '#/components/examples/declarationApplicationResponse'
+        500:
+          $ref: '#/components/responses/500'
+        503:
+          $ref: '#/components/responses/503'
+      operationId: getDeclareByTenantApplicationsByApplication
+      x-operation-id-source: derived
+    delete:
+      summary: Delete current BIG-IP AS3 application configuration
+      tags:
+      - Configuration
+      description: Delete the configuration for a single application
+      parameters:
+      - $ref: '#/components/parameters/async'
+      - $ref: '#/components/parameters/controlsDryRun'
+      - $ref: '#/components/parameters/controlsLogLevel'
+      - $ref: '#/components/parameters/controlsTrace'
+      - $ref: '#/components/parameters/controlsTraceResponse'
+      - $ref: '#/components/parameters/controlsUserAgent'
+      - $ref: '#/components/parameters/show'
+      - $ref: '#/components/parameters/showHash'
+      - $ref: '#/components/parameters/tenantForApplication'
+      - $ref: '#/components/parameters/application'
+      responses:
+        200:
+          description: Successful synchronous response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    description: The results of the request
+                    items:
+                      $ref: '#/components/schemas/result'
+                  declaration:
+                    $ref: '#/components/schemas/declaration'
+              example:
+                results:
+                - code: 200
+                  message: success
+                  lineCount: 25
+                  host: localhost
+                  tenant: tenant
+                  runTime: 1263
+                declaration:
+                  class: ADC
+                  schemaVersion: 3.0.0
+                  id: '1590774498956'
+                  updateMode: complete
+                  controls:
+                    archiveTimestamp: '2020-05-29T17:48:19.699Z'
+      operationId: deleteDeclareByTenantApplicationsByApplication
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+  /:
+    get:
+      summary: Get status of configuration request
+      description: Retrieve the status of the most recently deployed configuration request.
+      operationId: getMostRecentTask
+      tags:
+      - Configuration
+      parameters:
+      - name: show
+        in: query
+        required: false
+        description: Retrieve original and current configuration.
+        schema:
+          type: string
+          enum:
+          - full
+      - name: statusCodes
+        in: query
+        required: false
+        description: "Determines how BIG-IP DO returns HTTP status codes.\n  - *legacy*: Returns any errors as the HTTP status.\n  - *experimental*: Returns a 200 HTTP status code unless there is an actual error with the request. The result in the body of the response contains the status of the task.\n"
+        schema:
+          type: string
+          enum:
+          - legacy
+          - experimental
+          default: legacy
+      responses:
+        200:
+          description: Configuration was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+              examples:
+                success:
+                  value:
+                    $ref: '#/components/examples/task'
+                failure:
+                  value:
+                    $ref: '#/components/examples/errorConfig'
+        500:
+          $ref: '#/components/responses/500'
+    post:
+      summary: Apply BIG-IP DO configuration
+      description: Configure the device per the declaration.
+      operationId: postDeclaration
+      tags:
+      - Configuration
+      requestBody:
+        description: BIG-IP DO Declaration.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/device'
+      responses:
+        200:
+          description: Successful synchronous response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+              example:
+                $ref: '#/components/examples/task'
+        202:
+          description: Successful asynchronous response.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+              example:
+                id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4a
+                result:
+                  class: Result,
+                  code: 202,
+                  status: RUNNING,
+                  dryRun: false,
+                  message: processing
+                declaration:
+                  class: Device
+                  schemaVersion: 1.0.0
+                  async: true
+                  Common:
+                    class: Tenant
+                    myLicense:
+                      class: License
+                      licenseType: regKey
+                      regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+                selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+        422:
+          description: Error while applying config.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+              example:
+                $ref: '#/components/examples/errorConfig'
+        500:
+          $ref: '#/components/responses/500'
+    servers:
+    - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+  /config:
+    get:
+      summary: Return all original configurations
+      description: Retrieve the original configuration of all devices.
+      operationId: getAllConfigs
+      tags:
+      - Configuration
+      responses:
+        200:
+          description: Retrieval was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  allOf:
+                  - $ref: '#/components/schemas/config'
+        500:
+          $ref: '#/components/responses/500'
+    servers:
+    - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+  /config/{machineId}:
+    get:
+      summary: Return original configuration by machine ID
+      description: Retrieve the original configuration of a device by machine ID.
+      operationId: getConfig
+      tags:
+      - Configuration
+      parameters:
+      - name: machineId
+        in: path
+        required: true
+        description: The machine ID that is returned by the <code>/shared/identified-devices/config/device-info</code> endpoint.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Retrieval was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/config'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      summary: Delete the stored original configuration by config ID
+      description: Delete the stored original configuration by config ID. This can be used in some cases when BIG-IP DO has gotten into an unusable state.
+      operationId: deleteConfig
+      tags:
+      - Configuration
+      parameters:
+      - name: configId
+        in: path
+        required: true
+        description: The config ID that was returned by a GET to <code>/config</code>
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Delete was successful.
+          content:
+            application/json:
+              schema:
+                type: array
+              example: []
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    servers:
+    - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+components:
+  schemas:
+    result:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: HTTP status code describing the outcome of applying the tenant's configuration. This will be 0 until the tenant is done being processed.
+          enum:
+          - 0
+          - 200
+          - 202
+          - 422
+          - 500
+        message:
+          type: string
+          description: The current status of the task to configure the tenant.
+        lineCount:
+          type: integer
+          description: The number of lines in the tenant's configuration.
+        host:
+          type: string
+          description: The host name that the tenant was deployed on.
+        tenant:
+          type: string
+          description: The tenant that was configured.
+        runTime:
+          type: integer
+          description: The time (in milliseconds) it took to process the tenant.
+    declaration:
+      type: object
+      externalDocs:
+        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
+        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
+    configObject:
+      title: Config Object
+      type: object
+      properties:
+        Common:
+          type: object
+          description: A collection of sub-objects that describe the configuration state of a device.
+          additionalProperties: true
+    result_2:
+      title: Result
+      description: Standard result object in responses.
+      type: object
+      properties:
+        class:
+          type: string
+          enum:
+          - Result
+        code:
+          description: Status code.
+          type: integer
+        status:
+          description: Status string.
+          type: string
+          enum:
+          - OK
+          - ERROR
+          - ROLLING_BACK
+          - RUNNING
+          - REBOOTING
+          - REVOKING
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+    task:
+      title: Task
+      description: The configuration status and associated declaration.
+      type: object
+      properties:
+        id:
+          description: Unique ID for task.
+          type: string
+          format: uuid
+        selfLink:
+          description: URI at which to fetch task on the device.
+          type: string
+          format: uri
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+        result:
+          $ref: '#/components/schemas/result_2'
+        declaration:
+          $ref: '#/components/schemas/device'
+        currentConfig:
+          $ref: '#/components/schemas/configObject'
+        originalConfig:
+          $ref: '#/components/schemas/configObject'
+    device:
+      $ref: base.schema.json
+    config:
+      title: Config
+      description: The original configuration of a device.
+      type: object
+      allOf:
+      - properties:
+          id:
+            type: string
+            format: uuid
+          selfLink:
+            type: string
+            format: uri
+          result:
+            $ref: '#/components/schemas/result_2'
+      - $ref: '#/components/schemas/configObject'
+  examples:
+    declarationApplicationResponseMulti:
+      value:
+        application1:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.1
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.10
+              - 192.0.2.20
+        application2:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.2
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.30
+              - 192.0.2.40
+        controls:
+          class: Controls
+          logLevel: debug
+          trace: true
+          traceResponse: true
+    declarationApplicationResponse:
+      value:
+        application1:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.0
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.1
+              - 192.0.2.2
+        controls:
+          class: Controls
+          logLevel: debug
+          trace: true
+          traceResponse: true
+        id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
+    declarationApplicationPayloadSingle:
+      value:
+        application1:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.1
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.10
+              - 192.0.2.20
+        controls:
+          class: Controls
+          logLevel: debug
+          trace: true
+          traceResponse: true
+    declarationTenantPayload:
+      value:
+        class: ADC
+        schemaVersion: 3.0.0
+        tenant:
+          class: Tenant
+          application:
+            class: Application
+            service:
+              class: Service_HTTP
+              virtualAddresses:
+              - 192.0.2.0
+              pool: pool
+            pool:
+              class: Pool
+              members:
+              - servicePort: 80
+                serverAddresses:
+                - 192.0.2.1
+                - 192.0.2.2
+    declarationApplicationPayloadMulti:
+      value:
+        application1:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.1
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.10
+              - 192.0.2.20
+        application2:
+          class: Application
+          service:
+            class: Service_HTTP
+            virtualAddresses:
+            - 192.0.2.2
+            pool: pool
+          pool:
+            class: Pool
+            members:
+            - servicePort: 80
+              serverAddresses:
+              - 192.0.2.30
+              - 192.0.2.40
+        controls:
+          class: Controls
+          logLevel: debug
+          trace: true
+          traceResponse: true
+    declarationTenantSyncResponse:
+      value:
+        results:
+        - code: 200
+          message: success
+          lineCount: 25
+          host: localhost
+          tenant: tenant
+          runTime: 1263
+        declaration:
+          class: ADC
+          schemaVersion: 3.0.0
+          tenant:
+            class: Tenant
+            application:
+              class: Application
+              service:
+                class: Service_HTTP
+                virtualAddresses:
+                - 192.0.2.0
+                pool: pool
+              pool:
+                class: Pool
+                members:
+                - servicePort: 80
+                  serverAddresses:
+                  - 192.0.2.1
+                  - 192.0.2.2
+          id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
+          updateMode: selective
+    declarationTenantResponse:
+      value:
+        class: ADC
+        schemaVersion: 3.0.0
+        tenant:
+          class: Tenant
+          application:
+            class: Application
+            service:
+              class: Service_HTTP
+              virtualAddresses:
+              - 192.0.2.0
+              pool: pool
+            pool:
+              class: Pool
+              members:
+              - servicePort: 80
+                serverAddresses:
+                - 192.0.2.1
+                - 192.0.2.2
+        id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
+        updateMode: selective
+    declarationTenantAsyncResponse:
+      value:
+        id: f1f1c942-72b5-42f4-9210-7339a190fc9e
+        results:
+        - message: Declaration successfully submitted
+          tenant: ''
+          runTime: 0
+          code: 0
+          host: ''
+        declaration: {}
+        selfLink: https://localhost/mgmt/shared/appsvcs/task/f1f1c942-72b5-42f4-9210-7339a190fc9e
+    errorConfig:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      code: 422
+      status: ERROR
+      message: 'Error licensing: Invalid reg key'
+      errors:
+      - Invalid reg key
+      result:
+        class: Result
+        code: 422
+        status: ERROR
+        dryRun: false
+        message: 'Error licensing: Invalid reg key'
+        errors:
+        - Invalid reg key
+        declaration:
+          class: Device
+          schemaVersion: 1.0.0
+          async: true
+          Common:
+            class: Tenant
+            myLicense:
+              class: License
+              licenseType: regKey
+              regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+    task:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      result:
+        class: Result
+        code: 200
+        status: OK
+        message: success
+      declaration:
+        class: Device
+        schemaVersion: 1.0.0
+        async: true
+        Common:
+          class: Tenant
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+  parameters:
+    application:
+      name: application
+      description: Application to read/update.
+      in: path
+      required: true
+      schema:
+        type: string
+    controlsTrace:
+      name: controls.trace
+      in: query
+      description: 'BIG-IP AS3 3.30+: If true, BIG-IP AS3 creates a detailed trace of the configuration process for subsequent analysis (default false). Warning: Trace files may contain sensitive configuration data. Using this query parameter overwrites any Controls in the ADC class you specified in the declaration.
+
+        The default is **false**.
+
+        '
+      schema:
+        type: boolean
+    controlsUserAgent:
+      name: controls.userAgent
+      in: query
+      description: 'BIG-IP AS3 3.30+: User Agent information to include in TEEM report. Using this query parameter overwrites any Controls in the ADC class you specified in the declaration.
+
+        '
+      schema:
+        type: string
+    tenant:
+      name: tenant
+      description: 'Only use the specified tenants. Other tenants in the declaration will be ignored. May be a comma
+
+        separated list.
+
+        '
+      in: path
+      required: true
+      schema:
+        type: string
+    controlsLogLevel:
+      name: controls.logLevel
+      in: query
+      description: 'BIG-IP AS3 3.30+: Determines the level of detail in logs using RFC 5424 severity levels. Using this query parameter overwrites any Controls in the ADC class you specified in the declaration.
+
+        The default is **error**.
+
+        '
+      schema:
+        type: string
+    controlsDryRun:
+      name: controls.dryRun
+      in: query
+      description: 'BIG-IP AS3 3.30+: Using **controls.dryRun=true** sends the declaration through all validation checks but does not attempt to deploy the configuration on the target device.  This can be useful for testing and debugging declarations. Using this query parameter overwrites any Controls in the ADC class you specified in the declaration.
+
+        The default is **false**.
+
+        '
+      schema:
+        type: boolean
+    controlsTraceResponse:
+      name: controls.traceResponse
+      in: query
+      description: 'BIG-IP AS3 3.30+: If true, the response will contain the trace files. Using this query parameter overwrites any Controls in the ADC class you specified in the declaration.
+
+        The default is **false**.
+
+        '
+      schema:
+        type: boolean
+    tenantForApplication:
+      name: tenant
+      description: Tenant in which to create the application. Tenant will be created if it doesn't exist.
+      in: path
+      required: true
+      schema:
+        type: string
+    showHash:
+      name: showHash
+      in: query
+      description: 'If you set **showHash=true**, the results include an optimisticLockKey for each tenant.
+
+        Attempts to change/update any of the tenants *without* the correct optimisticLockKey will fail.
+
+        The default is **false**.
+
+        '
+      schema:
+        type: boolean
+    show:
+      name: show
+      description: '**show=**: *base* means system returns the declaration as originally deployed (but with secrets like passphrases encrypted), *full* returns the declaration with all default schema properties populated, *expanded* includes all URLs, base64s, and other references expanded to their final static values.  Default is **base**
+
+        '
+      in: query
+      required: false
+      schema:
+        type: string
+    async:
+      name: async
+      description: '**async=**: *true* causes BIG-IP AS3 to respond with a 202 status and a request ID which you can later use in a GET request to a new **/task** endpoint to get the results.  Default is **false**.
+
+        '
+      in: query
+      required: false
+      schema:
+        type: boolean
+  responses:
+    202standard:
+      description: Successful response to asynchronous request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: string
+                description: A unique identifier for the task
+              results:
+                type: array
+                description: The results of the asynchronous task per-tenant
+                items:
+                  $ref: '#/components/schemas/result'
+              declaration:
+                $ref: '#/components/schemas/declaration'
+              selfLink:
+                type: string
+                description: URL for this task
+          examples:
+            successfulAsyncResponse:
+              $ref: '#/components/examples/declarationTenantAsyncResponse'
+externalDocs:
+  description: Full AS3 documentation
+  url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+x-refined-from:
+- f5-big-ip-as3-openapi.yml
+- f5-big-ip-declarative-onboarding-openapi.yml

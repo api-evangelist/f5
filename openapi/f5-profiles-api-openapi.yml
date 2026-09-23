@@ -527,6 +527,12 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
@@ -539,24 +545,18 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   schemas:
-    TcpProfile:
+    CookiePersistenceProfile:
       type: object
-      description: A TCP profile that defines how the BIG-IP processes TCP traffic, including connection settings, timeouts, and optimization.
+      description: A cookie persistence profile that maintains session persistence by inserting or reading HTTP cookies.
       properties:
         kind:
           type: string
-          example: tm:ltm:profile:tcp:tcpstate
+          example: tm:ltm:persistence:cookie:cookiestate
           readOnly: true
         name:
           type: string
-          example: tcp
+          example: cookie
         fullPath:
           type: string
           readOnly: true
@@ -570,262 +570,106 @@ components:
           format: uri
           readOnly: true
           example: https://www.example.com
-        abc:
+        alwaysSend:
           type: string
-          description: Whether Appropriate Byte Counting is enabled.
+          description: Whether to always send the cookie.
           enum:
           - enabled
           - disabled
           example: enabled
-        ackOnPush:
+        cookieEncryption:
           type: string
-          description: Whether to send ACK on PUSH flag.
+          description: Cookie encryption method.
           enum:
-          - enabled
+          - required
+          - preferred
           - disabled
-          example: enabled
-        closeWaitTimeout:
-          type: integer
-          description: Timeout in seconds for CLOSE-WAIT state.
-          example: 10
-        congestionControl:
+          example: required
+        cookieName:
           type: string
-          description: TCP congestion control algorithm.
-          enum:
-          - high-speed
-          - cdg
-          - chd
-          - cubic
-          - illinois
-          - new-reno
-          - none
-          - reno
-          - scalable
-          - vegas
-          - westwood
-          - woodside
-          example: high-speed
+          description: Name of the persistence cookie.
+          example: example_value
         defaultsFrom:
           type: string
           description: Parent profile.
-          example: /Common/tcp
-        deferredAccept:
-          type: string
-          description: Whether to defer connection acceptance.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
+          example: /Common/cookie
         description:
           type: string
           example: A sample description.
-        finWaitTimeout:
-          type: integer
-          description: Timeout in seconds for FIN-WAIT state.
-          example: 10
-        idleTimeout:
-          type: integer
-          description: Idle timeout in seconds. Connections idle longer than this value are closed.
-          example: 10
-        initCwnd:
-          type: integer
-          description: Initial TCP congestion window size.
-          example: 10
-        initRwnd:
-          type: integer
-          description: Initial TCP receive window size.
-          example: 10
-        keepAliveInterval:
-          type: integer
-          description: Interval in seconds between TCP keep-alive probes.
-          example: 10
-        maxRetrans:
-          type: integer
-          description: Maximum number of TCP retransmission attempts.
-          example: 10
-        maxSegmentSize:
-          type: integer
-          description: Maximum segment size (MSS) in bytes.
-          example: 10
-        nagle:
+        expiration:
           type: string
-          description: Nagle algorithm setting.
-          enum:
-          - auto
-          - enabled
-          - disabled
-          example: auto
-        receiveWindowSize:
+          description: Cookie expiration time.
+          example: session
+        hashLength:
           type: integer
-          description: TCP receive window size in bytes.
+          description: Length of the cookie hash.
           example: 10
-        sendBufferSize:
+        hashOffset:
           type: integer
-          description: TCP send buffer size in bytes.
+          description: Offset for the cookie hash.
           example: 10
-        synMaxRetrans:
-          type: integer
-          description: Maximum SYN retransmission attempts.
-          example: 10
-        timeWaitRecycle:
+        httponly:
           type: string
-          description: Whether to recycle TIME-WAIT connections.
+          description: Whether the cookie has the HttpOnly flag.
           enum:
           - enabled
           - disabled
           example: enabled
-        timeWaitTimeout:
-          type: integer
-          description: Timeout in milliseconds for TIME-WAIT state.
-          example: 10
-    ClientSslProfile:
-      type: object
-      description: A Client SSL profile for managing SSL/TLS connections between clients and the BIG-IP system.
-      properties:
-        kind:
+        matchAcrossPools:
           type: string
-          example: tm:ltm:profile:client-ssl:client-sslstate
-          readOnly: true
-        name:
+          description: Whether to match persistence across pools.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        matchAcrossServices:
           type: string
-          example: clientssl
-        fullPath:
+          description: Whether to match persistence across virtual servers.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        matchAcrossVirtuals:
           type: string
-          readOnly: true
+          description: Whether to match persistence across all virtuals.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        method:
+          type: string
+          description: Cookie persistence method.
+          enum:
+          - insert
+          - rewrite
+          - passive
+          - hash
+          example: insert
+        mirror:
+          type: string
+          description: Whether to mirror persistence records.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        overrideConnectionLimit:
+          type: string
+          description: Whether to override connection limits for persisted sessions.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        secure:
+          type: string
+          description: Whether the cookie has the Secure flag.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        timeout:
+          type: string
+          description: Persistence timeout in seconds.
           example: example_value
-        generation:
-          type: integer
-          readOnly: true
-          example: 10
-        selfLink:
-          type: string
-          format: uri
-          readOnly: true
-          example: https://www.example.com
-        alertTimeout:
-          type: string
-          description: Alert timeout for SSL handshake.
-          example: example_value
-        allowNonSsl:
-          type: string
-          description: Whether to allow non-SSL connections.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        cert:
-          type: string
-          description: Path to the SSL certificate file.
-          example: /Common/default.crt
-        certKeyChain:
-          type: array
-          description: Certificate and key chain pairs.
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              cert:
-                type: string
-              key:
-                type: string
-              chain:
-                type: string
-          example: []
-        ciphers:
-          type: string
-          description: Cipher suite string.
-          example: DEFAULT
-        defaultsFrom:
-          type: string
-          description: Parent profile.
-          example: /Common/clientssl
-        description:
-          type: string
-          example: A sample description.
-        key:
-          type: string
-          description: Path to the SSL private key file.
-          example: /Common/default.key
-        options:
-          type: array
-          description: SSL options.
-          items:
-            type: string
-          example: []
-        peerCertMode:
-          type: string
-          description: Client certificate verification mode.
-          enum:
-          - ignore
-          - require
-          - request
-          example: ignore
-        renegotiation:
-          type: string
-          description: Whether SSL renegotiation is allowed.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        secureRenegotiation:
-          type: string
-          description: Secure renegotiation mode.
-          enum:
-          - require
-          - require-strict
-          - request
-          example: require
-        sniDefault:
-          type: string
-          description: Whether this is the default SNI profile.
-          enum:
-          - 'true'
-          - 'false'
-          example: 'true'
-        sniRequire:
-          type: string
-          description: Whether SNI is required.
-          enum:
-          - 'true'
-          - 'false'
-          example: 'true'
-        sslForwardProxy:
-          type: string
-          description: Whether SSL forward proxy is enabled.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        uncleanShutdown:
-          type: string
-          description: How to handle unclean SSL shutdowns.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     HttpProfile:
       type: object
       description: An HTTP profile that defines how the BIG-IP processes HTTP traffic for a virtual server.
@@ -989,17 +833,17 @@ components:
           items:
             type: string
           example: []
-    CookiePersistenceProfile:
+    ClientSslProfile:
       type: object
-      description: A cookie persistence profile that maintains session persistence by inserting or reading HTTP cookies.
+      description: A Client SSL profile for managing SSL/TLS connections between clients and the BIG-IP system.
       properties:
         kind:
           type: string
-          example: tm:ltm:persistence:cookie:cookiestate
+          example: tm:ltm:profile:client-ssl:client-sslstate
           readOnly: true
         name:
           type: string
-          example: cookie
+          example: clientssl
         fullPath:
           type: string
           readOnly: true
@@ -1013,123 +857,263 @@ components:
           format: uri
           readOnly: true
           example: https://www.example.com
-        alwaysSend:
+        alertTimeout:
           type: string
-          description: Whether to always send the cookie.
+          description: Alert timeout for SSL handshake.
+          example: example_value
+        allowNonSsl:
+          type: string
+          description: Whether to allow non-SSL connections.
           enum:
           - enabled
           - disabled
           example: enabled
-        cookieEncryption:
+        cert:
           type: string
-          description: Cookie encryption method.
-          enum:
-          - required
-          - preferred
-          - disabled
-          example: required
-        cookieName:
+          description: Path to the SSL certificate file.
+          example: /Common/default.crt
+        certKeyChain:
+          type: array
+          description: Certificate and key chain pairs.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              cert:
+                type: string
+              key:
+                type: string
+              chain:
+                type: string
+          example: []
+        ciphers:
           type: string
-          description: Name of the persistence cookie.
-          example: example_value
+          description: Cipher suite string.
+          example: DEFAULT
         defaultsFrom:
           type: string
           description: Parent profile.
-          example: /Common/cookie
+          example: /Common/clientssl
         description:
           type: string
           example: A sample description.
-        expiration:
+        key:
           type: string
-          description: Cookie expiration time.
-          example: session
-        hashLength:
+          description: Path to the SSL private key file.
+          example: /Common/default.key
+        options:
+          type: array
+          description: SSL options.
+          items:
+            type: string
+          example: []
+        peerCertMode:
+          type: string
+          description: Client certificate verification mode.
+          enum:
+          - ignore
+          - require
+          - request
+          example: ignore
+        renegotiation:
+          type: string
+          description: Whether SSL renegotiation is allowed.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        secureRenegotiation:
+          type: string
+          description: Secure renegotiation mode.
+          enum:
+          - require
+          - require-strict
+          - request
+          example: require
+        sniDefault:
+          type: string
+          description: Whether this is the default SNI profile.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sniRequire:
+          type: string
+          description: Whether SNI is required.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sslForwardProxy:
+          type: string
+          description: Whether SSL forward proxy is enabled.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        uncleanShutdown:
+          type: string
+          description: How to handle unclean SSL shutdowns.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
           type: integer
-          description: Length of the cookie hash.
-          example: 10
-        hashOffset:
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
           type: integer
-          description: Offset for the cookie hash.
+          description: API-specific error code.
           example: 10
-        httponly:
+    TcpProfile:
+      type: object
+      description: A TCP profile that defines how the BIG-IP processes TCP traffic, including connection settings, timeouts, and optimization.
+      properties:
+        kind:
           type: string
-          description: Whether the cookie has the HttpOnly flag.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        matchAcrossPools:
+          example: tm:ltm:profile:tcp:tcpstate
+          readOnly: true
+        name:
           type: string
-          description: Whether to match persistence across pools.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        matchAcrossServices:
+          example: tcp
+        fullPath:
           type: string
-          description: Whether to match persistence across virtual servers.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        matchAcrossVirtuals:
-          type: string
-          description: Whether to match persistence across all virtuals.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        method:
-          type: string
-          description: Cookie persistence method.
-          enum:
-          - insert
-          - rewrite
-          - passive
-          - hash
-          example: insert
-        mirror:
-          type: string
-          description: Whether to mirror persistence records.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        overrideConnectionLimit:
-          type: string
-          description: Whether to override connection limits for persisted sessions.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        secure:
-          type: string
-          description: Whether the cookie has the Secure flag.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        timeout:
-          type: string
-          description: Persistence timeout in seconds.
+          readOnly: true
           example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        abc:
+          type: string
+          description: Whether Appropriate Byte Counting is enabled.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        ackOnPush:
+          type: string
+          description: Whether to send ACK on PUSH flag.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        closeWaitTimeout:
+          type: integer
+          description: Timeout in seconds for CLOSE-WAIT state.
+          example: 10
+        congestionControl:
+          type: string
+          description: TCP congestion control algorithm.
+          enum:
+          - high-speed
+          - cdg
+          - chd
+          - cubic
+          - illinois
+          - new-reno
+          - none
+          - reno
+          - scalable
+          - vegas
+          - westwood
+          - woodside
+          example: high-speed
+        defaultsFrom:
+          type: string
+          description: Parent profile.
+          example: /Common/tcp
+        deferredAccept:
+          type: string
+          description: Whether to defer connection acceptance.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        description:
+          type: string
+          example: A sample description.
+        finWaitTimeout:
+          type: integer
+          description: Timeout in seconds for FIN-WAIT state.
+          example: 10
+        idleTimeout:
+          type: integer
+          description: Idle timeout in seconds. Connections idle longer than this value are closed.
+          example: 10
+        initCwnd:
+          type: integer
+          description: Initial TCP congestion window size.
+          example: 10
+        initRwnd:
+          type: integer
+          description: Initial TCP receive window size.
+          example: 10
+        keepAliveInterval:
+          type: integer
+          description: Interval in seconds between TCP keep-alive probes.
+          example: 10
+        maxRetrans:
+          type: integer
+          description: Maximum number of TCP retransmission attempts.
+          example: 10
+        maxSegmentSize:
+          type: integer
+          description: Maximum segment size (MSS) in bytes.
+          example: 10
+        nagle:
+          type: string
+          description: Nagle algorithm setting.
+          enum:
+          - auto
+          - enabled
+          - disabled
+          example: auto
+        receiveWindowSize:
+          type: integer
+          description: TCP receive window size in bytes.
+          example: 10
+        sendBufferSize:
+          type: integer
+          description: TCP send buffer size in bytes.
+          example: 10
+        synMaxRetrans:
+          type: integer
+          description: Maximum SYN retransmission attempts.
+          example: 10
+        timeWaitRecycle:
+          type: string
+          description: Whether to recycle TIME-WAIT connections.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        timeWaitTimeout:
+          type: integer
+          description: Timeout in milliseconds for TIME-WAIT state.
+          example: 10
   parameters:
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
     ProfileNameParam:
       name: profileName
       in: path
@@ -1138,6 +1122,22 @@ components:
       schema:
         type: string
       example: my_http_profile
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
   securitySchemes:
     basicAuth:
       type: http

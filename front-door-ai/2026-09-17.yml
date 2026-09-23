@@ -1,0 +1,35 @@
+# Front Door AI Index — f5 — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: f5
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.f5.com
+  final_host: www.f5.com
+  ownership: own
+  owner: f5
+  shares_host_with:
+  - f5-distributed-cloud-services
+  - f5-load-balancer
+  - threat-stack
+  inherited_from: null
+  verdict: scored
+  score: 46
+  host_score: 46
+  density: 33.95
+  words: 1355
+  tiers:
+    agentic: 6
+    core: 40
+    model: 0
+  ambiguous: 3
+  top_terms:
+    AI: 39
+    agent: 2
+    agentic: 2
+    inference: 2
+    AI agent: 1
+    ML: 1
+    RAG: 1
+    intelligence: 1

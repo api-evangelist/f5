@@ -1,0 +1,160 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST HTTP Limit Reqs API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: HTTP Limit Reqs
+paths:
+  /http/limit_reqs/:
+    get:
+      tags:
+      - HTTP Limit Reqs
+      summary: Return status of all HTTP limit_req zones
+      description: Returns status information for each HTTP limit_req zone.
+      operationId: getHttpLimitReqZones
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of limit_req zones will be output. If the “<literal>fields</literal>” value is empty, then only zone names will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPLimitReqZonesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /http/limit_reqs/{httpLimitReqZoneName}:
+    parameters:
+    - name: httpLimitReqZoneName
+      in: path
+      description: The name of a [limit_req zone](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone).
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - HTTP Limit Reqs
+      summary: Return status of an HTTP limit_req zone
+      description: Returns status of a particular HTTP limit_req zone.
+      operationId: getHttpLimitReqZone
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the [limit_req zone](https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone) will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPLimitReqZone'
+        '404':
+          description: 'limit_req not found (*LimitReqNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - HTTP Limit Reqs
+      summary: Reset statistics for an HTTP limit_req zone
+      description: Resets the requests limiting statistics.
+      operationId: deleteHttpLimitReqZoneStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'limit_req not found (*LimitReqNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxHTTPLimitReqZone:
+      title: HTTP Requests Rate Limiting
+      type: object
+      properties:
+        passed:
+          type: integer
+          description: The total number of requests that were neither limited nor accounted as limited.
+        delayed:
+          type: integer
+          description: The total number of requests that were delayed.
+        rejected:
+          type: integer
+          description: The total number of requests that were rejected.
+        delayed_dry_run:
+          type: integer
+          description: The total number of requests accounted as delayed in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
+        rejected_dry_run:
+          type: integer
+          description: The total number of requests accounted as rejected in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
+      example:
+        passed: 15
+        delayed: 4
+        rejected: 0
+        delayed_dry_run: 1
+        rejected_dry_run: 2
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxHTTPLimitReqZonesMap:
+      title: HTTP limit_reqs
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone">limit_req zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPLimitReqZone'

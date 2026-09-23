@@ -1,0 +1,313 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST HTTP Caches API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: HTTP Caches
+paths:
+  /http/caches/:
+    get:
+      tags:
+      - HTTP Caches
+      summary: Return status of all caches
+      description: Returns status of each cache configured by proxy_cache_path and other “*_cache_path” directives.
+      operationId: getHttpCaches
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of cache zones will be output. If the “<literal>fields</literal>” value is empty, then only names of cache zones will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPCachesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /http/caches/{httpCacheZoneName}:
+    parameters:
+    - name: httpCacheZoneName
+      in: path
+      description: The name of the cache zone.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - HTTP Caches
+      summary: Return status of a cache
+      description: Returns status of a particular cache.
+      operationId: getHttpCacheZone
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the cache zone will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPCache'
+        '404':
+          description: 'Cache not found (*CacheNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - HTTP Caches
+      summary: Reset cache statistics
+      description: Resets statistics of cache hits/misses in a particular cache zone.
+      operationId: deleteHttpCacheZoneStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'Cache not found (*CacheNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxHTTPCache:
+      title: HTTP Cache
+      type: object
+      properties:
+        size:
+          type: integer
+          description: The current size of the cache.
+        max_size:
+          type: integer
+          description: The limit on the maximum size of the cache specified in the configuration.
+        cold:
+          type: boolean
+          description: A boolean value indicating whether the “cache loader” process is still loading data from disk into the cache.
+        hit:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_valid">valid</a> responses read from the cache.
+            bytes:
+              type: integer
+              description: The total number of bytes read from the cache.
+        stale:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of expired responses read from the cache (see <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_use_stale">proxy_cache_use_stale</a> and other “<code>*_cache_use_stale</code>” directives).
+            bytes:
+              type: integer
+              description: The total number of bytes read from the cache.
+        updating:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of expired responses read from the cache while responses were being updated (see <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_use_stale_updating">proxy_cache_use_stale</a> and other “<code>*_cache_use_stale</code>” directives).
+            bytes:
+              type: integer
+              description: The total number of bytes read from the cache.
+        revalidated:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of expired and revalidated responses read from the cache (see <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_revalidate">proxy_cache_revalidate</a> and other “<code>*_cache_revalidate</code>” directives.
+            bytes:
+              type: integer
+              description: The total number of bytes read from the cache.
+        miss:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of responses not found in the cache.
+            bytes:
+              type: integer
+              description: The total number of bytes read from the proxied server.
+            responses_written:
+              type: integer
+              description: The total number of responses written to the cache.
+            bytes_written:
+              type: integer
+              description: The total number of bytes written to the cache.
+        expired:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of expired responses not taken from the cache.
+            bytes:
+              type: integer
+              description: The total number of bytes read from the proxied server.
+            responses_written:
+              type: integer
+              description: The total number of responses written to the cache.
+            bytes_written:
+              type: integer
+              description: The total number of bytes written to the cache.
+        bypass:
+          type: object
+          properties:
+            responses:
+              type: integer
+              description: The total number of responses not looked up in the cache due to the <a href="https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_bypass">proxy_cache_bypass</a> and other “<code>*_cache_bypass</code>” directives.
+            bytes:
+              type: integer
+              description: The total number of bytes read from the proxied server.
+            responses_written:
+              type: integer
+              description: The total number of responses written to the cache.
+            bytes_written:
+              type: integer
+              description: The total number of bytes written to the cache.
+      example:
+        size: 530915328
+        max_size: 536870912
+        cold: false
+        hit:
+          responses: 254032
+          bytes: 6685627875
+        stale:
+          responses: 0
+          bytes: 0
+        updating:
+          responses: 0
+          bytes: 0
+        revalidated:
+          responses: 0
+          bytes: 0
+        miss:
+          responses: 1619201
+          bytes: 53841943822
+        expired:
+          responses: 45859
+          bytes: 1656847080
+          responses_written: 44992
+          bytes_written: 1641825173
+        bypass:
+          responses: 200187
+          bytes: 5510647548
+          responses_written: 200173
+          bytes_written: 44992
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxHTTPCachesMap:
+      title: HTTP Caches
+      description: "Status information of all HTTP caches configured by \n<a href=\"https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_path\">proxy_cache_path</a>\nand other “<code>*_cache_path</code>” directives.\n"
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPCache'
+      example:
+        http-cache:
+          size: 530915328
+          max_size: 536870912
+          cold: false
+          hit:
+            responses: 254032
+            bytes: 6685627875
+          stale:
+            responses: 0
+            bytes: 0
+          updating:
+            responses: 0
+            bytes: 0
+          revalidated:
+            responses: 0
+            bytes: 0
+          miss:
+            responses: 1619201
+            bytes: 53841943822
+          expired:
+            responses: 45859
+            bytes: 1656847080
+            responses_written: 44992
+            bytes_written: 1641825173
+          bypass:
+            responses: 200187
+            bytes: 5510647548
+            responses_written: 200173
+            bytes_written: 44992
+        frontend-cache:
+          size: 530915328
+          max_size: 536870912
+          cold: false
+          hit:
+            responses: 254032
+            bytes: 6685627875
+          stale:
+            responses: 0
+            bytes: 0
+          updating:
+            responses: 0
+            bytes: 0
+          revalidated:
+            responses: 0
+            bytes: 0
+          miss:
+            responses: 1619201
+            bytes: 53841943822
+          expired:
+            responses: 45859
+            bytes: 1656847080
+            responses_written: 44992
+            bytes_written: 1641825173
+          bypass:
+            responses: 200187
+            bytes: 5510647548
+            responses_written: 200173
+            bytes_written: 44992

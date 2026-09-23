@@ -1,0 +1,152 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Stream Limit Conns API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Stream Limit Conns
+paths:
+  /stream/limit_conns/:
+    get:
+      tags:
+      - Stream Limit Conns
+      summary: Return status of all stream limit_conn zones
+      description: Returns status information for each stream limit_conn zone.
+      operationId: getStreamLimitConnZones
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of limit_conn zones will be output. If the “<literal>fields</literal>” value is empty, then only zone names will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamLimitConnZonesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /stream/limit_conns/{streamLimitConnZoneName}:
+    parameters:
+    - name: streamLimitConnZoneName
+      in: path
+      description: The name of a [limit_conn zone](https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_zone).
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Stream Limit Conns
+      summary: Return status of an stream limit_conn zone
+      description: Returns status of a particular stream limit_conn zone.
+      operationId: getStreamLimitConnZone
+      parameters:
+      - name: fields
+        in: query
+        description: Limits which fields of the [limit_conn zone](https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_zone) will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxStreamLimitConnZone'
+        '404':
+          description: 'limit_conn not found (*LimitConnNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Stream Limit Conns
+      summary: Reset statistics for a stream limit_conn zone
+      description: Resets the connection limiting statistics.
+      operationId: deleteStreamLimitConnZoneStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'limit_conn not found (*LimitConnNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxStreamLimitConnZone:
+      title: Stream Connections Limiting
+      type: object
+      properties:
+        passed:
+          type: integer
+          description: The total number of connections that were neither limited nor accounted as limited.
+        rejected:
+          type: integer
+          description: The total number of connections that were rejected.
+        rejected_dry_run:
+          type: integer
+          description: The total number of connections accounted as rejected in the <a href="https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_dry_run">dry run</a> mode.
+      example:
+        passed: 15
+        rejected: 0
+        rejected_dry_run: 2
+    NginxStreamLimitConnZonesMap:
+      title: Stream limit_conns
+      description: 'Status data for all stream
+
+        <a href="https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_zone">limit_conn zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxStreamLimitConnZone'

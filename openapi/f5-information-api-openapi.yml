@@ -1,0 +1,88 @@
+openapi: 3.2.0
+info:
+  title: F5 Information API
+  version: '1.0'
+  description: 'Operations tagged Information across 2 of this provider''s published API definitions: f5-big-ip-as3-openapi.yml, f5-big-ip-declarative-onboarding-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /mgmt/shared/appsvcs
+- url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+tags:
+- name: Information
+paths:
+  /info:
+    get:
+      summary: /mgmt/shared/appsvcs/info
+      tags:
+      - Information
+      description: 'This returns version and release information for the instance of BIG-IP AS3 you are using.
+
+        It also shows current and minimum required versions of the BIG-IP AS3 schema.'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  version:
+                    type: string
+                    description: The version of BIG-IP AS3
+                  release:
+                    type: string
+                    description: The build number of the current version
+                  schemaCurrent:
+                    type: string
+                    description: The maximum schema version supported
+                  schemaMinimum:
+                    type: string
+                    description: The minimum schema version supported
+              example:
+                version: 3.20.0
+                release: 2
+                schemaCurrent: 3.20.0
+                schemaMinimum: 3.0.0
+        500:
+          $ref: '#/components/responses/500'
+      operationId: getInfo
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+components:
+  schemas:
+    result:
+      title: Result
+      description: Standard result object in responses.
+      type: object
+      properties:
+        class:
+          type: string
+          enum:
+          - Result
+        code:
+          description: Status code.
+          type: integer
+        status:
+          description: Status string.
+          type: string
+          enum:
+          - OK
+          - ERROR
+          - ROLLING_BACK
+          - RUNNING
+          - REBOOTING
+          - REVOKING
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+externalDocs:
+  description: Full AS3 documentation
+  url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+x-refined-from:
+- f5-big-ip-as3-openapi.yml
+- f5-big-ip-declarative-onboarding-openapi.yml

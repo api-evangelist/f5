@@ -1,0 +1,142 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST SSL API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: SSL
+paths:
+  /ssl:
+    get:
+      tags:
+      - SSL
+      summary: Return SSL statistics
+      description: Returns SSL statistics.
+      operationId: getSsl
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxSSLObject'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of SSL statistics will be output.
+        schema:
+          type: string
+    delete:
+      tags:
+      - SSL
+      summary: Reset SSL statistics
+      description: Resets counters of SSL handshakes and session reuses.
+      operationId: deleteSslStat
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxSSLObject:
+      title: SSL
+      type: object
+      properties:
+        handshakes:
+          type: integer
+          description: The total number of successful SSL handshakes.
+        handshakes_failed:
+          type: integer
+          description: The total number of failed SSL handshakes.
+        session_reuses:
+          type: integer
+          description: The total number of session reuses during SSL handshake.
+        no_common_protocol:
+          type: integer
+          description: The number of SSL handshakes failed because of no common protocol.
+        no_common_cipher:
+          type: integer
+          description: The number of SSL handshakes failed because of no shared cipher.
+        handshake_timeout:
+          type: integer
+          description: The number of SSL handshakes failed because of a timeout.
+        peer_rejected_cert:
+          type: integer
+          description: The number of failed SSL handshakes when nginx presented the certificate to the client but it was rejected with a corresponding alert message.
+        verify_failures:
+          type: object
+          description: SSL certificate verification errors
+          properties:
+            no_cert:
+              type: integer
+              description: A client did not provide the required certificate.
+            expired_cert:
+              type: integer
+              description: An expired or not yet valid certificate was presented by a client.
+            revoked_cert:
+              type: integer
+              description: A revoked certificate was presented by a client.
+            hostname_mismatch:
+              type: integer
+              description: Server's certificate doesn't match the hostname.
+            other:
+              type: integer
+              description: Other SSL certificate verification errors.
+      example:
+        handshakes: 79572
+        handshakes_failed: 21025
+        session_reuses: 15762
+        no_common_protocol: 4
+        no_common_cipher: 2
+        handshake_timeout: 0
+        peer_rejected_cert: 0
+        verify_failures:
+          no_cert: 0
+          expired_cert: 2
+          revoked_cert: 1
+          hostname_mismatch: 2
+          other: 1

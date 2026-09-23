@@ -1,0 +1,636 @@
+openapi: 3.2.0
+info:
+  version: 1.26.0
+  title: F5 BIG-IP Application Services Templates Application…
+  license:
+    name: Apache 2.0
+  description: '# F5 BIG-IP Application Services Templates (FAST)
+
+
+    This is the documentation for the FAST templating extension.'
+servers:
+- url: http://localhost:8100/mgmt/shared/fast
+tags:
+- name: Application Management
+paths:
+  /applications:
+    get:
+      tags:
+      - Application Management
+      summary: Fetch List of FAST Applications
+      description: Responds with a list of Applications that are currently deployed in the system.
+      operationId: getFASTApplications
+      responses:
+        '200':
+          description: List of FAST Applications.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationList'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    post:
+      tags:
+      - Application Management
+      summary: Create one or more Applications from Templates
+      description: This is the main method to deploy a templated Application. The parameters posted will be used to render a Template, and that Template will get posted to AS3. The call to AS3 may be async, so this endpoint must also be async. A Task will be returned upon successful parameter submission that can track the progress of the deployment.
+      operationId: postFASTApplications
+      requestBody:
+        description: An application definition, including the name of the template to run and the parameters needed to render and post the output.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FastApplicationRequest'
+      responses:
+        '202':
+          description: Template Job Submitted Successfully, check the provided Task ID to get the status of the deployment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationResponse'
+        '400':
+          description: AS3 errors (e.g., invalid schema) are forwarded as 400-level errors. See AS3 documentation for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    put:
+      tags:
+      - Application Management
+      summary: Create or update Applications from Templates
+      description: This is method to deploy a templated Application. This will be used to render a Template, and that Template will get posted to AS3. The call to AS3 may be async, so this endpoint must also be async. A Task will be returned upon successful parameter submission that can track the progress of the deployment.
+      operationId: putFASTApplications
+      requestBody:
+        description: An application definition, including the name of the template to run and the parameters needed to render and post the output.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FastApplicationRequest'
+      responses:
+        '202':
+          description: Template Job Submitted Successfully, check the provided Task ID to get the status of the deployment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationResponse'
+        '400':
+          description: AS3 errors (e.g., invalid schema) are forwarded as 400-level errors. See AS3 documentation for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    delete:
+      tags:
+      - Application Management
+      summary: Delete FAST Applications
+      description: Delete multiple FAST managed Applications (all if no body is provided).
+      operationId: deleteFASTApplications
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                description: Application paths (e.g., 'tenant/app')
+              example:
+              - tenant/app
+      responses:
+        '202':
+          description: Delete job submitted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationDeleteResponse'
+        '404':
+          description: Tenant or Application not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /applications/{tenantName}/{appName}:
+    parameters:
+    - name: appName
+      in: path
+      required: true
+      description: The name of the app to retrieve.
+      schema:
+        type: string
+        pattern: .*
+    - name: tenantName
+      in: path
+      required: true
+      description: The tenant the app belongs to.
+      schema:
+        type: string
+        pattern: .*
+    get:
+      summary: Fetch an individual Application
+      description: Fetches the AS3 Application class for the given FAST Application.
+      operationId: getFASTApplication
+      tags:
+      - Application Management
+      responses:
+        '200':
+          description: The specified Application.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastAs3App'
+        '404':
+          description: Application or Tenant was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    patch:
+      summary: Update Application parameters
+      description: Update an existing, deployed FAST Application with the supplied parameters. Existing parameter values from the deployed Application will be used as defaults for any missing parameter values.
+      operationId: updateFASTApplication
+      tags:
+      - Application Management
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                parameters:
+                  $ref: '#/components/schemas/ParametersDefinition'
+              required:
+              - parameters
+            example:
+              virtualAddresses:
+              - 10.0.0.1
+      responses:
+        '202':
+          description: Template Job Submitted Successfully, check the provided Task ID to get the status of the deployment.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationResponse'
+        '400':
+          description: AS3 errors (e.g., invalid schema) are forwarded as 400-level errors. See AS3 documentation for details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+    delete:
+      tags:
+      - Application Management
+      summary: Delete Application
+      description: Delete an individual Application.
+      operationId: deleteFASTApplication
+      responses:
+        '202':
+          description: The Application was deleted successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationDeleteResponse'
+        '404':
+          description: Tenant or Application not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /render:
+    post:
+      tags:
+      - Application Management
+      summary: Render one or more Applications from Templates
+      description: Render Application Templates without posting them to AS3 NOTE - The rendered Template results are not stitched with other AS3 Applications on the box. In other words, posting these results to AS3 directly can result in data loss.
+      operationId: postFASTRender
+      requestBody:
+        description: An Application definition, including the name of the Template to render and the Template parameters.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FastApplicationRequest'
+      responses:
+        '200':
+          description: The rendered Templates as an array of JSON objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastApplicationRenderedResponse'
+        '400':
+          description: An improper Application definition was submitted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse400'
+        '404':
+          description: The specified Template could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+components:
+  schemas:
+    FastApplicationDeleteResponse:
+      type: object
+      title: Application Delete Response
+      description: The response message when deleting Applications.
+      required:
+      - code
+      - message
+      additionalProperties: true
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        code:
+          type: integer
+          minimum: 202
+          maximum: 599
+          example: 202
+        message:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The Task ID which can be used to query Task state.
+                example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+    FastAs3App:
+      type: object
+      title: AS3 Application
+      description: The resulting AS3 Application.
+      properties:
+        class:
+          type: string
+          title: Application class
+          example: application
+        constants:
+          type: object
+          properties:
+            fast:
+              type: object
+              properties:
+                template:
+                  description: must be valid Template in the system
+                  type: string
+                  example: examples/simple_udp_defaults
+                setHash:
+                  type: string
+                  description: the hash of the Template Set used to deploy this Application
+                  example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+                view:
+                  $ref: '#/components/schemas/ParametersDefinition'
+                templateType:
+                  type: string
+                  description: Template type, e.g., local, GitHub or GitLab
+                  example: local
+                lastModified:
+                  type: string
+                  format: date-time
+                  description: timestamp of when the Application was last modified
+                ipamAddrs:
+                  $ref: '#/components/schemas/ObjectDefinition'
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastApplicationList:
+      title: Application List
+      type: array
+      description: FAST Application List.
+      items:
+        $ref: '#/components/schemas/FastApplication'
+    FastApplicationDefinition:
+      type: object
+      title: Application Definition
+      description: Application Definition.
+      required:
+      - name
+      - parameters
+      properties:
+        name:
+          description: Must be valid Template in the system.
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        allowOverwrite:
+          description: Do not error if an Application with the same name already exists in the tenant.
+          type: boolean
+          default: true
+      example:
+        name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
+    FastApplicationResponse:
+      type: object
+      title: Application Response
+      description: The response message when performing Application operations.
+      required:
+      - code
+      - message
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        code:
+          type: integer
+          minimum: 202
+          maximum: 599
+          example: 202
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        message:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The Task ID which can be used to query Task state.
+                example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+              name:
+                description: The name of the Template used.
+                type: string
+                example: examples/simple_udp_defaults
+              parameters:
+                description: The parameters used to create/update the Application.
+                type: object
+                example:
+                  tenant_name: tenant
+                  application_name: app
+    FastResponse400:
+      title: Response 400
+      type: object
+      description: Bad Request
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 400
+        message:
+          type: string
+          example: the request was not successful
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    FastApplication:
+      type: object
+      title: Application
+      description: FAST Application.
+      required:
+      - template
+      - tenant
+      - name
+      properties:
+        template:
+          description: must be valid Template in the system
+          type: string
+          example: examples/simple_udp_defaults
+        setHash:
+          type: string
+          description: the hash of the Template Set used to deploy this Application
+          example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+        view:
+          $ref: '#/components/schemas/ParametersDefinition'
+        templateType:
+          type: string
+          description: Template type, e.g., local, GitHub or GitLab
+          example: local
+        lastModified:
+          type: string
+          format: date-time
+          description: timestamp of when the Application was last modified
+        ipamAddrs:
+          $ref: '#/components/schemas/ObjectDefinition'
+        tenant:
+          type: string
+          description: the tenant the Application belongs to
+          example: tenant
+        name:
+          type: string
+          description: the name of the Application
+          example: app
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastApplicationRequest:
+      title: Application Request
+      description: An application request.
+      type: array
+      items:
+        oneOf:
+        - $ref: '#/components/schemas/FastApplicationDefinition'
+        - $ref: '#/components/schemas/FastApplicationDefinitionList'
+    FastResponse404:
+      title: Response 404
+      type: object
+      description: Not Found
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 404
+        message:
+          type: string
+          example: resource not found
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    ObjectDefinition:
+      title: Object Definition
+      type: object
+      description: A generic definition for an object.
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
+    FastApplicationDefinitionList:
+      type: array
+      title: Application Definition List
+      description: Application Definition List.
+      items:
+        $ref: '#/components/schemas/FastApplicationDefinition'
+      example:
+      - name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
+      - name: tenant/app
+        parameters: {}
+        allowOverwrite: true
+    FastApplicationRenderedResponse:
+      title: Application Rendered Response
+      type: object
+      description: Application Rendered Response.
+      required:
+      - code
+      - message
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        code:
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 599
+          example: 200
+        message:
+          type: array
+          items:
+            $ref: '#/components/schemas/ObjectDefinition'
+          example:
+          - appDef:
+              class: ADC
+              schemaVersion: 3.0.0
+              tenant:
+                class: Tenant
+                bar:
+                  class: Application
+                  template: udp
+                  serviceMain:
+                    class: Service_UDP
+                    virtualAddresses:
+                    - 192.0.2.11
+                    virtualPort: 5555
+                    pool: bar_Pool1
+                  bar_Pool1:
+                    class: Pool
+                    monitors:
+                    - icmp
+                    members:
+                    - serverAddresses:
+                      - 192.0.2.22
+                      servicePort: 5555
+            metaData:
+              template: examples/simple_udp_defaults
+              setHash: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+              view:
+                tenant_name: tenant
+                app_name: app
+              lastModified: '2022-03-26T23:34:23.873Z'
+              ipamAddrs: {}

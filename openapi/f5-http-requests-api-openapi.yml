@@ -1,0 +1,97 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST HTTP Requests API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: HTTP Requests
+paths:
+  /http/requests:
+    get:
+      tags:
+      - HTTP Requests
+      summary: Return HTTP requests statistics
+      description: Returns status of client HTTP requests.
+      operationId: getHttpRequests
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of client HTTP requests statistics will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPRequests'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - HTTP Requests
+      summary: Reset HTTP requests statistics
+      description: Resets the number of total client HTTP requests.
+      operationId: deleteHttpRequests
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxHTTPRequests:
+      title: HTTP Requests
+      type: object
+      properties:
+        total:
+          type: integer
+          description: The total number of client requests.
+        current:
+          type: integer
+          description: The current number of client requests.
+      example:
+        total: 10624511
+        current: 4
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

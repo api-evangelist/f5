@@ -1,0 +1,304 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST HTTP Keyvals API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: HTTP Keyvals
+paths:
+  /http/keyvals/:
+    get:
+      tags:
+      - HTTP Keyvals
+      summary: Return key-value pairs from all HTTP keyval zones
+      description: Returns key-value pairs for each HTTP keyval shared memory zone.
+      operationId: getHttpKeyvalZones
+      parameters:
+      - name: fields
+        in: query
+        description: If the “<literal>fields</literal>” value is empty, then only HTTP keyval zone names will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPKeyvalZonesMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /http/keyvals/{httpKeyvalZoneName}:
+    parameters:
+    - name: httpKeyvalZoneName
+      in: path
+      description: The name of an HTTP keyval shared memory zone.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - HTTP Keyvals
+      summary: Return key-value pairs from an HTTP keyval zone
+      description: Returns key-value pairs stored in a particular HTTP keyval shared memory zone.
+      operationId: getHttpKeyvalZoneKeysValues
+      parameters:
+      - name: key
+        in: query
+        description: Get a particular key-value pair from the HTTP keyval zone.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxHTTPKeyvalZone'
+        '404':
+          description: 'Keyval not found (*KeyvalNotFound*),
+
+            keyval key not found (*KeyvalKeyNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    post:
+      tags:
+      - HTTP Keyvals
+      summary: Add a key-value pair to the HTTP keyval zone
+      description: Adds a new key-value pair to the HTTP keyval shared memory zone. Several key-value pairs can be entered if the HTTP keyval shared memory zone is empty.
+      operationId: postHttpKeyvalZoneData
+      responses:
+        '201':
+          description: Created
+        '400':
+          description: 'Invalid JSON (*KeyvalFormatError*),
+
+            invalid key format (*KeyvalFormatError*),
+
+            key required (*KeyvalFormatError*),
+
+            keyval timeout is not enabled (*KeyvalFormatError*),
+
+            only one key can be added (*KeyvalFormatError*),
+
+            reading request body failed *BodyReadError*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Keyval not found (*KeyvalNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '409':
+          description: 'Entry exists (*EntryExists*),
+
+            key already exists (*KeyvalKeyExists*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '413':
+          description: Request Entity Too Large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '415':
+          description: JSON error (*JsonError*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NginxHTTPKeyvalZonePostPatch'
+        description: A key-value pair is specified in the JSON format. Several key-value pairs can be entered if the HTTP keyval shared memory zone is empty. Expiration time in milliseconds can be specified for a key-value pair with the *expire* parameter which overrides the [*timeout*](https://nginx.org/en/docs/http/ngx_http_keyval_module.html#keyval_timeout) parameter of the <a href="https://nginx.org/en/docs/http/ngx_http_keyval_module.html#keyval_zone">keyval_zone</a> directive.
+        required: true
+    patch:
+      tags:
+      - HTTP Keyvals
+      summary: Modify a key-value or delete a key
+      description: Changes the value of the selected key in the key-value pair, deletes a key by setting the key value to null, changes expiration time of a key-value pair. If synchronization of keyval zones in a cluster is enabled, deletes a key only on a target cluster node. Expiration time in milliseconds can be specified for a key-value pair with the *expire* parameter which overrides the *timeout* parameter of the keyval_zone directive.
+      operationId: patchHttpKeyvalZoneKeyValue
+      responses:
+        '204':
+          description: Success
+        '400':
+          description: 'Invalid JSON (*KeyvalFormatError*),
+
+            key required (*KeyvalFormatError*),
+
+            keyval timeout is not enabled (*KeyvalFormatError*),
+
+            only one key can be updated (*KeyvalFormatError*),
+
+            reading request body failed *BodyReadError*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '404':
+          description: 'Keyval not found (*KeyvalNotFound*),
+
+            keyval key not found (*KeyvalKeyNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '413':
+          description: Request Entity Too Large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '415':
+          description: JSON error (*JsonError*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NginxHTTPKeyvalZonePostPatch'
+        description: A new value for the key is specified in the JSON format.
+        required: true
+    delete:
+      tags:
+      - HTTP Keyvals
+      summary: Empty the HTTP keyval zone
+      description: Deletes all key-value pairs from the HTTP keyval shared memory zone. If synchronization of keyval zones in a cluster is enabled, empties the keyval zone only on a target cluster node.
+      operationId: deleteHttpKeyvalZoneData
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'Keyval not found (*KeyvalNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxHTTPKeyvalZone:
+      title: HTTP Keyval Shared Memory Zone
+      description: 'Contents of an HTTP keyval shared memory zone
+
+        when using the GET method.
+
+        '
+      type: object
+      example:
+        key1: value1
+        key2: value2
+        key3: value3
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxHTTPKeyvalZonesMap:
+      title: HTTP Keyval Shared Memory Zones
+      description: 'Contents of all HTTP keyval shared memory zones.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPKeyvalZone'
+      example:
+        keyval_zone:
+          key1: value1
+          key2: value2
+          key3: value3
+        one:
+          arg1: value1
+          arg2: value2
+          arg3: value3
+    NginxHTTPKeyvalZonePostPatch:
+      title: HTTP Keyval Shared Memory Zone
+      description: 'Contents of an HTTP keyval shared memory zone
+
+        when using the POST or PATCH methods.
+
+        '
+      type: object
+      example:
+        key1: value1
+        key2: value2
+        key3:
+          value: value3
+          expire: 30000

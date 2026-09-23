@@ -1,0 +1,65 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Stream API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Stream
+paths:
+  /stream/:
+    get:
+      tags:
+      - Stream
+      summary: Return list of stream-related endpoints
+      description: Returns a list of first level stream endpoints.
+      operationId: getStream
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfStrings'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    ArrayOfStrings:
+      title: Array
+      description: 'An array of strings.
+
+        '
+      type: array
+      items:
+        type: string

@@ -1,0 +1,87 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Processes API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Processes
+paths:
+  /processes:
+    get:
+      tags:
+      - Processes
+      summary: Return nginx processes status
+      description: Returns the number of abnormally terminated and respawned child processes.
+      operationId: getProcesses
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxProcesses'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Processes
+      summary: Reset nginx processes statistics
+      description: Resets counters of abnormally terminated and respawned child processes.
+      operationId: deleteProcesses
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxProcesses:
+      title: Processes
+      type: object
+      properties:
+        respawned:
+          type: integer
+          description: The total number of abnormally terminated and respawned child processes.
+      example:
+        respawned: 0
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

@@ -424,14 +424,20 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
-    InternalServerError:
-      description: An unexpected error occurred on the BIG-IP system while processing the request.
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
     Conflict:
       description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
         application/json:
           schema:
@@ -448,212 +454,7 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-  parameters:
-    PoolNameParam:
-      name: poolName
-      in: path
-      required: true
-      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
-      schema:
-        type: string
-      example: my_pool
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
-    ExpandSubcollectionsParam:
-      name: expandSubcollections
-      in: query
-      required: false
-      description: When set to true, expands all subcollections inline within the response.
-      schema:
-        type: string
-        enum:
-        - 'true'
-        - 'false'
-      example: 'true'
-    TopParam:
-      name: $top
-      in: query
-      required: false
-      description: Maximum number of resources to return.
-      schema:
-        type: integer
-        minimum: 1
-      example: 10
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
-    SkipParam:
-      name: $skip
-      in: query
-      required: false
-      description: Number of resources to skip before returning results.
-      schema:
-        type: integer
-        minimum: 0
-      example: 0
   schemas:
-    PoolCreate:
-      type: object
-      description: Request body for creating a new pool.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Name of the pool.
-          example: my_pool
-        partition:
-          type: string
-          description: Administrative partition.
-          default: Common
-          example: example_value
-        description:
-          type: string
-          example: A sample description.
-        loadBalancingMode:
-          type: string
-          enum:
-          - round-robin
-          - ratio-member
-          - least-connections-member
-          - observed-member
-          - predictive-member
-          - ratio-node
-          - least-connections-node
-          - fastest-node
-          - observed-node
-          - predictive-node
-          - dynamic-ratio-node
-          - fastest-app-response
-          - least-sessions
-          - dynamic-ratio-member
-          default: round-robin
-          example: round-robin
-        monitor:
-          type: string
-          example: /Common/http
-        members:
-          type: array
-          description: Initial pool members to add during creation.
-          items:
-            type: object
-            required:
-            - name
-            properties:
-              name:
-                type: string
-                description: Member name in address:port format.
-                example: 10.0.0.1:80
-              address:
-                type: string
-              description:
-                type: string
-              ratio:
-                type: integer
-              priorityGroup:
-                type: integer
-              connectionLimit:
-                type: integer
-              monitor:
-                type: string
-          example: []
-        serviceDownAction:
-          type: string
-          enum:
-          - none
-          - reset
-          - reselect
-          - drop
-          example: none
-        slowRampTime:
-          type: integer
-          minimum: 0
-          example: 10
-        allowNat:
-          type: string
-          enum:
-          - 'yes'
-          - 'no'
-          example: 'yes'
-        allowSnat:
-          type: string
-          enum:
-          - 'yes'
-          - 'no'
-          example: 'yes'
-    PoolUpdate:
-      type: object
-      description: Request body for updating a pool.
-      properties:
-        description:
-          type: string
-          example: A sample description.
-        loadBalancingMode:
-          type: string
-          enum:
-          - round-robin
-          - ratio-member
-          - least-connections-member
-          - observed-member
-          - predictive-member
-          - ratio-node
-          - least-connections-node
-          - fastest-node
-          - observed-node
-          - predictive-node
-          - dynamic-ratio-node
-          - fastest-app-response
-          - least-sessions
-          - dynamic-ratio-member
-          example: round-robin
-        monitor:
-          type: string
-          example: example_value
-        serviceDownAction:
-          type: string
-          enum:
-          - none
-          - reset
-          - reselect
-          - drop
-          example: none
-        slowRampTime:
-          type: integer
-          minimum: 0
-          example: 10
-        minActiveMembers:
-          type: integer
-          minimum: 0
-          example: 10
-        allowNat:
-          type: string
-          enum:
-          - 'yes'
-          - 'no'
-          example: 'yes'
-        allowSnat:
-          type: string
-          enum:
-          - 'yes'
-          - 'no'
-          example: 'yes'
     Pool:
       type: object
       description: A pool resource that contains a group of backend server members used for load balancing traffic from virtual servers.
@@ -847,6 +648,151 @@ components:
               type: boolean
           readOnly: true
           example: example_value
+    PoolCreate:
+      type: object
+      description: Request body for creating a new pool.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Name of the pool.
+          example: my_pool
+        partition:
+          type: string
+          description: Administrative partition.
+          default: Common
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        loadBalancingMode:
+          type: string
+          enum:
+          - round-robin
+          - ratio-member
+          - least-connections-member
+          - observed-member
+          - predictive-member
+          - ratio-node
+          - least-connections-node
+          - fastest-node
+          - observed-node
+          - predictive-node
+          - dynamic-ratio-node
+          - fastest-app-response
+          - least-sessions
+          - dynamic-ratio-member
+          default: round-robin
+          example: round-robin
+        monitor:
+          type: string
+          example: /Common/http
+        members:
+          type: array
+          description: Initial pool members to add during creation.
+          items:
+            type: object
+            required:
+            - name
+            properties:
+              name:
+                type: string
+                description: Member name in address:port format.
+                example: 10.0.0.1:80
+              address:
+                type: string
+              description:
+                type: string
+              ratio:
+                type: integer
+              priorityGroup:
+                type: integer
+              connectionLimit:
+                type: integer
+              monitor:
+                type: string
+          example: []
+        serviceDownAction:
+          type: string
+          enum:
+          - none
+          - reset
+          - reselect
+          - drop
+          example: none
+        slowRampTime:
+          type: integer
+          minimum: 0
+          example: 10
+        allowNat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+        allowSnat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+    PoolUpdate:
+      type: object
+      description: Request body for updating a pool.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        loadBalancingMode:
+          type: string
+          enum:
+          - round-robin
+          - ratio-member
+          - least-connections-member
+          - observed-member
+          - predictive-member
+          - ratio-node
+          - least-connections-node
+          - fastest-node
+          - observed-node
+          - predictive-node
+          - dynamic-ratio-node
+          - fastest-app-response
+          - least-sessions
+          - dynamic-ratio-member
+          example: round-robin
+        monitor:
+          type: string
+          example: example_value
+        serviceDownAction:
+          type: string
+          enum:
+          - none
+          - reset
+          - reselect
+          - drop
+          example: none
+        slowRampTime:
+          type: integer
+          minimum: 0
+          example: 10
+        minActiveMembers:
+          type: integer
+          minimum: 0
+          example: 10
+        allowNat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
+        allowSnat:
+          type: string
+          enum:
+          - 'yes'
+          - 'no'
+          example: 'yes'
     ErrorResponse:
       type: object
       description: Standard error response from the iControl REST API.
@@ -869,6 +815,60 @@ components:
           type: integer
           description: API-specific error code.
           example: 10
+  parameters:
+    ExpandSubcollectionsParam:
+      name: expandSubcollections
+      in: query
+      required: false
+      description: When set to true, expands all subcollections inline within the response.
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+      example: 'true'
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    PoolNameParam:
+      name: poolName
+      in: path
+      required: true
+      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
+      schema:
+        type: string
+      example: my_pool
   securitySchemes:
     basicAuth:
       type: http

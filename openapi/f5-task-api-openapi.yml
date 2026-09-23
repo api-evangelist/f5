@@ -1,0 +1,308 @@
+openapi: 3.2.0
+info:
+  title: F5 Task API
+  version: '1.0'
+  description: 'Operations tagged Task across 2 of this provider''s published API definitions: f5-big-ip-as3-openapi.yml, f5-big-ip-declarative-onboarding-openapi.yml. Each path carries the servers of the definition it was published in.'
+servers:
+- url: /mgmt/shared/appsvcs
+- url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+tags:
+- name: Task
+paths:
+  /task:
+    get:
+      tags:
+      - Task
+      summary: A collection of asynchronous tasks
+      description: If you used the ?async=true query parameter to send a large declaration, you can use a GET request to the /task endpoint with the **recordId** returned by the POST to see the status of the processing (and the results if it is finished). Old task records are removed if the record is older than one week or more than 25 records exist.
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: A unique identifier for the task
+                  results:
+                    type: array
+                    description: The results of the asynchronous task per-tenant
+                    items:
+                      oneOf:
+                      - $ref: '#/components/schemas/result'
+                      - $ref: '#/components/schemas/declaration'
+                      - $ref: '#/components/schemas/error'
+                  declaration:
+                    oneOf:
+                    - $ref: '#/components/schemas/declaration'
+                    - type: object
+                      enum:
+                      - {}
+              examples:
+                task results from a successful POST request:
+                  $ref: '#/components/examples/declarationTenantTaskResponse'
+                task results from an invalid POST request:
+                  value:
+                    id: d1d2137e-d6e6-4ee6-b20f-e9a738d3ce1c
+                    results:
+                    - code: 422
+                      errors:
+                      - '/foo/bar/bar_Pool1/members/0: should have required property ''bigip'''
+                      declarationFullId: ''
+                      message: declaration is invalid
+                    declaration: {}
+        404:
+          description: No record exists for the given recordId
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: No record found with ID of d1d2137e-d6e6-4ee6-b20f-e9a738d3ce1d
+        500:
+          $ref: '#/components/responses/500'
+      operationId: getTask
+      x-operation-id-source: derived
+    servers:
+    - url: /mgmt/shared/appsvcs
+  /task/{taskId}:
+    get:
+      summary: Return status of configuration by task ID
+      description: Retrieve the status of a previously deployed configuration by task ID.
+      operationId: getTask
+      tags:
+      - Task
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        description: The task ID.
+        schema:
+          type: string
+          format: uuid
+      responses:
+        200:
+          description: Retrieval was successful.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/task'
+              examples:
+                success:
+                  value:
+                    $ref: '#/components/examples/task'
+                failure:
+                  value:
+                    $ref: '#/components/examples/errorConfig'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+    servers:
+    - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
+components:
+  schemas:
+    result:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: HTTP status code describing the outcome of applying the tenant's configuration. This will be 0 until the tenant is done being processed.
+          enum:
+          - 0
+          - 200
+          - 202
+          - 422
+          - 500
+        message:
+          type: string
+          description: The current status of the task to configure the tenant.
+        lineCount:
+          type: integer
+          description: The number of lines in the tenant's configuration.
+        host:
+          type: string
+          description: The host name that the tenant was deployed on.
+        tenant:
+          type: string
+          description: The tenant that was configured.
+        runTime:
+          type: integer
+          description: The time (in milliseconds) it took to process the tenant.
+    declaration:
+      type: object
+      externalDocs:
+        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
+        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
+    error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Code representing the error
+        message:
+          type: string
+          description: Additional information about the error
+        errors:
+          type: array
+          description: Details about schema validation failures
+          items:
+            type: string
+        declarationFullId:
+          type: string
+          description: The id of the declaration
+    configObject:
+      title: Config Object
+      type: object
+      properties:
+        Common:
+          type: object
+          description: A collection of sub-objects that describe the configuration state of a device.
+          additionalProperties: true
+    result_2:
+      title: Result
+      description: Standard result object in responses.
+      type: object
+      properties:
+        class:
+          type: string
+          enum:
+          - Result
+        code:
+          description: Status code.
+          type: integer
+        status:
+          description: Status string.
+          type: string
+          enum:
+          - OK
+          - ERROR
+          - ROLLING_BACK
+          - RUNNING
+          - REBOOTING
+          - REVOKING
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+    task:
+      title: Task
+      description: The configuration status and associated declaration.
+      type: object
+      properties:
+        id:
+          description: Unique ID for task.
+          type: string
+          format: uuid
+        selfLink:
+          description: URI at which to fetch task on the device.
+          type: string
+          format: uri
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+        result:
+          $ref: '#/components/schemas/result_2'
+        declaration:
+          $ref: '#/components/schemas/device'
+        currentConfig:
+          $ref: '#/components/schemas/configObject'
+        originalConfig:
+          $ref: '#/components/schemas/configObject'
+    device:
+      $ref: base.schema.json
+  examples:
+    declarationTenantTaskResponse:
+      value:
+        id: c8b8be98-1a55-443e-acd2-ec4b09fb2fc3
+        results:
+        - code: 200
+          message: success
+          lineCount: 25
+          host: localhost
+          tenant: tenant
+          runTime: 1263
+        declaration:
+          class: ADC
+          schemaVersion: 3.0.0
+          tenant:
+            class: Tenant
+            application:
+              class: Application
+              service:
+                class: Service_HTTP
+                virtualAddresses:
+                - 192.0.2.0
+                pool: pool
+              pool:
+                class: Pool
+                members:
+                - servicePort: 80
+                  serverAddresses:
+                  - 192.0.2.1
+                  - 192.0.2.2
+            id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
+    errorConfig:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      code: 422
+      status: ERROR
+      message: 'Error licensing: Invalid reg key'
+      errors:
+      - Invalid reg key
+      result:
+        class: Result
+        code: 422
+        status: ERROR
+        dryRun: false
+        message: 'Error licensing: Invalid reg key'
+        errors:
+        - Invalid reg key
+        declaration:
+          class: Device
+          schemaVersion: 1.0.0
+          async: true
+          Common:
+            class: Tenant
+            myLicense:
+              class: License
+              licenseType: regKey
+              regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+    task:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      result:
+        class: Result
+        code: 200
+        status: OK
+        message: success
+      declaration:
+        class: Device
+        schemaVersion: 1.0.0
+        async: true
+        Common:
+          class: Tenant
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+externalDocs:
+  description: Full AS3 documentation
+  url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/
+x-refined-from:
+- f5-big-ip-as3-openapi.yml
+- f5-big-ip-declarative-onboarding-openapi.yml

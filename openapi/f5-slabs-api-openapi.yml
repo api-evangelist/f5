@@ -1,0 +1,273 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Slabs API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Slabs
+paths:
+  /slabs/:
+    get:
+      tags:
+      - Slabs
+      summary: Return status of all slabs
+      description: Returns status of slabs for each shared memory zone with slab allocator.
+      operationId: getSlabs
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of slab zones will be output. If the “<literal>fields</literal>” value is empty, then only zone names will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxSlabZoneMap'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /slabs/{slabZoneName}:
+    parameters:
+    - name: slabZoneName
+      in: path
+      description: The name of the shared memory zone with slab allocator.
+      required: true
+      schema:
+        type: string
+    get:
+      tags:
+      - Slabs
+      summary: Return status of a slab
+      description: Returns status of slabs for a particular shared memory zone with slab allocator.
+      operationId: getSlabZone
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of the slab zone will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxSlabZone'
+        '404':
+          description: 'Slab not found (*SlabNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+    delete:
+      tags:
+      - Slabs
+      summary: Reset slab statistics
+      description: Resets the “reqs” and “fails” metrics for each memory slot.
+      operationId: deleteSlabZoneStats
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: 'Slab not found (*SlabNotFound*),
+
+            unknown version (*UnknownVersion*)
+
+            '
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxSlabZoneSlot:
+      title: Memory Slot
+      type: object
+      properties:
+        used:
+          type: integer
+          description: The current number of used memory slots.
+        free:
+          type: integer
+          description: The current number of free memory slots.
+        reqs:
+          type: integer
+          description: The total number of attempts to allocate memory of specified size.
+        fails:
+          type: integer
+          description: The number of unsuccessful attempts to allocate memory of specified size.
+    NginxSlabZone:
+      title: Shared memory zone with slab allocator
+      description: 'Shared memory zone with slab allocator
+
+        '
+      type: object
+      properties:
+        pages:
+          type: object
+          description: The number of free and used memory pages.
+          properties:
+            used:
+              type: integer
+              description: The current number of used memory pages.
+            free:
+              type: integer
+              description: The current number of free memory pages.
+        slots:
+          type: object
+          title: Memory Slots
+          description: Status data for memory slots (8, 16, 32, 64, 128, etc.)
+          additionalProperties:
+            $ref: '#/components/schemas/NginxSlabZoneSlot'
+      example:
+        pages:
+          used: 1143
+          free: 2928
+        slots:
+          8:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          16:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          32:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          64:
+            used: 1
+            free: 63
+            reqs: 1
+            fails: 0
+          128:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          256:
+            used: 18078
+            free: 178
+            reqs: 1635736
+            fails: 0
+    NginxSlabZoneMap:
+      title: Slab Zones
+      description: 'Status zones that use slab allocator.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxSlabZone'
+      example:
+        http_cache:
+          pages:
+            used: 2
+            free: 2452
+          slots:
+            8:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            16:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            32:
+              used: 1
+              free: 126
+              reqs: 1
+              fails: 0
+            64:
+              used: 2
+              free: 62
+              reqs: 2
+              fails: 0
+            128:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+        dns-backends:
+          pages:
+            used: 1143
+            free: 2928
+          slots:
+            8:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            16:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            32:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            64:
+              used: 1
+              free: 63
+              reqs: 1
+              fails: 0
+            128:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            256:
+              used: 18078
+              free: 178
+              reqs: 1635736
+              fails: 0
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

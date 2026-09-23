@@ -1,0 +1,134 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST General Info API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: General Info
+paths:
+  /:
+    get:
+      tags:
+      - General Info
+      summary: Return list of root endpoints
+      description: Returns a list of root endpoints.
+      operationId: getAPIEndpoints
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayOfStrings'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+  /nginx:
+    get:
+      tags:
+      - General Info
+      summary: Return status of nginx running instance
+      description: Returns nginx version, build name, address, number of configuration reloads, IDs of master and worker processes.
+      operationId: getNginx
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of nginx running instance will be output.
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxObject'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxObject:
+      title: nginx
+      description: 'General information about nginx:
+
+        '
+      type: object
+      properties:
+        version:
+          type: string
+          description: Version of nginx.
+        build:
+          type: string
+          description: Name of nginx build.
+        address:
+          type: string
+          description: The address of the server that accepted status request.
+        generation:
+          type: integer
+          description: The total number of configuration <a href="https://nginx.org/en/docs/control.html#reconfiguration">reloads</a>.
+        load_timestamp:
+          type: string
+          format: date-time
+          description: Time of the last reload of configuration, in the ISO 8601 format with millisecond resolution.
+        timestamp:
+          type: string
+          format: date-time
+          description: Current time in the ISO 8601 format with millisecond resolution.
+        pid:
+          type: integer
+          description: The ID of the worker process that handled status request.
+        ppid:
+          type: integer
+          description: The ID of the master process that started the <a href="https://nginx.org/en/docs/http/ngx_http_status_module.html#pid">worker process</a>.
+      example:
+        nginx:
+          version: 1.21.6
+          build: nginx-plus-r27
+          address: 206.251.255.64
+          generation: 6
+          load_timestamp: 2022-06-28 11:15:44.467000+00:00
+          timestamp: 2022-06-28 09:26:07.305000+00:00
+          pid: 32212
+          ppid: 32210
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    ArrayOfStrings:
+      title: Array
+      description: 'An array of strings.
+
+        '
+      type: array
+      items:
+        type: string

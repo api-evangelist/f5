@@ -1,0 +1,108 @@
+openapi: 3.2.0
+info:
+  version: '9.0'
+  title: NGINX Plus REST Connections API
+  description: NGINX Plus REST API provides access to NGINX Plus status information, on-the-fly configuration of upstream servers and key-value pairs management for http and stream.
+servers:
+- url: /api/9
+tags:
+- name: Connections
+paths:
+  /connections:
+    get:
+      tags:
+      - Connections
+      summary: Return client connections statistics
+      description: Returns statistics of client connections.
+      operationId: getConnections
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxConnections'
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+      parameters:
+      - in: query
+        name: fields
+        description: Limits which fields of the connections statistics will be output.
+        schema:
+          type: string
+    delete:
+      tags:
+      - Connections
+      summary: Reset client connections statistics
+      description: Resets statistics of accepted and dropped client connections.
+      operationId: deleteConnections
+      responses:
+        '204':
+          description: Success
+        '404':
+          description: Unknown version (*UnknownVersion*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+        '405':
+          description: Method disabled (*MethodDisabled*)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NginxError'
+components:
+  schemas:
+    NginxConnections:
+      title: Connections
+      description: 'The number of accepted, dropped, active, and idle connections.
+
+        '
+      type: object
+      properties:
+        accepted:
+          type: integer
+          description: The total number of accepted client connections.
+        dropped:
+          type: integer
+          description: The total number of dropped client connections.
+        active:
+          type: integer
+          description: The current number of active client connections.
+        idle:
+          type: integer
+          description: The current number of idle client connections.
+      example:
+        accepted: 4968119
+        dropped: 0
+        active: 5
+        idle: 117
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

@@ -1,0 +1,264 @@
+openapi: 3.2.0
+info:
+  version: 1.26.0
+  title: F5 BIG-IP Application Services Templates Task Tracking API
+  license:
+    name: Apache 2.0
+  description: '# F5 BIG-IP Application Services Templates (FAST)
+
+
+    This is the documentation for the FAST templating extension.'
+servers:
+- url: http://localhost:8100/mgmt/shared/fast
+tags:
+- name: Task Tracking
+paths:
+  /tasks:
+    get:
+      summary: Get Tasks
+      description: List all running and completed Tasks.
+      operationId: getFASTTasks
+      tags:
+      - Task Tracking
+      responses:
+        '200':
+          description: An array of Tasks and their status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskList'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+  /tasks/{taskId}:
+    parameters:
+    - name: taskId
+      in: path
+      required: true
+      description: The ID of the Task to retrieve.
+      schema:
+        $ref: '#/components/schemas/uuid'
+      example: 86657e15-439d-4cef-97bc-58a6c119976b
+    get:
+      summary: Get information about a specific Task
+      description: Get detailed information about a specific Task. Tasks are tracked on a best effort basis, an interruption in service to the iControl LX platform may result in lost results.
+      operationId: getFASTTaskById
+      tags:
+      - Task Tracking
+      responses:
+        '200':
+          description: The specified Task and its status.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: The Task ID was not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse404'
+        '500':
+          description: Internal error. A bug report should be filed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FastResponse500'
+components:
+  schemas:
+    uuid:
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      minLength: 36
+      maxLength: 36
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    TaskList:
+      description: Task List.
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+      example:
+      - id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 200
+        message: success
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 301ee9ed-e73e-4108-a9a2-3104509d7880
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 0
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 7908d0b0-c4cc-41ed-a7e0-9d2d376a3c7b
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 202
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 21697cbe-56b9-4d50-bd54-fd84f8c056de
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 422
+        message: declaration is invalid
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+    FastResponse404:
+      title: Response 404
+      type: object
+      description: Not Found
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 404
+        message:
+          type: string
+          example: resource not found
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    Task:
+      type: object
+      description: Task.
+      required:
+      - id
+      - name
+      - parameters
+      - code
+      - message
+      - tenant
+      - application
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        id:
+          description: The Task ID of this Task
+          type: string
+          example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+        name:
+          description: Name must be valid Template in the system
+          type: string
+          example: examples/simple_udp_defaults
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        code:
+          description: The current status code of the Task
+          type: integer
+          minimum: 200
+          maximum: 599
+          example: 200
+        message:
+          description: Any messages (such as "success" or "in progress") for the Task
+          type: string
+          example: success
+        errors:
+          description: A list of errors reported back by AS3 for the given task
+          type: array
+        tenant:
+          description: Tenant associated with the Task
+          type: string
+          example: tenant
+        application:
+          description: Application associated with the Task
+          type: string
+          example: app
+        timestamp:
+          description: timestamp of when the job was submitted (or updated for in progress jobs)
+          type: string
+          format: date-time
+      example:
+        id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 200
+        message: success
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
