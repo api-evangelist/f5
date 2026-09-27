@@ -98,76 +98,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxHTTPLocationZonesMap:
-      title: HTTP Location Zones
-      description: 'Status data for all HTTP
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_api_module.html#status_zone">location zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxHTTPLocationZone'
-      example:
-        site1:
-          requests: 736395
-          responses:
-            1xx: 0
-            2xx: 727290
-            3xx: 4614
-            4xx: 934
-            5xx: 1535
-            codes:
-              200: 727290
-              301: 4614
-              404: 934
-              503: 1535
-            total: 734373
-          discarded: 2020
-          received: 180157219
-          sent: 20183175459
-        site2:
-          requests: 185307
-          responses:
-            1xx: 0
-            2xx: 112674
-            3xx: 45383
-            4xx: 2504
-            5xx: 4419
-            codes:
-              200: 112674
-              301: 45383
-              404: 2504
-              503: 4419
-            total: 164980
-          discarded: 20326
-          received: 51575327
-          sent: 2983241510
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
     NginxHTTPLocationZone:
       title: HTTP Location Zone
       type: object
@@ -239,3 +169,73 @@ components:
         discarded: 1513
         received: 172711587
         sent: 19415530115
+    NginxHTTPLocationZonesMap:
+      title: HTTP Location Zones
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_api_module.html#status_zone">location zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPLocationZone'
+      example:
+        site1:
+          requests: 736395
+          responses:
+            1xx: 0
+            2xx: 727290
+            3xx: 4614
+            4xx: 934
+            5xx: 1535
+            codes:
+              200: 727290
+              301: 4614
+              404: 934
+              503: 1535
+            total: 734373
+          discarded: 2020
+          received: 180157219
+          sent: 20183175459
+        site2:
+          requests: 185307
+          responses:
+            1xx: 0
+            2xx: 112674
+            3xx: 45383
+            4xx: 2504
+            5xx: 4419
+            codes:
+              200: 112674
+              301: 45383
+              404: 2504
+              503: 4419
+            total: 164980
+          discarded: 20326
+          received: 51575327
+          sent: 2983241510
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

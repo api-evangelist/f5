@@ -531,12 +531,6 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     Conflict:
       description: The resource already exists or conflicts with an existing configuration.
       content:
@@ -561,36 +555,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    ExpandSubcollectionsParam:
-      name: expandSubcollections
-      in: query
-      required: false
-      description: When set to true, expands all subcollections inline within the response.
-      schema:
-        type: string
-        enum:
-        - 'true'
-        - 'false'
-      example: 'true'
-    SkipParam:
-      name: $skip
-      in: query
-      required: false
-      description: Number of resources to skip before returning results.
-      schema:
-        type: integer
-        minimum: 0
-      example: 0
-    TopParam:
-      name: $top
-      in: query
-      required: false
-      description: Maximum number of resources to return.
-      schema:
-        type: integer
-        minimum: 1
-      example: 10
     VirtualNameParam:
       name: virtualName
       in: path
@@ -615,29 +586,36 @@ components:
       schema:
         type: string
       example: partition eq Common
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    ExpandSubcollectionsParam:
+      name: expandSubcollections
+      in: query
+      required: false
+      description: When set to true, expands all subcollections inline within the response.
+      schema:
+        type: string
+        enum:
+        - 'true'
+        - 'false'
+      example: 'true'
   schemas:
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     VirtualServerUpdate:
       type: object
       description: Request body for updating a virtual server.
@@ -1099,6 +1077,28 @@ components:
         vlansDisabled:
           type: boolean
           example: true
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
   securitySchemes:
     basicAuth:
       type: http

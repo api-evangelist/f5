@@ -98,33 +98,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxHTTPLimitConnZonesMap:
-      title: HTTP limit_conns
-      description: 'Status data for all HTTP
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone">limit_conn zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxHTTPLimitConnZone'
-    NginxHTTPLimitConnZone:
-      title: HTTP Connections Limiting
-      type: object
-      properties:
-        passed:
-          type: integer
-          description: The total number of connections that were neither limited nor accounted as limited.
-        rejected:
-          type: integer
-          description: The total number of connections that were rejected.
-        rejected_dry_run:
-          type: integer
-          description: The total number of connections accounted as rejected in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_dry_run">dry run</a> mode.
-      example:
-        passed: 15
-        rejected: 0
-        rejected_dry_run: 2
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -150,3 +123,30 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxHTTPLimitConnZone:
+      title: HTTP Connections Limiting
+      type: object
+      properties:
+        passed:
+          type: integer
+          description: The total number of connections that were neither limited nor accounted as limited.
+        rejected:
+          type: integer
+          description: The total number of connections that were rejected.
+        rejected_dry_run:
+          type: integer
+          description: The total number of connections accounted as rejected in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_dry_run">dry run</a> mode.
+      example:
+        passed: 15
+        rejected: 0
+        rejected_dry_run: 2
+    NginxHTTPLimitConnZonesMap:
+      title: HTTP limit_conns
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone">limit_conn zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPLimitConnZone'

@@ -98,6 +98,31 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
     NginxHTTPCache:
       title: HTTP Cache
       type: object
@@ -221,31 +246,6 @@ components:
           bytes: 5510647548
           responses_written: 200173
           bytes_written: 44992
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
     NginxHTTPCachesMap:
       title: HTTP Caches
       description: "Status information of all HTTP caches configured by \n<a href=\"https://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_path\">proxy_cache_path</a>\nand other “<code>*_cache_path</code>” directives.\n"

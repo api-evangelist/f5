@@ -63,6 +63,8 @@ paths:
           $ref: '#/components/responses/500'
 components:
   schemas:
+    device:
+      $ref: base.schema.json
     result:
       title: Result
       description: Standard result object in responses.
@@ -115,5 +117,3 @@ components:
               - DO
             declaration:
               $ref: '#/components/schemas/device'
-    device:
-      $ref: base.schema.json

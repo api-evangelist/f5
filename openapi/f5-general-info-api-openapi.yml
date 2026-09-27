@@ -56,6 +56,31 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
     NginxObject:
       title: nginx
       description: 'General information about nginx:
@@ -99,31 +124,6 @@ components:
           timestamp: 2022-06-28 09:26:07.305000+00:00
           pid: 32212
           ppid: 32210
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
     ArrayOfStrings:
       title: Array
       description: 'An array of strings.

@@ -234,18 +234,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxHTTPKeyvalZone:
-      title: HTTP Keyval Shared Memory Zone
-      description: 'Contents of an HTTP keyval shared memory zone
-
-        when using the GET method.
-
-        '
-      type: object
-      example:
-        key1: value1
-        key2: value2
-        key3: value3
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -271,6 +259,20 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxHTTPKeyvalZonePostPatch:
+      title: HTTP Keyval Shared Memory Zone
+      description: 'Contents of an HTTP keyval shared memory zone
+
+        when using the POST or PATCH methods.
+
+        '
+      type: object
+      example:
+        key1: value1
+        key2: value2
+        key3:
+          value: value3
+          expire: 30000
     NginxHTTPKeyvalZonesMap:
       title: HTTP Keyval Shared Memory Zones
       description: 'Contents of all HTTP keyval shared memory zones.
@@ -288,17 +290,15 @@ components:
           arg1: value1
           arg2: value2
           arg3: value3
-    NginxHTTPKeyvalZonePostPatch:
+    NginxHTTPKeyvalZone:
       title: HTTP Keyval Shared Memory Zone
       description: 'Contents of an HTTP keyval shared memory zone
 
-        when using the POST or PATCH methods.
+        when using the GET method.
 
         '
       type: object
       example:
         key1: value1
         key2: value2
-        key3:
-          value: value3
-          expire: 30000
+        key3: value3

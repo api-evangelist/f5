@@ -527,12 +527,6 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
     InternalServerError:
       description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
@@ -541,6 +535,12 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     Unauthorized:
       description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
       content:
         application/json:
           schema:
@@ -833,154 +833,6 @@ components:
           items:
             type: string
           example: []
-    ClientSslProfile:
-      type: object
-      description: A Client SSL profile for managing SSL/TLS connections between clients and the BIG-IP system.
-      properties:
-        kind:
-          type: string
-          example: tm:ltm:profile:client-ssl:client-sslstate
-          readOnly: true
-        name:
-          type: string
-          example: clientssl
-        fullPath:
-          type: string
-          readOnly: true
-          example: example_value
-        generation:
-          type: integer
-          readOnly: true
-          example: 10
-        selfLink:
-          type: string
-          format: uri
-          readOnly: true
-          example: https://www.example.com
-        alertTimeout:
-          type: string
-          description: Alert timeout for SSL handshake.
-          example: example_value
-        allowNonSsl:
-          type: string
-          description: Whether to allow non-SSL connections.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        cert:
-          type: string
-          description: Path to the SSL certificate file.
-          example: /Common/default.crt
-        certKeyChain:
-          type: array
-          description: Certificate and key chain pairs.
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              cert:
-                type: string
-              key:
-                type: string
-              chain:
-                type: string
-          example: []
-        ciphers:
-          type: string
-          description: Cipher suite string.
-          example: DEFAULT
-        defaultsFrom:
-          type: string
-          description: Parent profile.
-          example: /Common/clientssl
-        description:
-          type: string
-          example: A sample description.
-        key:
-          type: string
-          description: Path to the SSL private key file.
-          example: /Common/default.key
-        options:
-          type: array
-          description: SSL options.
-          items:
-            type: string
-          example: []
-        peerCertMode:
-          type: string
-          description: Client certificate verification mode.
-          enum:
-          - ignore
-          - require
-          - request
-          example: ignore
-        renegotiation:
-          type: string
-          description: Whether SSL renegotiation is allowed.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        secureRenegotiation:
-          type: string
-          description: Secure renegotiation mode.
-          enum:
-          - require
-          - require-strict
-          - request
-          example: require
-        sniDefault:
-          type: string
-          description: Whether this is the default SNI profile.
-          enum:
-          - 'true'
-          - 'false'
-          example: 'true'
-        sniRequire:
-          type: string
-          description: Whether SNI is required.
-          enum:
-          - 'true'
-          - 'false'
-          example: 'true'
-        sslForwardProxy:
-          type: string
-          description: Whether SSL forward proxy is enabled.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        uncleanShutdown:
-          type: string
-          description: How to handle unclean SSL shutdowns.
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     TcpProfile:
       type: object
       description: A TCP profile that defines how the BIG-IP processes TCP traffic, including connection settings, timeouts, and optimization.
@@ -1113,15 +965,155 @@ components:
           type: integer
           description: Timeout in milliseconds for TIME-WAIT state.
           example: 10
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
+    ClientSslProfile:
+      type: object
+      description: A Client SSL profile for managing SSL/TLS connections between clients and the BIG-IP system.
+      properties:
+        kind:
+          type: string
+          example: tm:ltm:profile:client-ssl:client-sslstate
+          readOnly: true
+        name:
+          type: string
+          example: clientssl
+        fullPath:
+          type: string
+          readOnly: true
+          example: example_value
+        generation:
+          type: integer
+          readOnly: true
+          example: 10
+        selfLink:
+          type: string
+          format: uri
+          readOnly: true
+          example: https://www.example.com
+        alertTimeout:
+          type: string
+          description: Alert timeout for SSL handshake.
+          example: example_value
+        allowNonSsl:
+          type: string
+          description: Whether to allow non-SSL connections.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        cert:
+          type: string
+          description: Path to the SSL certificate file.
+          example: /Common/default.crt
+        certKeyChain:
+          type: array
+          description: Certificate and key chain pairs.
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              cert:
+                type: string
+              key:
+                type: string
+              chain:
+                type: string
+          example: []
+        ciphers:
+          type: string
+          description: Cipher suite string.
+          example: DEFAULT
+        defaultsFrom:
+          type: string
+          description: Parent profile.
+          example: /Common/clientssl
+        description:
+          type: string
+          example: A sample description.
+        key:
+          type: string
+          description: Path to the SSL private key file.
+          example: /Common/default.key
+        options:
+          type: array
+          description: SSL options.
+          items:
+            type: string
+          example: []
+        peerCertMode:
+          type: string
+          description: Client certificate verification mode.
+          enum:
+          - ignore
+          - require
+          - request
+          example: ignore
+        renegotiation:
+          type: string
+          description: Whether SSL renegotiation is allowed.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        secureRenegotiation:
+          type: string
+          description: Secure renegotiation mode.
+          enum:
+          - require
+          - require-strict
+          - request
+          example: require
+        sniDefault:
+          type: string
+          description: Whether this is the default SNI profile.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sniRequire:
+          type: string
+          description: Whether SNI is required.
+          enum:
+          - 'true'
+          - 'false'
+          example: 'true'
+        sslForwardProxy:
+          type: string
+          description: Whether SSL forward proxy is enabled.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        uncleanShutdown:
+          type: string
+          description: How to handle unclean SSL shutdowns.
+          enum:
+          - enabled
+          - disabled
+          example: enabled
   parameters:
-    ProfileNameParam:
-      name: profileName
-      in: path
-      required: true
-      description: Name of the profile resource.
-      schema:
-        type: string
-      example: my_http_profile
     SelectParam:
       name: $select
       in: query
@@ -1130,6 +1122,14 @@ components:
       schema:
         type: string
       example: name,destination,pool
+    ProfileNameParam:
+      name: profileName
+      in: path
+      required: true
+      description: Name of the profile resource.
+      schema:
+        type: string
+      example: my_http_profile
     FilterParam:
       name: $filter
       in: query

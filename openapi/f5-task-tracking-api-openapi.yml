@@ -69,95 +69,6 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
-    uuid:
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-      minLength: 36
-      maxLength: 36
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
-    FastResponse500:
-      title: Response 500
-      type: object
-      description: Internal error. A bug report should be filed.
-      required:
-      - code
-      - message
-      - errors
-      properties:
-        code:
-          enum:
-          - 500
-        message:
-          type: string
-          example: internal server error
-        error:
-          $ref: '#/components/schemas/ErrorsArray'
-        requestId:
-          type: integer
-          example: 3
-          minimum: 1
-          maximum: 4294967295
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
-    TaskList:
-      description: Task List.
-      type: array
-      items:
-        $ref: '#/components/schemas/Task'
-      example:
-      - id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 200
-        message: success
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 301ee9ed-e73e-4108-a9a2-3104509d7880
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 0
-        message: in progress
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 7908d0b0-c4cc-41ed-a7e0-9d2d376a3c7b
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 202
-        message: in progress
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 21697cbe-56b9-4d50-bd54-fd84f8c056de
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 422
-        message: declaration is invalid
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
     FastResponse404:
       title: Response 404
       type: object
@@ -182,6 +93,11 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
+    uuid:
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      minLength: 36
+      maxLength: 36
     Task:
       type: object
       description: Task.
@@ -242,6 +158,44 @@ components:
         timestamp: '2019-08-24T14:15:22Z'
         _links:
           self: /mgmt/shared/fast/tasks
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
     LinksDefinition:
       type: object
       title: Links Definition
@@ -262,3 +216,49 @@ components:
         tenant: foo
         application: bar
         virtualAddress: 192.0.2.11
+    TaskList:
+      description: Task List.
+      type: array
+      items:
+        $ref: '#/components/schemas/Task'
+      example:
+      - id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 200
+        message: success
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 301ee9ed-e73e-4108-a9a2-3104509d7880
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 0
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 7908d0b0-c4cc-41ed-a7e0-9d2d376a3c7b
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 202
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 21697cbe-56b9-4d50-bd54-fd84f8c056de
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 422
+        message: declaration is invalid
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks

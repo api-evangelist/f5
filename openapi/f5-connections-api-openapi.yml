@@ -57,30 +57,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxConnections:
-      title: Connections
-      description: 'The number of accepted, dropped, active, and idle connections.
-
-        '
-      type: object
-      properties:
-        accepted:
-          type: integer
-          description: The total number of accepted client connections.
-        dropped:
-          type: integer
-          description: The total number of dropped client connections.
-        active:
-          type: integer
-          description: The current number of active client connections.
-        idle:
-          type: integer
-          description: The current number of idle client connections.
-      example:
-        accepted: 4968119
-        dropped: 0
-        active: 5
-        idle: 117
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -106,3 +82,27 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxConnections:
+      title: Connections
+      description: 'The number of accepted, dropped, active, and idle connections.
+
+        '
+      type: object
+      properties:
+        accepted:
+          type: integer
+          description: The total number of accepted client connections.
+        dropped:
+          type: integer
+          description: The total number of dropped client connections.
+        active:
+          type: integer
+          description: The current number of active client connections.
+        idle:
+          type: integer
+          description: The current number of idle client connections.
+      example:
+        accepted: 4968119
+        dropped: 0
+        active: 5
+        idle: 117

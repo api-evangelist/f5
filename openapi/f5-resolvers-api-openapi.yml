@@ -98,6 +98,70 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxResolverZonesMap:
+      title: Resolver Zones
+      description: 'Status data for all
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#resolver_status_zone">resolver zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxResolverZone'
+      example:
+        resolver_zone1:
+          requests:
+            name: 25460
+            srv: 130
+            addr: 2580
+          responses:
+            noerror: 26499
+            formerr: 0
+            servfail: 3
+            nxdomain: 0
+            notimp: 0
+            refused: 0
+            timedout: 243
+            unknown: 478
+        resolver_zone2:
+          requests:
+            name: 325460
+            srv: 1130
+            addr: 12580
+          responses:
+            noerror: 226499
+            formerr: 0
+            servfail: 283
+            nxdomain: 0
+            notimp: 0
+            refused: 0
+            timedout: 743
+            unknown: 1478
     NginxResolverZone:
       title: Resolver Zone
       description: 'Statistics of DNS requests and responses per particular
@@ -174,67 +238,3 @@ components:
             refused: 0
             timedout: 243
             unknown: 478
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
-    NginxResolverZonesMap:
-      title: Resolver Zones
-      description: 'Status data for all
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#resolver_status_zone">resolver zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxResolverZone'
-      example:
-        resolver_zone1:
-          requests:
-            name: 25460
-            srv: 130
-            addr: 2580
-          responses:
-            noerror: 26499
-            formerr: 0
-            servfail: 3
-            nxdomain: 0
-            notimp: 0
-            refused: 0
-            timedout: 243
-            unknown: 478
-        resolver_zone2:
-          requests:
-            name: 325460
-            srv: 1130
-            addr: 12580
-          responses:
-            noerror: 226499
-            formerr: 0
-            servfail: 283
-            nxdomain: 0
-            notimp: 0
-            refused: 0
-            timedout: 743
-            unknown: 1478

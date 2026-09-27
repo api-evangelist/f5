@@ -294,6 +294,18 @@ paths:
       tags:
       - Mgmt
 components:
+  parameters:
+    ObjectName:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'Object name. Use the tilde-partition-tilde-name notation when
+
+        addressing objects in non-Common partitions, e.g. ~Common~http.
+
+        '
   schemas:
     Virtual:
       type: object
@@ -342,18 +354,6 @@ components:
                 type: string
               address:
                 type: string
-  parameters:
-    ObjectName:
-      name: name
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'Object name. Use the tilde-partition-tilde-name notation when
-
-        addressing objects in non-Common partitions, e.g. ~Common~http.
-
-        '
   securitySchemes:
     Basic:
       type: http

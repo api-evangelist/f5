@@ -98,6 +98,106 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxHTTPServerZonesMap:
+      title: HTTP Server Zones
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_api_module.html#status_zone">status zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPServerZone'
+      example:
+        site1:
+          processing: 2
+          requests: 736395
+          responses:
+            1xx: 0
+            2xx: 727290
+            3xx: 4614
+            4xx: 934
+            5xx: 1535
+            codes:
+              200: 727270
+              301: 4614
+              404: 930
+              503: 1535
+            total: 734373
+          discarded: 2020
+          received: 180157219
+          sent: 20183175459
+          ssl:
+            handshakes: 65432
+            handshakes_failed: 421
+            session_reuses: 4645
+            no_common_protocol: 4
+            no_common_cipher: 2
+            handshake_timeout: 0
+            peer_rejected_cert: 0
+            verify_failures:
+              no_cert: 0
+              expired_cert: 2
+              revoked_cert: 1
+              hostname_mismatch: 2
+              other: 1
+        site2:
+          processing: 1
+          requests: 185307
+          responses:
+            1xx: 0
+            2xx: 112674
+            3xx: 45383
+            4xx: 2504
+            5xx: 4419
+            codes:
+              200: 112674
+              301: 45383
+              404: 2504
+              503: 4419
+            total: 164980
+          discarded: 20326
+          received: 51575327
+          sent: 2983241510
+          ssl:
+            handshakes: 104303
+            handshakes_failed: 1421
+            session_reuses: 54645
+            no_common_protocol: 4
+            no_common_cipher: 2
+            handshake_timeout: 0
+            peer_rejected_cert: 0
+            verify_failures:
+              no_cert: 0
+              expired_cert: 2
+              revoked_cert: 1
+              hostname_mismatch: 2
+              other: 1
     NginxHTTPServerZone:
       title: HTTP Server Zone
       type: object
@@ -230,103 +330,3 @@ components:
             expired_cert: 2
             revoked_cert: 1
             other: 1
-    NginxHTTPServerZonesMap:
-      title: HTTP Server Zones
-      description: 'Status data for all HTTP
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_api_module.html#status_zone">status zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxHTTPServerZone'
-      example:
-        site1:
-          processing: 2
-          requests: 736395
-          responses:
-            1xx: 0
-            2xx: 727290
-            3xx: 4614
-            4xx: 934
-            5xx: 1535
-            codes:
-              200: 727270
-              301: 4614
-              404: 930
-              503: 1535
-            total: 734373
-          discarded: 2020
-          received: 180157219
-          sent: 20183175459
-          ssl:
-            handshakes: 65432
-            handshakes_failed: 421
-            session_reuses: 4645
-            no_common_protocol: 4
-            no_common_cipher: 2
-            handshake_timeout: 0
-            peer_rejected_cert: 0
-            verify_failures:
-              no_cert: 0
-              expired_cert: 2
-              revoked_cert: 1
-              hostname_mismatch: 2
-              other: 1
-        site2:
-          processing: 1
-          requests: 185307
-          responses:
-            1xx: 0
-            2xx: 112674
-            3xx: 45383
-            4xx: 2504
-            5xx: 4419
-            codes:
-              200: 112674
-              301: 45383
-              404: 2504
-              503: 4419
-            total: 164980
-          discarded: 20326
-          received: 51575327
-          sent: 2983241510
-          ssl:
-            handshakes: 104303
-            handshakes_failed: 1421
-            session_reuses: 54645
-            no_common_protocol: 4
-            no_common_cipher: 2
-            handshake_timeout: 0
-            peer_rejected_cert: 0
-            verify_failures:
-              no_cert: 0
-              expired_cert: 2
-              revoked_cert: 1
-              hostname_mismatch: 2
-              other: 1
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.

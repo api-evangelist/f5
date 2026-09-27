@@ -98,22 +98,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxSlabZoneSlot:
-      title: Memory Slot
-      type: object
-      properties:
-        used:
-          type: integer
-          description: The current number of used memory slots.
-        free:
-          type: integer
-          description: The current number of free memory slots.
-        reqs:
-          type: integer
-          description: The total number of attempts to allocate memory of specified size.
-        fails:
-          type: integer
-          description: The number of unsuccessful attempts to allocate memory of specified size.
     NginxSlabZone:
       title: Shared memory zone with slab allocator
       description: 'Shared memory zone with slab allocator
@@ -246,6 +230,22 @@ components:
               free: 178
               reqs: 1635736
               fails: 0
+    NginxSlabZoneSlot:
+      title: Memory Slot
+      type: object
+      properties:
+        used:
+          type: integer
+          description: The current number of used memory slots.
+        free:
+          type: integer
+          description: The current number of free memory slots.
+        reqs:
+          type: integer
+          description: The total number of attempts to allocate memory of specified size.
+        fails:
+          type: integer
+          description: The number of unsuccessful attempts to allocate memory of specified size.
     NginxError:
       title: Error
       description: 'nginx error object.

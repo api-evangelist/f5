@@ -98,6 +98,23 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxStreamLimitConnZone:
+      title: Stream Connections Limiting
+      type: object
+      properties:
+        passed:
+          type: integer
+          description: The total number of connections that were neither limited nor accounted as limited.
+        rejected:
+          type: integer
+          description: The total number of connections that were rejected.
+        rejected_dry_run:
+          type: integer
+          description: The total number of connections accounted as rejected in the <a href="https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_dry_run">dry run</a> mode.
+      example:
+        passed: 15
+        rejected: 0
+        rejected_dry_run: 2
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -123,23 +140,6 @@ components:
         href:
           type: string
           description: Link to reference documentation.
-    NginxStreamLimitConnZone:
-      title: Stream Connections Limiting
-      type: object
-      properties:
-        passed:
-          type: integer
-          description: The total number of connections that were neither limited nor accounted as limited.
-        rejected:
-          type: integer
-          description: The total number of connections that were rejected.
-        rejected_dry_run:
-          type: integer
-          description: The total number of connections accounted as rejected in the <a href="https://nginx.org/en/docs/stream/ngx_stream_limit_conn_module.html#limit_conn_dry_run">dry run</a> mode.
-      example:
-        passed: 15
-        rejected: 0
-        rejected_dry_run: 2
     NginxStreamLimitConnZonesMap:
       title: Stream limit_conns
       description: 'Status data for all stream
