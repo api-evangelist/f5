@@ -259,6 +259,18 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxHTTPKeyvalZone:
+      title: HTTP Keyval Shared Memory Zone
+      description: 'Contents of an HTTP keyval shared memory zone
+
+        when using the GET method.
+
+        '
+      type: object
+      example:
+        key1: value1
+        key2: value2
+        key3: value3
     NginxHTTPKeyvalZonePostPatch:
       title: HTTP Keyval Shared Memory Zone
       description: 'Contents of an HTTP keyval shared memory zone
@@ -290,15 +302,3 @@ components:
           arg1: value1
           arg2: value2
           arg3: value3
-    NginxHTTPKeyvalZone:
-      title: HTTP Keyval Shared Memory Zone
-      description: 'Contents of an HTTP keyval shared memory zone
-
-        when using the GET method.
-
-        '
-      type: object
-      example:
-        key1: value1
-        key2: value2
-        key3: value3

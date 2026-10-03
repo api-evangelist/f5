@@ -369,6 +369,12 @@ paths:
         dispatcher: FALLBACK
 components:
   responses:
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
     Conflict:
       description: The resource already exists or conflicts with an existing configuration.
       content:
@@ -383,12 +389,6 @@ components:
             $ref: '#/components/schemas/ErrorResponse'
     Unauthorized:
       description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: The request could not be processed due to invalid syntax or missing required parameters.
       content:
         application/json:
           schema:
@@ -564,28 +564,6 @@ components:
           - down
           - unchecked
           example: up
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
     PoolMemberUpdate:
       type: object
       description: Request body for updating a pool member.
@@ -623,23 +601,29 @@ components:
           - user-up
           - user-down
           example: user-up
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
   parameters:
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
     MemberNameParam:
       name: memberName
       in: path
@@ -648,6 +632,14 @@ components:
       schema:
         type: string
       example: 10.0.0.1:80
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
     PoolNameParam:
       name: poolName
       in: path
@@ -656,6 +648,14 @@ components:
       schema:
         type: string
       example: my_pool
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
   securitySchemes:
     basicAuth:
       type: http

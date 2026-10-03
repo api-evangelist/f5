@@ -63,6 +63,28 @@ paths:
           $ref: '#/components/responses/500'
 components:
   schemas:
+    inspect:
+      title: Inspect
+      description: The current configuration of a device.
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        selfLink:
+          type: string
+          format: uri
+        result:
+          $ref: '#/components/schemas/result'
+        declaration:
+          type: object
+          properties:
+            class:
+              type: string
+              enum:
+              - DO
+            declaration:
+              $ref: '#/components/schemas/device'
     device:
       $ref: base.schema.json
     result:
@@ -95,25 +117,3 @@ components:
           type: array
           items:
             type: string
-    inspect:
-      title: Inspect
-      description: The current configuration of a device.
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        selfLink:
-          type: string
-          format: uri
-        result:
-          $ref: '#/components/schemas/result'
-        declaration:
-          type: object
-          properties:
-            class:
-              type: string
-              enum:
-              - DO
-            declaration:
-              $ref: '#/components/schemas/device'

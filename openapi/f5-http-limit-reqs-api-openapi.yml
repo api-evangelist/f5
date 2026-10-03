@@ -123,6 +123,16 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxHTTPLimitReqZonesMap:
+      title: HTTP limit_reqs
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone">limit_req zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPLimitReqZone'
     NginxHTTPLimitReqZone:
       title: HTTP Requests Rate Limiting
       type: object
@@ -148,13 +158,3 @@ components:
         rejected: 0
         delayed_dry_run: 1
         rejected_dry_run: 2
-    NginxHTTPLimitReqZonesMap:
-      title: HTTP limit_reqs
-      description: 'Status data for all HTTP
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_zone">limit_req zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxHTTPLimitReqZone'

@@ -441,23 +441,49 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
-    FastResponse404:
-      title: Response 404
+    TemplateList:
+      type: array
+      title: Templates
+      description: A list of template objects.
+      items:
+        type: object
+        properties:
+          name:
+            type: string
+            description: Name of the template.
+          hash:
+            type: string
+            description: The sha256 of the template source text.
+          description:
+            type: string
+            description: Template description
+            example: '** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.'
+          title:
+            type: string
+            description: A "pretty name" for the Template
+            example: Simple UDP Application
+          appsList:
+            type: array
+            description: A list of applications using the template.
+            items:
+              $ref: '#/components/schemas/FastApplicationDefinition'
+    FastResponse200:
+      title: Response 200
       type: object
-      description: Not Found
+      description: OK - Request was successful.
       required:
       - code
       - message
-      - errors
       properties:
         code:
-          enum:
-          - 404
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 200
+          example: 200
         message:
           type: string
-          example: resource not found
-        errors:
-          $ref: '#/components/schemas/ErrorsArray'
+          example: success
         requestId:
           type: integer
           example: 3
@@ -465,6 +491,20 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
     TemplateSet:
       type: object
       description: Template Set.
@@ -552,6 +592,24 @@ components:
           type: boolean
           description: Template Set is installed and ready to use
           example: true
+    TemplateSetList:
+      type: array
+      description: Template Set List.
+      items:
+        $ref: '#/components/schemas/TemplateSet'
+    StringDefinition:
+      title: String Definition
+      type: string
+      description: A generic definition for a string.
+    TemplateNameList:
+      type: array
+      title: Template Names
+      description: A list of template names.
+      items:
+        type: string
+      example:
+      - example/httpTemplate
+      - example/httpsTemplate
     FastResponse500:
       title: Response 500
       type: object
@@ -576,104 +634,6 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
-    FastApplicationDefinition:
-      type: object
-      title: Application Definition
-      description: Application Definition.
-      required:
-      - name
-      - parameters
-      properties:
-        name:
-          description: Must be valid Template in the system.
-          type: string
-        parameters:
-          $ref: '#/components/schemas/ParametersDefinition'
-        allowOverwrite:
-          description: Do not error if an Application with the same name already exists in the tenant.
-          type: boolean
-          default: true
-      example:
-        name: examples/simple_udp_defaults
-        parameters: {}
-        allowOverwrite: true
-    StringDefinition:
-      title: String Definition
-      type: string
-      description: A generic definition for a string.
-    FastResponse200:
-      title: Response 200
-      type: object
-      description: OK - Request was successful.
-      required:
-      - code
-      - message
-      properties:
-        code:
-          type: integer
-          format: int32
-          minimum: 200
-          maximum: 200
-          example: 200
-        message:
-          type: string
-          example: success
-        requestId:
-          type: integer
-          example: 3
-          minimum: 1
-          maximum: 4294967295
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
-    TemplateNameList:
-      type: array
-      title: Template Names
-      description: A list of template names.
-      items:
-        type: string
-      example:
-      - example/httpTemplate
-      - example/httpsTemplate
-    TemplateList:
-      type: array
-      title: Templates
-      description: A list of template objects.
-      items:
-        type: object
-        properties:
-          name:
-            type: string
-            description: Name of the template.
-          hash:
-            type: string
-            description: The sha256 of the template source text.
-          description:
-            type: string
-            description: Template description
-            example: '** FOR DEMONSTRATION PURPOSES--NOT INTENDED FOR USE IN PRODUCTION ** This Template is an example of how one might build a simple UDP Application with load balancing. It allows the user to provide a virtual IP address and port along with a list of UDP server addresses. The user-supplied values are inserted when the Template is rendered, yielding an AS3 declaration suitable for submission to BIG-IP.'
-          title:
-            type: string
-            description: A "pretty name" for the Template
-            example: Simple UDP Application
-          appsList:
-            type: array
-            description: A list of applications using the template.
-            items:
-              $ref: '#/components/schemas/FastApplicationDefinition'
     FastResponse400:
       title: Response 400
       type: object
@@ -698,19 +658,6 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    LinksDefinition:
-      type: object
-      title: Links Definition
-      description: An object containing link references.
-      properties:
-        self:
-          type: string
-          description: Self-link to endpoint
-          example: /mgmt/shared/fast/applications
-        task:
-          type: string
-          description: Self-link to task endpoint
-          example: /mgmt/shared/fast/tasks/12345
     Template:
       type: object
       description: An JSON-serialized, f5-fast-core Template object. All fields prefixed with an underscore should be treated as internal/private and only intended for Template.fromJson(). As such, they are not documented here.
@@ -758,11 +705,40 @@ components:
           - $ref: '#/components/schemas/StringDefinition'
           - $ref: '#/components/schemas/ObjectDefinition'
           example: null
-    TemplateSetList:
-      type: array
-      description: Template Set List.
-      items:
-        $ref: '#/components/schemas/TemplateSet'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    FastApplicationDefinition:
+      type: object
+      title: Application Definition
+      description: Application Definition.
+      required:
+      - name
+      - parameters
+      properties:
+        name:
+          description: Must be valid Template in the system.
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        allowOverwrite:
+          description: Do not error if an Application with the same name already exists in the tenant.
+          type: boolean
+          default: true
+      example:
+        name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
     ObjectDefinition:
       title: Object Definition
       type: object
@@ -774,3 +750,27 @@ components:
         tenant: foo
         application: bar
         virtualAddress: 192.0.2.11
+    FastResponse404:
+      title: Response 404
+      type: object
+      description: Not Found
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 404
+        message:
+          type: string
+          example: resource not found
+        errors:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'

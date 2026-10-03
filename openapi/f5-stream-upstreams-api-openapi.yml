@@ -417,6 +417,39 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxStreamUpstreamConfServerMap:
+      title: Stream Upstream Servers
+      description: 'An array of stream upstream servers for dynamic configuration.
+
+        '
+      type: array
+      items:
+        $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
+      example:
+      - id: 0
+        server: 10.0.0.1:12348
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+      - id: 1
+        server: 10.0.0.1:12349
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+    NginxStreamUpstreamPeerMap:
+      title: Stream Upstream Servers
+      description: Array of stream upstream servers.
+      type: array
+      items:
+        $ref: '#/components/schemas/NginxStreamUpstreamPeer'
     NginxStreamUpstreamPeer:
       title: Stream Upstream Server
       type: object
@@ -566,164 +599,6 @@ components:
           format: date-time
           description: The time when the server was last selected to process a connection, in the ISO 8601 format with millisecond resolution.
           readOnly: true
-    NginxStreamUpstreamConfServer:
-      title: Stream Upstream Server
-      description: 'Dynamically configurable parameters of a stream upstream
-
-        <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">server</a>:
-
-        '
-      type: object
-      properties:
-        id:
-          type: integer
-          description: The ID of the stream upstream server. The ID is assigned automatically and cannot be changed.
-          readOnly: true
-        server:
-          type: string
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">address</a> parameter of the stream upstream server. When adding a server, it is possible to specify it as a domain name. In this case, changes of the IP addresses that correspond to a domain name will be monitored and automatically applied to the upstream configuration without the need of restarting nginx. This requires the <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#resolver">resolver</a> directive in the “<code>stream</code>” block. See also the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#resolve">resolve</a> parameter of the stream upstream server.
-        service:
-          type: string
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#service">service</a> parameter of the stream upstream server. This parameter cannot be changed.
-          readOnly: true
-        weight:
-          type: integer
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#weight">weight</a> parameter of the stream upstream server.
-        max_conns:
-          type: integer
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_conns">max_conns</a> parameter of the stream upstream server.
-        max_fails:
-          type: integer
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_fails">max_fails</a> parameter of the stream upstream server.
-        fail_timeout:
-          type: string
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#fail_timeout">fail_timeout</a> parameter of the stream upstream server.
-        slow_start:
-          type: string
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#slow_start">slow_start</a> parameter of the stream upstream server.
-        backup:
-          type: boolean
-          description: When <code>true</code>, adds a <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#backup">backup</a> server. This parameter cannot be changed.
-          readOnly: true
-        down:
-          type: boolean
-          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#down">down</a> parameter of the stream upstream server.
-        parent:
-          type: string
-          description: Parent server ID of the resolved server. The ID is assigned automatically and cannot be changed.
-          readOnly: true
-        host:
-          type: string
-          description: Hostname of the resolved server. The hostname is assigned automatically and cannot be changed.
-          readOnly: true
-      example:
-        id: 0
-        server: 10.0.0.1:12348
-        weight: 1
-        max_conns: 0
-        max_fails: 1
-        fail_timeout: 10s
-        slow_start: 0
-        backup: false
-        down: false
-    NginxStreamUpstreamConfServerMap:
-      title: Stream Upstream Servers
-      description: 'An array of stream upstream servers for dynamic configuration.
-
-        '
-      type: array
-      items:
-        $ref: '#/components/schemas/NginxStreamUpstreamConfServer'
-      example:
-      - id: 0
-        server: 10.0.0.1:12348
-        weight: 1
-        max_conns: 0
-        max_fails: 1
-        fail_timeout: 10s
-        slow_start: 0
-        backup: false
-        down: false
-      - id: 1
-        server: 10.0.0.1:12349
-        weight: 1
-        max_conns: 0
-        max_fails: 1
-        fail_timeout: 10s
-        slow_start: 0
-        backup: false
-        down: false
-    NginxStreamUpstream:
-      title: Stream Upstream
-      type: object
-      properties:
-        peers:
-          $ref: '#/components/schemas/NginxStreamUpstreamPeerMap'
-        zombies:
-          type: integer
-          description: The current number of servers removed from the group but still processing active client connections.
-        zone:
-          type: string
-          description: The name of the shared memory <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#zone">zone</a> that keeps the group’s configuration and run-time state.
-      example:
-        dns:
-          peers:
-          - id: 0
-            server: 10.0.0.1:12347
-            name: 10.0.0.1:12347
-            backup: false
-            weight: 5
-            state: up
-            active: 0
-            ssl:
-              handshakes: 200
-              handshakes_failed: 4
-              session_reuses: 189
-              no_common_protocol: 4
-              handshake_timeout: 0
-              peer_rejected_cert: 0
-              verify_failures:
-                expired_cert: 2
-                revoked_cert: 1
-                hostname_mismatch: 2
-                other: 1
-            max_conns: 50
-            connections: 667231
-            sent: 251946292
-            received: 19222475454
-            fails: 0
-            unavail: 0
-            health_checks:
-              checks: 26214
-              fails: 0
-              unhealthy: 0
-              last_passed: true
-            downtime: 0
-            downstart: 2022-06-28 11:09:21.602000+00:00
-            selected: 2022-06-28 15:01:25+00:00
-          - id: 1
-            server: 10.0.0.1:12348
-            name: 10.0.0.1:12348
-            backup: true
-            weight: 1
-            state: unhealthy
-            active: 0
-            max_conns: 50
-            connections: 0
-            sent: 0
-            received: 0
-            fails: 0
-            unavail: 0
-            health_checks:
-              checks: 26284
-              fails: 26284
-              unhealthy: 1
-              last_passed: false
-            downtime: 262925617
-            downstart: 2022-06-28 11:09:21.602000+00:00
-            selected: 2022-06-28 15:01:25+00:00
-          zombies: 0
-          zone: dns
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -749,12 +624,6 @@ components:
         href:
           type: string
           description: Link to reference documentation.
-    NginxStreamUpstreamPeerMap:
-      title: Stream Upstream Servers
-      description: Array of stream upstream servers.
-      type: array
-      items:
-        $ref: '#/components/schemas/NginxStreamUpstreamPeer'
     NginxStreamUpstreamMap:
       title: Stream Upstreams
       description: Status information of stream upstream server groups.
@@ -864,6 +733,137 @@ components:
             active: 0
             connections: 0
             max_conns: 30
+            sent: 0
+            received: 0
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26284
+              fails: 26284
+              unhealthy: 1
+              last_passed: false
+            downtime: 262925617
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          zombies: 0
+          zone: dns
+    NginxStreamUpstreamConfServer:
+      title: Stream Upstream Server
+      description: 'Dynamically configurable parameters of a stream upstream
+
+        <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">server</a>:
+
+        '
+      type: object
+      properties:
+        id:
+          type: integer
+          description: The ID of the stream upstream server. The ID is assigned automatically and cannot be changed.
+          readOnly: true
+        server:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#server">address</a> parameter of the stream upstream server. When adding a server, it is possible to specify it as a domain name. In this case, changes of the IP addresses that correspond to a domain name will be monitored and automatically applied to the upstream configuration without the need of restarting nginx. This requires the <a href="https://nginx.org/en/docs/stream/ngx_stream_core_module.html#resolver">resolver</a> directive in the “<code>stream</code>” block. See also the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#resolve">resolve</a> parameter of the stream upstream server.
+        service:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#service">service</a> parameter of the stream upstream server. This parameter cannot be changed.
+          readOnly: true
+        weight:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#weight">weight</a> parameter of the stream upstream server.
+        max_conns:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_conns">max_conns</a> parameter of the stream upstream server.
+        max_fails:
+          type: integer
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#max_fails">max_fails</a> parameter of the stream upstream server.
+        fail_timeout:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#fail_timeout">fail_timeout</a> parameter of the stream upstream server.
+        slow_start:
+          type: string
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#slow_start">slow_start</a> parameter of the stream upstream server.
+        backup:
+          type: boolean
+          description: When <code>true</code>, adds a <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#backup">backup</a> server. This parameter cannot be changed.
+          readOnly: true
+        down:
+          type: boolean
+          description: Same as the <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#down">down</a> parameter of the stream upstream server.
+        parent:
+          type: string
+          description: Parent server ID of the resolved server. The ID is assigned automatically and cannot be changed.
+          readOnly: true
+        host:
+          type: string
+          description: Hostname of the resolved server. The hostname is assigned automatically and cannot be changed.
+          readOnly: true
+      example:
+        id: 0
+        server: 10.0.0.1:12348
+        weight: 1
+        max_conns: 0
+        max_fails: 1
+        fail_timeout: 10s
+        slow_start: 0
+        backup: false
+        down: false
+    NginxStreamUpstream:
+      title: Stream Upstream
+      type: object
+      properties:
+        peers:
+          $ref: '#/components/schemas/NginxStreamUpstreamPeerMap'
+        zombies:
+          type: integer
+          description: The current number of servers removed from the group but still processing active client connections.
+        zone:
+          type: string
+          description: The name of the shared memory <a href="https://nginx.org/en/docs/stream/ngx_stream_upstream_module.html#zone">zone</a> that keeps the group’s configuration and run-time state.
+      example:
+        dns:
+          peers:
+          - id: 0
+            server: 10.0.0.1:12347
+            name: 10.0.0.1:12347
+            backup: false
+            weight: 5
+            state: up
+            active: 0
+            ssl:
+              handshakes: 200
+              handshakes_failed: 4
+              session_reuses: 189
+              no_common_protocol: 4
+              handshake_timeout: 0
+              peer_rejected_cert: 0
+              verify_failures:
+                expired_cert: 2
+                revoked_cert: 1
+                hostname_mismatch: 2
+                other: 1
+            max_conns: 50
+            connections: 667231
+            sent: 251946292
+            received: 19222475454
+            fails: 0
+            unavail: 0
+            health_checks:
+              checks: 26214
+              fails: 0
+              unhealthy: 0
+              last_passed: true
+            downtime: 0
+            downstart: 2022-06-28 11:09:21.602000+00:00
+            selected: 2022-06-28 15:01:25+00:00
+          - id: 1
+            server: 10.0.0.1:12348
+            name: 10.0.0.1:12348
+            backup: true
+            weight: 1
+            state: unhealthy
+            active: 0
+            max_conns: 50
+            connections: 0
             sent: 0
             received: 0
             fails: 0

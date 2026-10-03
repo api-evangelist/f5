@@ -123,6 +123,16 @@ components:
         href:
           type: string
           description: Link to reference documentation.
+    NginxHTTPLimitConnZonesMap:
+      title: HTTP limit_conns
+      description: 'Status data for all HTTP
+
+        <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone">limit_conn zones</a>.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxHTTPLimitConnZone'
     NginxHTTPLimitConnZone:
       title: HTTP Connections Limiting
       type: object
@@ -140,13 +150,3 @@ components:
         passed: 15
         rejected: 0
         rejected_dry_run: 2
-    NginxHTTPLimitConnZonesMap:
-      title: HTTP limit_conns
-      description: 'Status data for all HTTP
-
-        <a href="https://nginx.org/en/docs/http/ngx_http_limit_conn_module.html#limit_conn_zone">limit_conn zones</a>.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxHTTPLimitConnZone'

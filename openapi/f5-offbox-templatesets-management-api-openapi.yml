@@ -48,6 +48,47 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    FastOffboxTemplatesetsResponse:
+      title: Offbox Templates Response
+      type: object
+      description: Offbox Templates response
+      required:
+      - code
+      - requestId
+      - methods
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        code:
+          type: integer
+          format: int32
+          minimum: 200
+          maximum: 599
+          example: 200
+        methods:
+          type: array
+          description: a list of methods executed for Offbox Templates management
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: method name
+                example: status
     FastResponse500:
       title: Response 500
       type: object
@@ -72,37 +113,6 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    FastOffboxTemplatesets:
-      title: Offbox Templates
-      description: Offbox Templates management
-      type: object
-      required:
-      - methods
-      properties:
-        methods:
-          type: array
-          description: a list of methods for Offbox Templates management
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-                description: method name
-                example: status
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
     FastResponse400:
       title: Response 400
       type: object
@@ -140,26 +150,16 @@ components:
           type: string
           description: Self-link to task endpoint
           example: /mgmt/shared/fast/tasks/12345
-    FastOffboxTemplatesetsResponse:
-      title: Offbox Templates Response
+    FastOffboxTemplatesets:
+      title: Offbox Templates
+      description: Offbox Templates management
       type: object
-      description: Offbox Templates response
       required:
-      - code
-      - requestId
       - methods
       properties:
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
-        code:
-          type: integer
-          format: int32
-          minimum: 200
-          maximum: 599
-          example: 200
         methods:
           type: array
-          description: a list of methods executed for Offbox Templates management
+          description: a list of methods for Offbox Templates management
           items:
             type: object
             properties:

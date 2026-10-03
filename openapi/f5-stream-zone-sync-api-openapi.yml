@@ -55,17 +55,6 @@ components:
         href:
           type: string
           description: Link to reference documentation.
-    NginxStreamZoneSyncZone:
-      title: Sync Zone
-      description: Synchronization status of a shared memory zone.
-      type: object
-      properties:
-        records_pending:
-          type: integer
-          description: The number of records that need to be sent to the cluster.
-        records_total:
-          type: integer
-          description: The total number of records stored in the shared memory zone.
     NginxStreamZoneSync:
       title: Stream Zone Sync Node
       type: object
@@ -109,3 +98,14 @@ components:
           msgs_out: 346717
           bytes_out: 1402765472
           nodes_online: 15
+    NginxStreamZoneSyncZone:
+      title: Sync Zone
+      description: Synchronization status of a shared memory zone.
+      type: object
+      properties:
+        records_pending:
+          type: integer
+          description: The number of records that need to be sent to the cluster.
+        records_total:
+          type: integer
+          description: The total number of records stored in the shared memory zone.

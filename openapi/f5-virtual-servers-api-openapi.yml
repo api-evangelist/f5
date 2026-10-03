@@ -530,80 +530,7 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
-  responses:
-    Conflict:
-      description: The resource already exists or conflicts with an existing configuration.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    InternalServerError:
-      description: An unexpected error occurred on the BIG-IP system while processing the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    Unauthorized:
-      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: The request could not be processed due to invalid syntax or missing required parameters.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
-    NotFound:
-      description: The requested resource was not found on the BIG-IP system.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ErrorResponse'
   parameters:
-    VirtualNameParam:
-      name: virtualName
-      in: path
-      required: true
-      description: Name of the virtual server resource. Use ~Common~ prefix for partition-qualified names (e.g., ~Common~my_virtual).
-      schema:
-        type: string
-      example: my_virtual_server
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
-    SkipParam:
-      name: $skip
-      in: query
-      required: false
-      description: Number of resources to skip before returning results.
-      schema:
-        type: integer
-        minimum: 0
-      example: 0
-    TopParam:
-      name: $top
-      in: query
-      required: false
-      description: Maximum number of resources to return.
-      schema:
-        type: integer
-        minimum: 1
-      example: 10
     ExpandSubcollectionsParam:
       name: expandSubcollections
       in: query
@@ -615,115 +542,49 @@ components:
         - 'true'
         - 'false'
       example: 'true'
+    VirtualNameParam:
+      name: virtualName
+      in: path
+      required: true
+      description: Name of the virtual server resource. Use ~Common~ prefix for partition-qualified names (e.g., ~Common~my_virtual).
+      schema:
+        type: string
+      example: my_virtual_server
+    SkipParam:
+      name: $skip
+      in: query
+      required: false
+      description: Number of resources to skip before returning results.
+      schema:
+        type: integer
+        minimum: 0
+      example: 0
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
+    TopParam:
+      name: $top
+      in: query
+      required: false
+      description: Maximum number of resources to return.
+      schema:
+        type: integer
+        minimum: 1
+      example: 10
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
   schemas:
-    VirtualServerUpdate:
-      type: object
-      description: Request body for updating a virtual server.
-      properties:
-        description:
-          type: string
-          example: A sample description.
-        destination:
-          type: string
-          example: example_value
-        ipProtocol:
-          type: string
-          enum:
-          - tcp
-          - udp
-          - sctp
-          - any
-          example: tcp
-        mask:
-          type: string
-          example: example_value
-        pool:
-          type: string
-          example: example_value
-        profiles:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              context:
-                type: string
-                enum:
-                - all
-                - clientside
-                - serverside
-          example: []
-        persist:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              tmDefault:
-                type: string
-          example: []
-        source:
-          type: string
-          example: example_value
-        sourcePort:
-          type: string
-          enum:
-          - preserve
-          - preserve-strict
-          - change
-          example: preserve
-        translateAddress:
-          type: string
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        translatePort:
-          type: string
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        connectionLimit:
-          type: integer
-          minimum: 0
-          example: 10
-        enabled:
-          type: boolean
-          example: true
-        disabled:
-          type: boolean
-          example: true
-        mirror:
-          type: string
-          enum:
-          - enabled
-          - disabled
-          example: enabled
-        rateLimit:
-          type: string
-          example: example_value
-        rules:
-          type: array
-          items:
-            type: string
-          example: []
-        vlans:
-          type: array
-          items:
-            type: string
-          example: []
-        vlansEnabled:
-          type: boolean
-          example: true
-        vlansDisabled:
-          type: boolean
-          example: true
-        fallbackPersistence:
-          type: string
-          example: example_value
     VirtualServer:
       type: object
       description: A virtual server resource that directs client traffic to a pool of backend servers based on an IP address and port combination.
@@ -1077,6 +938,114 @@ components:
         vlansDisabled:
           type: boolean
           example: true
+    VirtualServerUpdate:
+      type: object
+      description: Request body for updating a virtual server.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        destination:
+          type: string
+          example: example_value
+        ipProtocol:
+          type: string
+          enum:
+          - tcp
+          - udp
+          - sctp
+          - any
+          example: tcp
+        mask:
+          type: string
+          example: example_value
+        pool:
+          type: string
+          example: example_value
+        profiles:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              context:
+                type: string
+                enum:
+                - all
+                - clientside
+                - serverside
+          example: []
+        persist:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              tmDefault:
+                type: string
+          example: []
+        source:
+          type: string
+          example: example_value
+        sourcePort:
+          type: string
+          enum:
+          - preserve
+          - preserve-strict
+          - change
+          example: preserve
+        translateAddress:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        translatePort:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        enabled:
+          type: boolean
+          example: true
+        disabled:
+          type: boolean
+          example: true
+        mirror:
+          type: string
+          enum:
+          - enabled
+          - disabled
+          example: enabled
+        rateLimit:
+          type: string
+          example: example_value
+        rules:
+          type: array
+          items:
+            type: string
+          example: []
+        vlans:
+          type: array
+          items:
+            type: string
+          example: []
+        vlansEnabled:
+          type: boolean
+          example: true
+        vlansDisabled:
+          type: boolean
+          example: true
+        fallbackPersistence:
+          type: string
+          example: example_value
     ErrorResponse:
       type: object
       description: Standard error response from the iControl REST API.
@@ -1099,6 +1068,37 @@ components:
           type: integer
           description: API-specific error code.
           example: 10
+  responses:
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Unauthorized:
+      description: Authentication failed. Provide valid credentials via Basic Auth or X-F5-Auth-Token header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: The requested resource was not found on the BIG-IP system.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
   securitySchemes:
     basicAuth:
       type: http

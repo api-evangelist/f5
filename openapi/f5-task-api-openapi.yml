@@ -109,6 +109,11 @@ paths:
     - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
 components:
   schemas:
+    declaration:
+      type: object
+      externalDocs:
+        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
+        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
     error:
       type: object
       properties:
@@ -126,11 +131,6 @@ components:
         declarationFullId:
           type: string
           description: The id of the declaration
-    declaration:
-      type: object
-      externalDocs:
-        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
-        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
     result:
       type: object
       properties:
@@ -158,8 +158,43 @@ components:
         runTime:
           type: integer
           description: The time (in milliseconds) it took to process the tenant.
-    device:
-      $ref: base.schema.json
+    task:
+      title: Task
+      description: The configuration status and associated declaration.
+      type: object
+      properties:
+        id:
+          description: Unique ID for task.
+          type: string
+          format: uuid
+        selfLink:
+          description: URI at which to fetch task on the device.
+          type: string
+          format: uri
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+        result:
+          $ref: '#/components/schemas/result_2'
+        declaration:
+          $ref: '#/components/schemas/device'
+        currentConfig:
+          $ref: '#/components/schemas/configObject'
+        originalConfig:
+          $ref: '#/components/schemas/configObject'
+    configObject:
+      title: Config Object
+      type: object
+      properties:
+        Common:
+          type: object
+          description: A collection of sub-objects that describe the configuration state of a device.
+          additionalProperties: true
     result_2:
       title: Result
       description: Standard result object in responses.
@@ -190,43 +225,8 @@ components:
           type: array
           items:
             type: string
-    configObject:
-      title: Config Object
-      type: object
-      properties:
-        Common:
-          type: object
-          description: A collection of sub-objects that describe the configuration state of a device.
-          additionalProperties: true
-    task:
-      title: Task
-      description: The configuration status and associated declaration.
-      type: object
-      properties:
-        id:
-          description: Unique ID for task.
-          type: string
-          format: uuid
-        selfLink:
-          description: URI at which to fetch task on the device.
-          type: string
-          format: uri
-        message:
-          description: Overall result message.
-          type: string
-        errors:
-          description: Array of errors that occurred.
-          type: array
-          items:
-            type: string
-        result:
-          $ref: '#/components/schemas/result_2'
-        declaration:
-          $ref: '#/components/schemas/device'
-        currentConfig:
-          $ref: '#/components/schemas/configObject'
-        originalConfig:
-          $ref: '#/components/schemas/configObject'
+    device:
+      $ref: base.schema.json
   examples:
     declarationTenantTaskResponse:
       value:

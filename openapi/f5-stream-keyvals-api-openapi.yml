@@ -234,16 +234,37 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxStreamKeyvalZone:
+    NginxStreamKeyvalZonesMap:
+      title: Stream Keyval Shared Memory Zones
+      description: 'Contents of all stream keyval shared memory zones.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxStreamKeyvalZone'
+      example:
+        keyval_zone:
+          key1: value1
+          key2: value2
+          key3: value3
+        one:
+          arg1: value1
+          arg2: value2
+          arg3: value3
+    NginxStreamKeyvalZonePostPatch:
       title: Stream Keyval Shared Memory Zone
-      description: 'Contents of a stream keyval shared memory zone when using the GET method.
+      description: 'Contents of a stream keyval shared memory zone
+
+        when using the POST or PATCH methods.
 
         '
       type: object
       example:
         key1: value1
         key2: value2
-        key3: value3
+        key3:
+          value: value3
+          expire: 30000
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -269,34 +290,13 @@ components:
         href:
           type: string
           description: Link to reference documentation.
-    NginxStreamKeyvalZonePostPatch:
+    NginxStreamKeyvalZone:
       title: Stream Keyval Shared Memory Zone
-      description: 'Contents of a stream keyval shared memory zone
-
-        when using the POST or PATCH methods.
+      description: 'Contents of a stream keyval shared memory zone when using the GET method.
 
         '
       type: object
       example:
         key1: value1
         key2: value2
-        key3:
-          value: value3
-          expire: 30000
-    NginxStreamKeyvalZonesMap:
-      title: Stream Keyval Shared Memory Zones
-      description: 'Contents of all stream keyval shared memory zones.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxStreamKeyvalZone'
-      example:
-        keyval_zone:
-          key1: value1
-          key2: value2
-          key3: value3
-        one:
-          arg1: value1
-          arg2: value2
-          arg3: value3
+        key3: value3
