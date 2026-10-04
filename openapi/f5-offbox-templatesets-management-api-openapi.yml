@@ -48,20 +48,43 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
+    FastResponse500:
+      title: Response 500
+      type: object
+      description: Internal error. A bug report should be filed.
+      required:
+      - code
+      - message
+      - errors
+      properties:
+        code:
+          enum:
+          - 500
+        message:
+          type: string
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
     FastOffboxTemplatesetsResponse:
       title: Offbox Templates Response
       type: object
@@ -89,30 +112,6 @@ components:
                 type: string
                 description: method name
                 example: status
-    FastResponse500:
-      title: Response 500
-      type: object
-      description: Internal error. A bug report should be filed.
-      required:
-      - code
-      - message
-      - errors
-      properties:
-        code:
-          enum:
-          - 500
-        message:
-          type: string
-          example: internal server error
-        error:
-          $ref: '#/components/schemas/ErrorsArray'
-        requestId:
-          type: integer
-          example: 3
-          minimum: 1
-          maximum: 4294967295
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
     FastResponse400:
       title: Response 400
       type: object
@@ -137,19 +136,6 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    LinksDefinition:
-      type: object
-      title: Links Definition
-      description: An object containing link references.
-      properties:
-        self:
-          type: string
-          description: Self-link to endpoint
-          example: /mgmt/shared/fast/applications
-        task:
-          type: string
-          description: Self-link to task endpoint
-          example: /mgmt/shared/fast/tasks/12345
     FastOffboxTemplatesets:
       title: Offbox Templates
       description: Offbox Templates management
@@ -167,3 +153,17 @@ components:
                 type: string
                 description: method name
                 example: status
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error

@@ -109,28 +109,6 @@ paths:
     - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
 components:
   schemas:
-    declaration:
-      type: object
-      externalDocs:
-        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
-        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
-    error:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Code representing the error
-        message:
-          type: string
-          description: Additional information about the error
-        errors:
-          type: array
-          description: Details about schema validation failures
-          items:
-            type: string
-        declarationFullId:
-          type: string
-          description: The id of the declaration
     result:
       type: object
       properties:
@@ -158,43 +136,28 @@ components:
         runTime:
           type: integer
           description: The time (in milliseconds) it took to process the tenant.
-    task:
-      title: Task
-      description: The configuration status and associated declaration.
+    declaration:
+      type: object
+      externalDocs:
+        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
+        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
+    error:
       type: object
       properties:
-        id:
-          description: Unique ID for task.
-          type: string
-          format: uuid
-        selfLink:
-          description: URI at which to fetch task on the device.
-          type: string
-          format: uri
+        code:
+          type: integer
+          description: Code representing the error
         message:
-          description: Overall result message.
           type: string
+          description: Additional information about the error
         errors:
-          description: Array of errors that occurred.
           type: array
+          description: Details about schema validation failures
           items:
             type: string
-        result:
-          $ref: '#/components/schemas/result_2'
-        declaration:
-          $ref: '#/components/schemas/device'
-        currentConfig:
-          $ref: '#/components/schemas/configObject'
-        originalConfig:
-          $ref: '#/components/schemas/configObject'
-    configObject:
-      title: Config Object
-      type: object
-      properties:
-        Common:
-          type: object
-          description: A collection of sub-objects that describe the configuration state of a device.
-          additionalProperties: true
+        declarationFullId:
+          type: string
+          description: The id of the declaration
     result_2:
       title: Result
       description: Standard result object in responses.
@@ -225,8 +188,45 @@ components:
           type: array
           items:
             type: string
+    task:
+      title: Task
+      description: The configuration status and associated declaration.
+      type: object
+      properties:
+        id:
+          description: Unique ID for task.
+          type: string
+          format: uuid
+        selfLink:
+          description: URI at which to fetch task on the device.
+          type: string
+          format: uri
+        message:
+          description: Overall result message.
+          type: string
+        errors:
+          description: Array of errors that occurred.
+          type: array
+          items:
+            type: string
+        result:
+          $ref: '#/components/schemas/result_2'
+        declaration:
+          $ref: '#/components/schemas/device'
+        currentConfig:
+          $ref: '#/components/schemas/configObject'
+        originalConfig:
+          $ref: '#/components/schemas/configObject'
     device:
       $ref: base.schema.json
+    configObject:
+      title: Config Object
+      type: object
+      properties:
+        Common:
+          type: object
+          description: A collection of sub-objects that describe the configuration state of a device.
+          additionalProperties: true
   examples:
     declarationTenantTaskResponse:
       value:
@@ -258,24 +258,6 @@ components:
                   - 192.0.2.1
                   - 192.0.2.2
             id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
-    task:
-      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      result:
-        class: Result
-        code: 200
-        status: OK
-        message: success
-      declaration:
-        class: Device
-        schemaVersion: 1.0.0
-        async: true
-        Common:
-          class: Tenant
-          myLicense:
-            class: License
-            licenseType: regKey
-            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
     errorConfig:
       id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
       selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
@@ -302,6 +284,24 @@ components:
               class: License
               licenseType: regKey
               regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+    task:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      result:
+        class: Result
+        code: 200
+        status: OK
+        message: success
+      declaration:
+        class: Device
+        schemaVersion: 1.0.0
+        async: true
+        Common:
+          class: Tenant
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
 externalDocs:
   description: Full AS3 documentation
   url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/

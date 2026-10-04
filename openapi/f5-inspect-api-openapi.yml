@@ -85,8 +85,6 @@ components:
               - DO
             declaration:
               $ref: '#/components/schemas/device'
-    device:
-      $ref: base.schema.json
     result:
       title: Result
       description: Standard result object in responses.
@@ -117,3 +115,5 @@ components:
           type: array
           items:
             type: string
+    device:
+      $ref: base.schema.json

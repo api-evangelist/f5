@@ -294,41 +294,7 @@ paths:
       tags:
       - Mgmt
 components:
-  parameters:
-    ObjectName:
-      name: name
-      in: path
-      required: true
-      schema:
-        type: string
-      description: 'Object name. Use the tilde-partition-tilde-name notation when
-
-        addressing objects in non-Common partitions, e.g. ~Common~http.
-
-        '
   schemas:
-    Pool:
-      type: object
-      properties:
-        name:
-          type: string
-        partition:
-          type: string
-          default: Common
-        loadBalancingMode:
-          type: string
-          default: round-robin
-        monitor:
-          type: string
-        members:
-          type: array
-          items:
-            type: object
-            properties:
-              name:
-                type: string
-              address:
-                type: string
     Virtual:
       type: object
       properties:
@@ -354,6 +320,40 @@ components:
                 type: string
               context:
                 type: string
+    Pool:
+      type: object
+      properties:
+        name:
+          type: string
+        partition:
+          type: string
+          default: Common
+        loadBalancingMode:
+          type: string
+          default: round-robin
+        monitor:
+          type: string
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              address:
+                type: string
+  parameters:
+    ObjectName:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: 'Object name. Use the tilde-partition-tilde-name notation when
+
+        addressing objects in non-Common partitions, e.g. ~Common~http.
+
+        '
   securitySchemes:
     Basic:
       type: http

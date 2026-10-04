@@ -123,80 +123,6 @@ components:
         href:
           type: string
           description: Link to reference documentation.
-    NginxSlabZone:
-      title: Shared memory zone with slab allocator
-      description: 'Shared memory zone with slab allocator
-
-        '
-      type: object
-      properties:
-        pages:
-          type: object
-          description: The number of free and used memory pages.
-          properties:
-            used:
-              type: integer
-              description: The current number of used memory pages.
-            free:
-              type: integer
-              description: The current number of free memory pages.
-        slots:
-          type: object
-          title: Memory Slots
-          description: Status data for memory slots (8, 16, 32, 64, 128, etc.)
-          additionalProperties:
-            $ref: '#/components/schemas/NginxSlabZoneSlot'
-      example:
-        pages:
-          used: 1143
-          free: 2928
-        slots:
-          8:
-            used: 0
-            free: 0
-            reqs: 0
-            fails: 0
-          16:
-            used: 0
-            free: 0
-            reqs: 0
-            fails: 0
-          32:
-            used: 0
-            free: 0
-            reqs: 0
-            fails: 0
-          64:
-            used: 1
-            free: 63
-            reqs: 1
-            fails: 0
-          128:
-            used: 0
-            free: 0
-            reqs: 0
-            fails: 0
-          256:
-            used: 18078
-            free: 178
-            reqs: 1635736
-            fails: 0
-    NginxSlabZoneSlot:
-      title: Memory Slot
-      type: object
-      properties:
-        used:
-          type: integer
-          description: The current number of used memory slots.
-        free:
-          type: integer
-          description: The current number of free memory slots.
-        reqs:
-          type: integer
-          description: The total number of attempts to allocate memory of specified size.
-        fails:
-          type: integer
-          description: The number of unsuccessful attempts to allocate memory of specified size.
     NginxSlabZoneMap:
       title: Slab Zones
       description: 'Status zones that use slab allocator.
@@ -271,3 +197,77 @@ components:
               free: 178
               reqs: 1635736
               fails: 0
+    NginxSlabZone:
+      title: Shared memory zone with slab allocator
+      description: 'Shared memory zone with slab allocator
+
+        '
+      type: object
+      properties:
+        pages:
+          type: object
+          description: The number of free and used memory pages.
+          properties:
+            used:
+              type: integer
+              description: The current number of used memory pages.
+            free:
+              type: integer
+              description: The current number of free memory pages.
+        slots:
+          type: object
+          title: Memory Slots
+          description: Status data for memory slots (8, 16, 32, 64, 128, etc.)
+          additionalProperties:
+            $ref: '#/components/schemas/NginxSlabZoneSlot'
+      example:
+        pages:
+          used: 1143
+          free: 2928
+        slots:
+          8:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          16:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          32:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          64:
+            used: 1
+            free: 63
+            reqs: 1
+            fails: 0
+          128:
+            used: 0
+            free: 0
+            reqs: 0
+            fails: 0
+          256:
+            used: 18078
+            free: 178
+            reqs: 1635736
+            fails: 0
+    NginxSlabZoneSlot:
+      title: Memory Slot
+      type: object
+      properties:
+        used:
+          type: integer
+          description: The current number of used memory slots.
+        free:
+          type: integer
+          description: The current number of free memory slots.
+        reqs:
+          type: integer
+          description: The total number of attempts to allocate memory of specified size.
+        fails:
+          type: integer
+          description: The number of unsuccessful attempts to allocate memory of specified size.

@@ -69,20 +69,11 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
+    uuid:
+      type: string
+      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
+      minLength: 36
+      maxLength: 36
     Task:
       type: object
       description: Task.
@@ -143,6 +134,13 @@ components:
         timestamp: '2019-08-24T14:15:22Z'
         _links:
           self: /mgmt/shared/fast/tasks
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
     TaskList:
       description: Task List.
       type: array
@@ -213,31 +211,6 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    LinksDefinition:
-      type: object
-      title: Links Definition
-      description: An object containing link references.
-      properties:
-        self:
-          type: string
-          description: Self-link to endpoint
-          example: /mgmt/shared/fast/applications
-        task:
-          type: string
-          description: Self-link to task endpoint
-          example: /mgmt/shared/fast/tasks/12345
-    ParametersDefinition:
-      type: object
-      description: Object must conform to specified template's schema.
-      example:
-        tenant: foo
-        application: bar
-        virtualAddress: 192.0.2.11
-    uuid:
-      type: string
-      pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
-      minLength: 36
-      maxLength: 36
     FastResponse404:
       title: Response 404
       type: object
@@ -262,3 +235,30 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error

@@ -279,109 +279,37 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
-    FastApplicationDeleteResponse:
-      type: object
-      title: Application Delete Response
-      description: The response message when deleting Applications.
-      required:
-      - code
-      - message
-      additionalProperties: true
-      properties:
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
-        requestId:
-          type: integer
-          example: 3
-          minimum: 1
-          maximum: 4294967295
-        code:
-          type: integer
-          minimum: 202
-          maximum: 599
-          example: 202
-        message:
-          type: array
-          minItems: 1
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                description: The Task ID which can be used to query Task state.
-                example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
-    ErrorsArray:
-      type: array
-      minItems: 1
-      items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
-    FastApplication:
-      type: object
-      title: Application
-      description: FAST Application.
-      required:
-      - template
-      - tenant
-      - name
-      properties:
-        template:
-          description: must be valid Template in the system
-          type: string
-          example: examples/simple_udp_defaults
-        setHash:
-          type: string
-          description: the hash of the Template Set used to deploy this Application
-          example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
-        view:
-          $ref: '#/components/schemas/ParametersDefinition'
-        templateType:
-          type: string
-          description: Template type, e.g., local, GitHub or GitLab
-          example: local
-        lastModified:
-          type: string
-          format: date-time
-          description: timestamp of when the Application was last modified
-        ipamAddrs:
-          $ref: '#/components/schemas/ObjectDefinition'
-        tenant:
-          type: string
-          description: the tenant the Application belongs to
-          example: tenant
-        name:
-          type: string
-          description: the name of the Application
-          example: app
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
-    FastApplicationDefinitionList:
-      type: array
-      title: Application Definition List
-      description: Application Definition List.
-      items:
-        $ref: '#/components/schemas/FastApplicationDefinition'
-      example:
-      - name: examples/simple_udp_defaults
-        parameters: {}
-        allowOverwrite: true
-      - name: tenant/app
-        parameters: {}
-        allowOverwrite: true
     FastApplicationList:
       title: Application List
       type: array
       description: FAST Application List.
       items:
         $ref: '#/components/schemas/FastApplication'
+    ObjectDefinition:
+      title: Object Definition
+      type: object
+      description: A generic definition for an object.
+    FastApplicationDefinition:
+      type: object
+      title: Application Definition
+      description: Application Definition.
+      required:
+      - name
+      - parameters
+      properties:
+        name:
+          description: Must be valid Template in the system.
+          type: string
+        parameters:
+          $ref: '#/components/schemas/ParametersDefinition'
+        allowOverwrite:
+          description: Do not error if an Application with the same name already exists in the tenant.
+          type: boolean
+          default: true
+      example:
+        name: examples/simple_udp_defaults
+        parameters: {}
+        allowOverwrite: true
     FastAs3App:
       type: object
       title: AS3 Application
@@ -419,28 +347,30 @@ components:
                   $ref: '#/components/schemas/ObjectDefinition'
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    FastApplicationResponse:
+    FastApplicationDeleteResponse:
       type: object
-      title: Application Response
-      description: The response message when performing Application operations.
+      title: Application Delete Response
+      description: The response message when deleting Applications.
       required:
       - code
       - message
+      additionalProperties: true
       properties:
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-        code:
-          type: integer
-          minimum: 202
-          maximum: 599
-          example: 202
         requestId:
           type: integer
           example: 3
           minimum: 1
           maximum: 4294967295
+        code:
+          type: integer
+          minimum: 202
+          maximum: 599
+          example: 202
         message:
           type: array
+          minItems: 1
           items:
             type: object
             properties:
@@ -448,16 +378,6 @@ components:
                 type: string
                 description: The Task ID which can be used to query Task state.
                 example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
-              name:
-                description: The name of the Template used.
-                type: string
-                example: examples/simple_udp_defaults
-              parameters:
-                description: The parameters used to create/update the Application.
-                type: object
-                example:
-                  tenant_name: tenant
-                  application_name: app
     FastApplicationRenderedResponse:
       title: Application Rendered Response
       type: object
@@ -509,6 +429,52 @@ components:
                 app_name: app
               lastModified: '2022-03-26T23:34:23.873Z'
               ipamAddrs: {}
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
+    FastApplication:
+      type: object
+      title: Application
+      description: FAST Application.
+      required:
+      - template
+      - tenant
+      - name
+      properties:
+        template:
+          description: must be valid Template in the system
+          type: string
+          example: examples/simple_udp_defaults
+        setHash:
+          type: string
+          description: the hash of the Template Set used to deploy this Application
+          example: b4e574f5692532a03deb40b78599a7913ff63b2a31897a7b0168d99246d64715
+        view:
+          $ref: '#/components/schemas/ParametersDefinition'
+        templateType:
+          type: string
+          description: Template type, e.g., local, GitHub or GitLab
+          example: local
+        lastModified:
+          type: string
+          format: date-time
+          description: timestamp of when the Application was last modified
+        ipamAddrs:
+          $ref: '#/components/schemas/ObjectDefinition'
+        tenant:
+          type: string
+          description: the tenant the Application belongs to
+          example: tenant
+        name:
+          type: string
+          description: the name of the Application
+          example: app
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
     FastApplicationRequest:
       title: Application Request
       description: An application request.
@@ -517,30 +483,6 @@ components:
         oneOf:
         - $ref: '#/components/schemas/FastApplicationDefinition'
         - $ref: '#/components/schemas/FastApplicationDefinitionList'
-    FastResponse500:
-      title: Response 500
-      type: object
-      description: Internal error. A bug report should be filed.
-      required:
-      - code
-      - message
-      - errors
-      properties:
-        code:
-          enum:
-          - 500
-        message:
-          type: string
-          example: internal server error
-        error:
-          $ref: '#/components/schemas/ErrorsArray'
-        requestId:
-          type: integer
-          example: 3
-          minimum: 1
-          maximum: 4294967295
-        _links:
-          $ref: '#/components/schemas/LinksDefinition'
     FastResponse404:
       title: Response 404
       type: object
@@ -565,6 +507,58 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
+    LinksDefinition:
+      type: object
+      title: Links Definition
+      description: An object containing link references.
+      properties:
+        self:
+          type: string
+          description: Self-link to endpoint
+          example: /mgmt/shared/fast/applications
+        task:
+          type: string
+          description: Self-link to task endpoint
+          example: /mgmt/shared/fast/tasks/12345
+    FastApplicationResponse:
+      type: object
+      title: Application Response
+      description: The response message when performing Application operations.
+      required:
+      - code
+      - message
+      properties:
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+        code:
+          type: integer
+          minimum: 202
+          maximum: 599
+          example: 202
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        message:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: The Task ID which can be used to query Task state.
+                example: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+              name:
+                description: The name of the Template used.
+                type: string
+                example: examples/simple_udp_defaults
+              parameters:
+                description: The parameters used to create/update the Application.
+                type: object
+                example:
+                  tenant_name: tenant
+                  application_name: app
     FastResponse400:
       title: Response 400
       type: object
@@ -589,48 +583,54 @@ components:
           maximum: 4294967295
         _links:
           $ref: '#/components/schemas/LinksDefinition'
-    FastApplicationDefinition:
+    FastResponse500:
+      title: Response 500
       type: object
-      title: Application Definition
-      description: Application Definition.
+      description: Internal error. A bug report should be filed.
       required:
-      - name
-      - parameters
+      - code
+      - message
+      - errors
       properties:
-        name:
-          description: Must be valid Template in the system.
+        code:
+          enum:
+          - 500
+        message:
           type: string
-        parameters:
-          $ref: '#/components/schemas/ParametersDefinition'
-        allowOverwrite:
-          description: Do not error if an Application with the same name already exists in the tenant.
-          type: boolean
-          default: true
+          example: internal server error
+        error:
+          $ref: '#/components/schemas/ErrorsArray'
+        requestId:
+          type: integer
+          example: 3
+          minimum: 1
+          maximum: 4294967295
+        _links:
+          $ref: '#/components/schemas/LinksDefinition'
+    FastApplicationDefinitionList:
+      type: array
+      title: Application Definition List
+      description: Application Definition List.
+      items:
+        $ref: '#/components/schemas/FastApplicationDefinition'
       example:
-        name: examples/simple_udp_defaults
+      - name: examples/simple_udp_defaults
         parameters: {}
         allowOverwrite: true
-    LinksDefinition:
-      type: object
-      title: Links Definition
-      description: An object containing link references.
-      properties:
-        self:
-          type: string
-          description: Self-link to endpoint
-          example: /mgmt/shared/fast/applications
-        task:
-          type: string
-          description: Self-link to task endpoint
-          example: /mgmt/shared/fast/tasks/12345
-    ObjectDefinition:
-      title: Object Definition
-      type: object
-      description: A generic definition for an object.
-    ParametersDefinition:
-      type: object
-      description: Object must conform to specified template's schema.
-      example:
-        tenant: foo
-        application: bar
-        virtualAddress: 192.0.2.11
+      - name: tenant/app
+        parameters: {}
+        allowOverwrite: true
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error

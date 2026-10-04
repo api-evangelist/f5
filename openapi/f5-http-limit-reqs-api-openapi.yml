@@ -98,6 +98,31 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
+    NginxHTTPLimitReqZone:
+      title: HTTP Requests Rate Limiting
+      type: object
+      properties:
+        passed:
+          type: integer
+          description: The total number of requests that were neither limited nor accounted as limited.
+        delayed:
+          type: integer
+          description: The total number of requests that were delayed.
+        rejected:
+          type: integer
+          description: The total number of requests that were rejected.
+        delayed_dry_run:
+          type: integer
+          description: The total number of requests accounted as delayed in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
+        rejected_dry_run:
+          type: integer
+          description: The total number of requests accounted as rejected in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
+      example:
+        passed: 15
+        delayed: 4
+        rejected: 0
+        delayed_dry_run: 1
+        rejected_dry_run: 2
     NginxError:
       title: Error
       description: 'nginx error object.
@@ -133,28 +158,3 @@ components:
       type: object
       additionalProperties:
         $ref: '#/components/schemas/NginxHTTPLimitReqZone'
-    NginxHTTPLimitReqZone:
-      title: HTTP Requests Rate Limiting
-      type: object
-      properties:
-        passed:
-          type: integer
-          description: The total number of requests that were neither limited nor accounted as limited.
-        delayed:
-          type: integer
-          description: The total number of requests that were delayed.
-        rejected:
-          type: integer
-          description: The total number of requests that were rejected.
-        delayed_dry_run:
-          type: integer
-          description: The total number of requests accounted as delayed in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
-        rejected_dry_run:
-          type: integer
-          description: The total number of requests accounted as rejected in the <a href="https://nginx.org/en/docs/http/ngx_http_limit_req_module.html#limit_req_dry_run">dry run</a> mode.
-      example:
-        passed: 15
-        delayed: 4
-        rejected: 0
-        delayed_dry_run: 1
-        rejected_dry_run: 2
