@@ -1,0 +1,118 @@
+slug: f5
+provider: F5
+generated_by: planning/capability-mapping/scripts/classify_capabilities.py
+model: claude-opus-5
+frame:
+- Software & Technology
+min_confidence: 0.7
+capability_model:
+  source: https://github.com/vincentmakes/turbo-ea-capabilities
+  license: CC-BY-4.0
+  attribution: Turbo EA Capabilities by Vincent Verdet — Turbo EA, https://github.com/vincentmakes/turbo-ea-capabilities,
+    CC BY 4.0
+  notice: NOTICE
+edge_count: 10
+edges:
+- tag: Mgmt
+  spec_file: f5-mgmt-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: '"iControl REST is the JSON/HTTP management interface for F5 BIG-IP devices... /mgmt/tm/ namespace
+    so any TMSH-addressable object (LTM, GTM, net, security, sys, etc.) can be created, retrieved, updated,
+    and deleted"; operations ''createVirtual  Create a virtual server'', ''createPool  Create a pool'''
+  reason: CRUD configuration of load-balancer virtual servers and pools on network appliances is network/compute
+    infrastructure configuration — IT Infrastructure Management. The login endpoint is incidental auth
+    plumbing.
+- tag: Nodes
+  spec_file: f5-nodes-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: '"manage and configure F5 BIG-IP devices... Local Traffic Manager (LTM) resources including
+    virtual servers, pools, nodes"; ''POST /ltm/node  createNode  Create a Node'''
+  reason: Nodes here are backend server objects in a load-balancing configuration, not organisational
+    entities. Managing them is infrastructure/network configuration.
+- tag: Pool Members
+  spec_file: f5-pool-members-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: '''POST /ltm/pool/{poolName}/members  addPoolMember  Add a Pool Member''; schema ''PoolMemberCreate'''
+  reason: Pool members are load-balancer backend targets; managing them configures application delivery
+    infrastructure. Not a membership/customer concept.
+- tag: Pools
+  spec_file: f5-pools-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.8
+  evidence: '"automation of Local Traffic Manager (LTM) resources including virtual servers, pools, nodes,
+    pool members"; ''POST /ltm/pool  createPool  Create a Pool'''
+  reason: Load-balancing pool CRUD on BIG-IP devices is network infrastructure configuration, not any
+    financial or resource-pooling business concept.
+- tag: Virtual Servers
+  spec_file: f5-virtual-servers-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.78
+  evidence: '''Create a Virtual Server'' on /ltm/virtual; description: ''Local Traffic Manager (LTM) resources
+    including virtual servers, pools, nodes, pool members ... for application delivery, load balancing,
+    and network management'''
+  reason: CRUD over load-balancer virtual servers is configuration of network infrastructure — IT Infrastructure
+    Management.
+- tag: Configuration
+  spec_file: f5-configuration-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.75
+  evidence: '''POST /declare postDeclare Apply BIG-IP AS3 configuration'' and ''POST / postDeclaration
+    Apply BIG-IP DO configuration'''
+  reason: Declarative onboarding and AS3 declarations configure BIG-IP devices and tenants — configuration
+    of network/application-delivery infrastructure rather than any business process.
+- tag: HTTP Upstreams
+  spec_file: f5-http-upstreams-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.75
+  evidence: '''Add a server to an HTTP upstream server group'' / ''Remove a server from an HTTP upstream
+    server group'''
+  reason: Runtime configuration of load-balanced upstream server pools — management of compute/network
+    infrastructure for application delivery.
+- tag: Profiles
+  spec_file: f5-profiles-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.75
+  evidence: '''GET /ltm/profile/http  listHttpProfiles''; ''GET /ltm/profile/client-ssl  listClientSslProfiles'';
+    schema ''CookiePersistenceProfile'''
+  reason: Profiles are protocol/SSL/persistence configuration objects attached to virtual servers — infrastructure
+    configuration, not user or customer profiles.
+- tag: Stream Upstreams
+  spec_file: f5-stream-upstreams-api-openapi.yml
+  capability_id: BC-600.50
+  capability_id_l1: BC-600
+  capability_name: IT Infrastructure Management
+  confidence: 0.72
+  evidence: '''Add a server to a stream upstream server group''; ''Remove a server from a stream upstream
+    server group'''
+  reason: Dynamic management of load-balancer upstream server pools — configuration of network/compute
+    infrastructure.
+- tag: Application Management
+  spec_file: f5-application-management-api-openapi.yml
+  capability_id: BC-600
+  capability_id_l1: BC-600
+  capability_name: Information Technology Management
+  confidence: 0.7
+  evidence: '''POST /applications postFASTApplications Create one or more Applications from Templates''
+    and schema ''FastAs3App'''
+  reason: FAST templates instantiate and update BIG-IP application service configurations (AS3 apps) on
+    the delivery infrastructure. Clearly enterprise IT management, but it straddles application lifecycle
+    and network infrastructure configuration, so no L2 is asserted.
