@@ -1702,6 +1702,8 @@ apis:
   - type: ChangeLog
     url: https://github.com/F5Networks/f5-declarative-onboarding/releases
 common:
+- type: FinOps
+  url: finops/f5-finops.yml
 - type: CapabilityMap
   url: capabilities/f5-capability-edges.yml
   name: F5 Business Capability Map
