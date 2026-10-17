@@ -108,7 +108,104 @@ paths:
     servers:
     - url: https://192.0.2.1:443/mgmt/shared/declarative-onboarding
 components:
+  examples:
+    declarationTenantTaskResponse:
+      value:
+        id: c8b8be98-1a55-443e-acd2-ec4b09fb2fc3
+        results:
+        - code: 200
+          message: success
+          lineCount: 25
+          host: localhost
+          tenant: tenant
+          runTime: 1263
+        declaration:
+          class: ADC
+          schemaVersion: 3.0.0
+          tenant:
+            class: Tenant
+            application:
+              class: Application
+              service:
+                class: Service_HTTP
+                virtualAddresses:
+                - 192.0.2.0
+                pool: pool
+              pool:
+                class: Pool
+                members:
+                - servicePort: 80
+                  serverAddresses:
+                  - 192.0.2.1
+                  - 192.0.2.2
+            id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
+    task:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      result:
+        class: Result
+        code: 200
+        status: OK
+        message: success
+      declaration:
+        class: Device
+        schemaVersion: 1.0.0
+        async: true
+        Common:
+          class: Tenant
+          myLicense:
+            class: License
+            licenseType: regKey
+            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
+    errorConfig:
+      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
+      code: 422
+      status: ERROR
+      message: 'Error licensing: Invalid reg key'
+      errors:
+      - Invalid reg key
+      result:
+        class: Result
+        code: 422
+        status: ERROR
+        dryRun: false
+        message: 'Error licensing: Invalid reg key'
+        errors:
+        - Invalid reg key
+        declaration:
+          class: Device
+          schemaVersion: 1.0.0
+          async: true
+          Common:
+            class: Tenant
+            myLicense:
+              class: License
+              licenseType: regKey
+              regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
   schemas:
+    error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: Code representing the error
+        message:
+          type: string
+          description: Additional information about the error
+        errors:
+          type: array
+          description: Details about schema validation failures
+          items:
+            type: string
+        declarationFullId:
+          type: string
+          description: The id of the declaration
+    declaration:
+      type: object
+      externalDocs:
+        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
+        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
     result:
       type: object
       properties:
@@ -136,28 +233,6 @@ components:
         runTime:
           type: integer
           description: The time (in milliseconds) it took to process the tenant.
-    declaration:
-      type: object
-      externalDocs:
-        description: See 'Composing a Declaration' page for information on the the BIG-IP AS3 Request body.
-        url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/userguide/composing-a-declaration.html
-    error:
-      type: object
-      properties:
-        code:
-          type: integer
-          description: Code representing the error
-        message:
-          type: string
-          description: Additional information about the error
-        errors:
-          type: array
-          description: Details about schema validation failures
-          items:
-            type: string
-        declarationFullId:
-          type: string
-          description: The id of the declaration
     result_2:
       title: Result
       description: Standard result object in responses.
@@ -227,81 +302,6 @@ components:
           type: object
           description: A collection of sub-objects that describe the configuration state of a device.
           additionalProperties: true
-  examples:
-    declarationTenantTaskResponse:
-      value:
-        id: c8b8be98-1a55-443e-acd2-ec4b09fb2fc3
-        results:
-        - code: 200
-          message: success
-          lineCount: 25
-          host: localhost
-          tenant: tenant
-          runTime: 1263
-        declaration:
-          class: ADC
-          schemaVersion: 3.0.0
-          tenant:
-            class: Tenant
-            application:
-              class: Application
-              service:
-                class: Service_HTTP
-                virtualAddresses:
-                - 192.0.2.0
-                pool: pool
-              pool:
-                class: Pool
-                members:
-                - servicePort: 80
-                  serverAddresses:
-                  - 192.0.2.1
-                  - 192.0.2.2
-            id: autogen_1d77bb4f-cd46-453b-917f-897bd2c278f7
-    errorConfig:
-      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      code: 422
-      status: ERROR
-      message: 'Error licensing: Invalid reg key'
-      errors:
-      - Invalid reg key
-      result:
-        class: Result
-        code: 422
-        status: ERROR
-        dryRun: false
-        message: 'Error licensing: Invalid reg key'
-        errors:
-        - Invalid reg key
-        declaration:
-          class: Device
-          schemaVersion: 1.0.0
-          async: true
-          Common:
-            class: Tenant
-            myLicense:
-              class: License
-              licenseType: regKey
-              regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
-    task:
-      id: c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      selfLink: https://localhost/mgmt/shared/appsvcs/task/c098f4f1-d2a4-4c53-8728-7d1ce5567a4
-      result:
-        class: Result
-        code: 200
-        status: OK
-        message: success
-      declaration:
-        class: Device
-        schemaVersion: 1.0.0
-        async: true
-        Common:
-          class: Tenant
-          myLicense:
-            class: License
-            licenseType: regKey
-            regKey: AAAAA-BBBBB-CCCCC-DDDDD-EEEEEEE
 externalDocs:
   description: Full AS3 documentation
   url: https://clouddocs.f5.com/products/extensions/f5-appsvcs-extension/latest/

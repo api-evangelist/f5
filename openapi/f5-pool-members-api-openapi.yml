@@ -368,7 +368,146 @@ paths:
         delay: 0
         dispatcher: FALLBACK
 components:
+  parameters:
+    MemberNameParam:
+      name: memberName
+      in: path
+      required: true
+      description: Name of the pool member in the format address:port (e.g., 10.0.0.1:80).
+      schema:
+        type: string
+      example: 10.0.0.1:80
+    SelectParam:
+      name: $select
+      in: query
+      required: false
+      description: Comma-separated list of property names to include in the response.
+      schema:
+        type: string
+      example: name,destination,pool
+    PoolNameParam:
+      name: poolName
+      in: path
+      required: true
+      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
+      schema:
+        type: string
+      example: my_pool
+    FilterParam:
+      name: $filter
+      in: query
+      required: false
+      description: OData filter expression to restrict returned resources.
+      schema:
+        type: string
+      example: partition eq Common
   schemas:
+    PoolMemberUpdate:
+      type: object
+      description: Request body for updating a pool member.
+      properties:
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        priorityGroup:
+          type: integer
+          minimum: 0
+          example: 10
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        session:
+          type: string
+          enum:
+          - user-enabled
+          - user-disabled
+          example: user-enabled
+        state:
+          type: string
+          enum:
+          - user-up
+          - user-down
+          example: user-up
+    PoolMemberCreate:
+      type: object
+      description: Request body for adding a new pool member.
+      required:
+      - name
+      properties:
+        name:
+          type: string
+          description: Member name in address:port format. If a node with the address does not exist, one will be created.
+          example: 10.0.0.1:80
+        address:
+          type: string
+          description: IP address if it differs from the name.
+          example: example_value
+        description:
+          type: string
+          example: A sample description.
+        connectionLimit:
+          type: integer
+          minimum: 0
+          example: 10
+        monitor:
+          type: string
+          example: example_value
+        priorityGroup:
+          type: integer
+          minimum: 0
+          example: 10
+        rateLimit:
+          type: string
+          example: example_value
+        ratio:
+          type: integer
+          minimum: 1
+          example: 10
+        session:
+          type: string
+          enum:
+          - user-enabled
+          - user-disabled
+          example: user-enabled
+        state:
+          type: string
+          enum:
+          - user-up
+          - user-down
+          example: user-up
+    ErrorResponse:
+      type: object
+      description: Standard error response from the iControl REST API.
+      properties:
+        code:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        message:
+          type: string
+          description: Error message describing what went wrong.
+          example: The requested Pool (/Common/my_pool) was not found.
+        errorStack:
+          type: array
+          description: Stack trace for debugging (when available).
+          items:
+            type: string
+          example: []
+        apiError:
+          type: integer
+          description: API-specific error code.
+          example: 10
     PoolMember:
       type: object
       description: A pool member resource representing an individual backend server within a pool, identified by address and port.
@@ -486,154 +625,15 @@ components:
           - down
           - unchecked
           example: up
-    PoolMemberUpdate:
-      type: object
-      description: Request body for updating a pool member.
-      properties:
-        description:
-          type: string
-          example: A sample description.
-        connectionLimit:
-          type: integer
-          minimum: 0
-          example: 10
-        monitor:
-          type: string
-          example: example_value
-        priorityGroup:
-          type: integer
-          minimum: 0
-          example: 10
-        rateLimit:
-          type: string
-          example: example_value
-        ratio:
-          type: integer
-          minimum: 1
-          example: 10
-        session:
-          type: string
-          enum:
-          - user-enabled
-          - user-disabled
-          example: user-enabled
-        state:
-          type: string
-          enum:
-          - user-up
-          - user-down
-          example: user-up
-    ErrorResponse:
-      type: object
-      description: Standard error response from the iControl REST API.
-      properties:
-        code:
-          type: integer
-          description: HTTP status code.
-          example: 400
-        message:
-          type: string
-          description: Error message describing what went wrong.
-          example: The requested Pool (/Common/my_pool) was not found.
-        errorStack:
-          type: array
-          description: Stack trace for debugging (when available).
-          items:
-            type: string
-          example: []
-        apiError:
-          type: integer
-          description: API-specific error code.
-          example: 10
-    PoolMemberCreate:
-      type: object
-      description: Request body for adding a new pool member.
-      required:
-      - name
-      properties:
-        name:
-          type: string
-          description: Member name in address:port format. If a node with the address does not exist, one will be created.
-          example: 10.0.0.1:80
-        address:
-          type: string
-          description: IP address if it differs from the name.
-          example: example_value
-        description:
-          type: string
-          example: A sample description.
-        connectionLimit:
-          type: integer
-          minimum: 0
-          example: 10
-        monitor:
-          type: string
-          example: example_value
-        priorityGroup:
-          type: integer
-          minimum: 0
-          example: 10
-        rateLimit:
-          type: string
-          example: example_value
-        ratio:
-          type: integer
-          minimum: 1
-          example: 10
-        session:
-          type: string
-          enum:
-          - user-enabled
-          - user-disabled
-          example: user-enabled
-        state:
-          type: string
-          enum:
-          - user-up
-          - user-down
-          example: user-up
-  parameters:
-    PoolNameParam:
-      name: poolName
-      in: path
-      required: true
-      description: Name of the pool resource. Use ~Common~ prefix for partition-qualified names.
-      schema:
-        type: string
-      example: my_pool
-    SelectParam:
-      name: $select
-      in: query
-      required: false
-      description: Comma-separated list of property names to include in the response.
-      schema:
-        type: string
-      example: name,destination,pool
-    FilterParam:
-      name: $filter
-      in: query
-      required: false
-      description: OData filter expression to restrict returned resources.
-      schema:
-        type: string
-      example: partition eq Common
-    MemberNameParam:
-      name: memberName
-      in: path
-      required: true
-      description: Name of the pool member in the format address:port (e.g., 10.0.0.1:80).
-      schema:
-        type: string
-      example: 10.0.0.1:80
   responses:
-    InternalServerError:
-      description: An unexpected error occurred on the BIG-IP system while processing the request.
+    Conflict:
+      description: The resource already exists or conflicts with an existing configuration.
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    Conflict:
-      description: The resource already exists or conflicts with an existing configuration.
+    BadRequest:
+      description: The request could not be processed due to invalid syntax or missing required parameters.
       content:
         application/json:
           schema:
@@ -644,8 +644,8 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/ErrorResponse'
-    BadRequest:
-      description: The request could not be processed due to invalid syntax or missing required parameters.
+    InternalServerError:
+      description: An unexpected error occurred on the BIG-IP system while processing the request.
       content:
         application/json:
           schema:

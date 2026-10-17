@@ -98,105 +98,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
-    NginxSlabZoneMap:
-      title: Slab Zones
-      description: 'Status zones that use slab allocator.
-
-        '
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxSlabZone'
-      example:
-        http_cache:
-          pages:
-            used: 2
-            free: 2452
-          slots:
-            8:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            16:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            32:
-              used: 1
-              free: 126
-              reqs: 1
-              fails: 0
-            64:
-              used: 2
-              free: 62
-              reqs: 2
-              fails: 0
-            128:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-        dns-backends:
-          pages:
-            used: 1143
-            free: 2928
-          slots:
-            8:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            16:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            32:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            64:
-              used: 1
-              free: 63
-              reqs: 1
-              fails: 0
-            128:
-              used: 0
-              free: 0
-              reqs: 0
-              fails: 0
-            256:
-              used: 18078
-              free: 178
-              reqs: 1635736
-              fails: 0
     NginxSlabZone:
       title: Shared memory zone with slab allocator
       description: 'Shared memory zone with slab allocator
@@ -271,3 +172,102 @@ components:
         fails:
           type: integer
           description: The number of unsuccessful attempts to allocate memory of specified size.
+    NginxSlabZoneMap:
+      title: Slab Zones
+      description: 'Status zones that use slab allocator.
+
+        '
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxSlabZone'
+      example:
+        http_cache:
+          pages:
+            used: 2
+            free: 2452
+          slots:
+            8:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            16:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            32:
+              used: 1
+              free: 126
+              reqs: 1
+              fails: 0
+            64:
+              used: 2
+              free: 62
+              reqs: 2
+              fails: 0
+            128:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+        dns-backends:
+          pages:
+            used: 1143
+            free: 2928
+          slots:
+            8:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            16:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            32:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            64:
+              used: 1
+              free: 63
+              reqs: 1
+              fails: 0
+            128:
+              used: 0
+              free: 0
+              reqs: 0
+              fails: 0
+            256:
+              used: 18078
+              free: 178
+              reqs: 1635736
+              fails: 0
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.

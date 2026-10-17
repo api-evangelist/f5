@@ -69,6 +69,27 @@ paths:
                 $ref: '#/components/schemas/FastResponse500'
 components:
   schemas:
+    ErrorsArray:
+      type: array
+      minItems: 1
+      items:
+        type: object
+        required:
+        - summary
+        properties:
+          summary:
+            type: string
+            description: brief message describing the error
+          details:
+            type: string
+            description: extra information about the error
+    ParametersDefinition:
+      type: object
+      description: Object must conform to specified template's schema.
+      example:
+        tenant: foo
+        application: bar
+        virtualAddress: 192.0.2.11
     uuid:
       type: string
       pattern: ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$
@@ -129,59 +150,6 @@ components:
         parameters: {}
         code: 200
         message: success
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-    ParametersDefinition:
-      type: object
-      description: Object must conform to specified template's schema.
-      example:
-        tenant: foo
-        application: bar
-        virtualAddress: 192.0.2.11
-    TaskList:
-      description: Task List.
-      type: array
-      items:
-        $ref: '#/components/schemas/Task'
-      example:
-      - id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 200
-        message: success
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 301ee9ed-e73e-4108-a9a2-3104509d7880
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 0
-        message: in progress
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 7908d0b0-c4cc-41ed-a7e0-9d2d376a3c7b
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 202
-        message: in progress
-        tenant: tenant
-        application: app
-        timestamp: '2019-08-24T14:15:22Z'
-        _links:
-          self: /mgmt/shared/fast/tasks
-      - id: 21697cbe-56b9-4d50-bd54-fd84f8c056de
-        name: examples/simple_udp_defaults
-        parameters: {}
-        code: 422
-        message: declaration is invalid
         tenant: tenant
         application: app
         timestamp: '2019-08-24T14:15:22Z'
@@ -248,17 +216,49 @@ components:
           type: string
           description: Self-link to task endpoint
           example: /mgmt/shared/fast/tasks/12345
-    ErrorsArray:
+    TaskList:
+      description: Task List.
       type: array
-      minItems: 1
       items:
-        type: object
-        required:
-        - summary
-        properties:
-          summary:
-            type: string
-            description: brief message describing the error
-          details:
-            type: string
-            description: extra information about the error
+        $ref: '#/components/schemas/Task'
+      example:
+      - id: ff70c2c0-af21-44c8-8fec-18e2d82eabf0
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 200
+        message: success
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 301ee9ed-e73e-4108-a9a2-3104509d7880
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 0
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 7908d0b0-c4cc-41ed-a7e0-9d2d376a3c7b
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 202
+        message: in progress
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks
+      - id: 21697cbe-56b9-4d50-bd54-fd84f8c056de
+        name: examples/simple_udp_defaults
+        parameters: {}
+        code: 422
+        message: declaration is invalid
+        tenant: tenant
+        application: app
+        timestamp: '2019-08-24T14:15:22Z'
+        _links:
+          self: /mgmt/shared/fast/tasks

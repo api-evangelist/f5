@@ -131,60 +131,6 @@ paths:
                 $ref: '#/components/schemas/NginxError'
 components:
   schemas:
-    NginxError:
-      title: Error
-      description: 'nginx error object.
-
-        '
-      type: object
-      properties:
-        error:
-          type: object
-          properties:
-            status:
-              type: integer
-              description: HTTP error code.
-            text:
-              type: string
-              description: Error description.
-            code:
-              type: string
-              description: Internal nginx error code.
-        request_id:
-          type: string
-          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
-        href:
-          type: string
-          description: Link to reference documentation.
-    NginxWorkersMap:
-      title: Worker processes
-      description: nginx worker processes object.
-      type: object
-      additionalProperties:
-        $ref: '#/components/schemas/NginxWorker'
-      example:
-      - id: 0
-        pid: 32212
-        connections:
-          accepted: 1
-          dropped: 0
-          active: 1
-          idle: 0
-        http:
-          requests:
-            total: 19
-            current: 1
-      - id: 1
-        pid: 32214
-        connections:
-          accepted: 1
-          dropped: 0
-          active: 1
-          idle: 0
-        http:
-          requests:
-            total: 15
-            current: 0
     NginxWorker:
       title: Worker process
       description: 'Statistics per each worker process.
@@ -258,3 +204,57 @@ components:
           requests:
             total: 15
             current: 1
+    NginxError:
+      title: Error
+      description: 'nginx error object.
+
+        '
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP error code.
+            text:
+              type: string
+              description: Error description.
+            code:
+              type: string
+              description: Internal nginx error code.
+        request_id:
+          type: string
+          description: The ID of the request, equals the value of the <a href="https://nginx.org/en/docs/http/ngx_http_core_module.html#var_request_id">$request_id</a> variable.
+        href:
+          type: string
+          description: Link to reference documentation.
+    NginxWorkersMap:
+      title: Worker processes
+      description: nginx worker processes object.
+      type: object
+      additionalProperties:
+        $ref: '#/components/schemas/NginxWorker'
+      example:
+      - id: 0
+        pid: 32212
+        connections:
+          accepted: 1
+          dropped: 0
+          active: 1
+          idle: 0
+        http:
+          requests:
+            total: 19
+            current: 1
+      - id: 1
+        pid: 32214
+        connections:
+          accepted: 1
+          dropped: 0
+          active: 1
+          idle: 0
+        http:
+          requests:
+            total: 15
+            current: 0
