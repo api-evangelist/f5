@@ -52,3 +52,30 @@
     detected: '2026-10-15'
   status: not-a-workflow
   arazzo: null
+- slug: f5-istio-ecosystem
+  label: Istio (ecosystem)
+  partner: istio
+  partner_name: Istio (ecosystem)
+  category: Service mesh ecosystem
+  type: register
+  channel: standard-directory
+  evidence: https://github.com/istio/istio.io/blob/a03df1cfd4fda35a88a37b7a6486141c1c153bea/data/companies.yml
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Istio ecosystem (github.com/istio/istio.io data/companies.yml @a03df1cfd4)
+    spec_file: null
+    standard: Istio service mesh
+    role: istio-provider
+    registered_name: Aspen Service Mesh by F5
+    registered_names:
+    - Aspen Service Mesh by F5
+    website: https://www.f5.com/products/aspen-mesh
+    matched_domain: f5.com
+    matched_by: domain+name-among-holders
+    identity_source: register-url
+    signal_note: 'participation only: the ecosystem lists are context, never read'
+    detected_by: sweep-api-management.py
+    detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
