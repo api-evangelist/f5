@@ -29,6 +29,9 @@ checked:
 - https://www.commoncriteriaportal.org/products/certified_products-archived.csv
 - https://www.commoncriteriaportal.org/products/certified_products.csv
 - https://www.niap-ccevs.org/Product/PCL.cfm
+- https://api.first.org/data/v1/teams
+- https://raw.githubusercontent.com/CVEProject/cve-website/dev/src/assets/data/CNAsList.json
+- https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json
 source:
 - microsoft-sentinel/integrations/microsoft-sentinel-integration-edges.yml
 edges:
@@ -447,3 +450,72 @@ edges:
     identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
   detected_by: sweep-common-criteria-certified-products.py
   first_seen: '2026-10-21'
+- partner_name: CVE Program (CVE Numbering Authorities)
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://www.cve.org/PartnerInformation/ListofPartners/partner/F5
+  category: Vulnerability disclosure (CVE Numbering Authority)
+  contract_reference:
+    register: CVE Program CNA list (github.com/CVEProject/cve-website CNAsList.json @ 239d3d9b68e0)
+    standard: CVE Program CNA Operational Rules (CVE Numbering Authority)
+    spec_file: null
+    role: cve-numbering-authority
+    registered_name: F5, Inc.
+    matched_domain: f5.com
+    matched_by: domain+name-among-holders
+    cna_id: CNA-2016-0009
+    cna_short_name: F5
+    cna_types:
+    - Vendor
+    - Open Source
+    cna_roles:
+    - CNA
+    scope: All F5 products and services, commercial and open source, which have not yet reached End of Technical
+      Support (EoTS). All legacy acquisition products and brands including, but not limited to, NGINX, Shape Security,
+      Volterra, and Threat Stack. F5 does not issue CVEs for products which are no longer supported.
+    top_level_root: MITRE Corporation
+    root: n/a
+    security_advisories:
+    - https://my.f5.com/manage/s/new-updated-articles#sort=%40f5_updated_published_date%20descending&amp;f:@f5_document_type=[Security%20Advisory]&amp;periodFilter=4&amp;dateField=0
+    disclosure_policy:
+    - https://support.f5.com/csp/article/K4602
+    country: USA
+    signal_note: listing as a CVE Numbering Authority = participation (a public commitment to assign CVE IDs and
+      publish advisories for its scope); never a count of CVEs
+    detected_by: sweep-vulnerability-disclosure-cna.py
+    detected: '2026-10-22'
+  detected_by: sweep-vulnerability-disclosure-cna.py
+  first_seen: '2026-10-22'
+- partner_name: FIRST (Forum of Incident Response and Security Teams)
+  partner: null
+  partner_match: register
+  type: register
+  channel: standard-directory
+  relationship: standard-participant
+  direction: partner-built
+  evidence: https://www.first.org/members/teams/f5_sirt
+  category: Incident response / PSIRT (FIRST member team)
+  contract_reference:
+    register: FIRST member teams (api.first.org/data/v1/teams, public JSON API)
+    standard: FIRST (Forum of Incident Response and Security Teams) membership
+    spec_file: null
+    role: first-member-team
+    registered_name: F5, Inc.
+    matched_domain: f5.com
+    matched_by: domain+name-among-holders
+    teams:
+    - id: f5_sirt
+      team: F5 SIRT
+      team_type: PSIRT, CSIRT
+      member_since: April 17, 2025
+      country: US
+    signal_note: FIRST full membership of an incident-response / product-security team = participation; team_type
+      names CSIRT / PSIRT / SOC; never a count
+    detected_by: sweep-vulnerability-disclosure-cna.py
+    detected: '2026-10-22'
+  detected_by: sweep-vulnerability-disclosure-cna.py
+  first_seen: '2026-10-22'
