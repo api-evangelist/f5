@@ -284,3 +284,122 @@
     detected: '2026-10-21'
   status: not-a-workflow
   arazzo: null
+- slug: f5-common-criteria-portal-ccra-certified-products
+  label: Common Criteria Portal (CCRA certified products)
+  partner_name: Common Criteria Portal (CCRA certified products)
+  category: Common Criteria (ISO/IEC 15408) product certification
+  type: register
+  channel: standard-directory
+  evidence: https://www.commoncriteriaportal.org/products/
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: Common Criteria Portal certified products + archived certificates (commoncriteriaportal.org/products/certified_products.csv,
+      certified_products-archived.csv)
+    standard: ISO/IEC 15408 Common Criteria for Information Technology Security Evaluation (CCRA)
+    spec_file: null
+    role: cc-certified-manufacturer
+    registered_name: F5 Networks, Inc.
+    matched_domain: f5.com
+    matched_by: domain+name-among-holders
+    certified_products:
+    - product: Boundary Protection Devices and Systems
+      product_type: Boundary Protection Devices and Systems
+      standard: ISO/IEC 15408 Common Criteria for Information Technology Security Evaluation (CCRA)
+      lapsed: true
+      protection_profiles:
+      - CPP_FW_V1.0
+      - CPP_FW_V2.0E
+      schemes:
+      - SE
+    - product: Network and Network-Related Devices and Systems
+      product_type: Network and Network-Related Devices and Systems
+      standard: ISO/IEC 15408 Common Criteria for Information Technology Security Evaluation (CCRA)
+      lapsed: false
+      protection_profiles:
+      - CPP_FW_V2.0
+      - CPP_ND_V3.0E
+      - MOD_CPP_FW_V1.4E
+      - MOD_STIP_V1.1
+      - NDCPP
+      - PKG_SSH_V1.0
+      schemes:
+      - SE
+    signal_note: 'certified_products = one entry per Common Criteria product CATEGORY held (highest EAL for that
+      category in partner_tier; a category held only among archived certificates is lapsed: true); certificate and
+      product counts are context, never counted'
+    detected_by: sweep-common-criteria-certified-products.py
+    detected: '2026-10-21'
+    identity: wikidata Q3029296 'F5, Inc.' P856 https://www.f5.com/
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+  status: not-a-workflow
+  arazzo: null
+- slug: f5-niap-product-compliant-list-us-ccevs
+  label: NIAP Product Compliant List (US CCEVS)
+  partner_name: NIAP Product Compliant List (US CCEVS)
+  category: NIAP Protection Profile conformance (US Common Criteria scheme)
+  type: register
+  channel: standard-directory
+  evidence: https://www.niap-ccevs.org/Product/PCL.cfm
+  source: edge
+  relationship: standard-participant
+  contract_reference:
+    register: NIAP Product Compliant List (niap-ccevs.org/Product/PCL.cfm; public JSON /api/project/product/pcl_products_all/)
+    standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology Security
+      Evaluation (CCRA)
+    spec_file: null
+    role: niap-pcl-vendor
+    registered_name: F5 Networks, Inc.
+    matched_domain: f5.com
+    matched_by: domain+name-among-holders
+    signal_note: 'certified_products = one entry per NIAP technology type with a Certified (current) or Archived
+      (lapsed: true) PCL product, Protection Profiles named; products In Progress are listing only (in_evaluation),
+      never certified; product counts are context, never counted'
+    detected_by: sweep-common-criteria-certified-products.py
+    detected: '2026-10-21'
+    certified_products:
+    - product: Boundary Protection Devices and Systems
+      product_type: Boundary Protection Devices and Systems
+      lapsed: true
+      standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology
+        Security Evaluation (CCRA)
+      protection_profiles:
+      - CPP_FW_V1.0
+      - CPP_FW_V2.0E
+      - CPP_ND_V2.0E
+      - CPP_ND_V2.1
+    - product: Network Management
+      product_type: Network Management
+      lapsed: true
+      standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology
+        Security Evaluation (CCRA)
+      protection_profiles:
+      - None
+    - product: Network and Network-Related Devices and Systems
+      product_type: Network and Network-Related Devices and Systems
+      lapsed: false
+      standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology
+        Security Evaluation (CCRA)
+      protection_profiles:
+      - CPP_ND_V3.0E
+      - MOD_CPP_FW_v1.4e
+      - MOD_STIP_V1.1
+      - PKG_SSH_V1.0
+    - product: Router
+      product_type: Router
+      lapsed: true
+      standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology
+        Security Evaluation (CCRA)
+      protection_profiles:
+      - none
+    - product: Virtual Private Network
+      product_type: Virtual Private Network
+      lapsed: true
+      standard: NIAP-approved Protection Profiles under ISO/IEC 15408 Common Criteria for Information Technology
+        Security Evaluation (CCRA)
+      protection_profiles:
+      - None
+    identity: wikidata Q3029296 'F5, Inc.' P856 https://www.f5.com/
+    identity_source: wikidata P856 (labelled provenance step; Kin 2026-10-15 decision 1)
+  status: not-a-workflow
+  arazzo: null
