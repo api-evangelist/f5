@@ -1,4 +1,4 @@
-# F5 (f5)
+# F5
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,107 +66,212 @@
 
 F5 is a global company that specializes in application delivery and security solutions for businesses. They provide products and services that help organizations efficiently and securely deliver applications to users across any network or cloud environment. F5's solutions are designed to optimize the performance, availability, and security of applications, ensuring a seamless user experience. The F5 portfolio includes BIG-IP for high-performance app and API delivery, NGINX for cloud-native delivery and security across modern apps and Kubernetes, and F5 Distributed Cloud Services for SaaS-based delivery, security, and networking across multicloud environments.
 
-**APIs.json:** [https://raw.githubusercontent.com/api-evangelist/f5/refs/heads/main/apis.yml](https://raw.githubusercontent.com/api-evangelist/f5/refs/heads/main/apis.yml)
+**Areas:** Application · Security · Load Balancing · API Gateway · WAF
 
-## Scope
+## F5 on APIs.io
 
-- **Type:** Index
-- **Position:** Consumer
-- **Access:** 3rd-Party
+Everything profiled for F5 is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/f5/](https://apis.io/providers/f5/)** — or go straight to one of the APIs or properties below.
 
-## Tags
+### APIs (51)
 
-- Applications
-- Security
-- Load Balancing
-- API Gateway
-- WAF
+- [F5 BIG-IP](https://apis.io/apis/f5/f5-big-ip/) — BIG-IP delivers high-performance application and API delivery with load balancing, API gateway, DNS, and security services. The platform exposes…
+- [F5 NGINX](https://apis.io/apis/f5/f5-nginx/) — NGINX provides cloud-native delivery and security for modern applications, Kubernetes, and APIs. The NGINX product line includes NGINX Plus, NGINX One,…
+- [F5 Distributed Cloud Services](https://apis.io/apis/f5/f5-distributed-cloud/) — F5 Distributed Cloud Services delivers SaaS-based application delivery, security, and networking across multicloud and edge environments. The platform…
+- [F5 BIG-IP iControl REST (Mgmt)](https://apis.io/apis/f5/f5-mgmt-api/) — A partial contract for the BIG-IP iControl REST management tree — 10 paths under /mgmt/tm/ and /mgmt/shared/ covering token login, virtual servers, pools,…
+- [F5 NGINX Management Suite API](https://apis.io/apis/f5/f5-nginx-management-suite-api/) — REST API for managing NGINX instances, monitoring performance, and configuring application delivery through NGINX Management Suite.
+- [F5 Essential App Protect API](https://apis.io/apis/f5/f5-essential-app-protect-api/) — API for managing F5's application security services including WAF policies, bot defense, and API protection.
+- [F5 BIG-IQ Centralized Management API](https://apis.io/apis/f5/f5-big-iq-centralized-management-api/) — REST API for BIG-IQ Centralized Management providing programmatic control over BIG-IP device management, licensing, monitoring, and analytics across your F5…
+- [F5 BIG-IP Application Services 3 Extension API](https://apis.io/apis/f5/f5-big-ip-application-services-3-extension-api/) — Declarative API for automating layer 4-7 application services on BIG-IP using JSON declarations. AS3 enables infrastructure-as-code for application delivery…
+- [F5 Declarative Onboarding API](https://apis.io/apis/f5/f5-declarative-onboarding-api/) — Declarative API for automating layer 1-3 BIG-IP onboarding and initial device configuration using JSON declarations, making BIG-IP available on the network…
+- [F5 Telemetry Streaming API](https://apis.io/apis/f5/f5-telemetry-streaming-api/) — Declarative API for aggregating, normalizing, and forwarding BIG-IP statistics and events to third-party analytics consumers including Splunk, Azure Log…
+- [F5 NGINX Plus API](https://apis.io/apis/f5/f5-nginx-plus-api/) — REST API for NGINX Plus providing real-time live activity monitoring, dynamic upstream configuration, key-value store management, and server health…
+- [F5 NGINX One Console API](https://apis.io/apis/f5/f5-nginx-one-console-api/) — API for managing and monitoring NGINX instances across environments from a single console, including configuration management, performance metrics, security…
+- [F5 NGINX Ingress Controller API](https://apis.io/apis/f5/f5-nginx-ingress-controller-api/) — Kubernetes Ingress Controller implementation for NGINX and NGINX Plus providing load balancing, SSL/TLS termination, content-based routing, and advanced…
+- [F5 Networks Nodes API](https://apis.io/apis/f5/f5-networks-nodes-api/) — Manage nodes representing individual backend servers by IP address or FQDN.
+- [F5 Networks Pool Members API](https://apis.io/apis/f5/f5-networks-pool-members-api/) — Manage individual members within a pool, including their health status, session state, and load balancing weight.
+- [F5 Networks Pools API](https://apis.io/apis/f5/f5-networks-pools-api/) — Manage pools of backend servers for load distribution and health monitoring.
+- [F5 Networks Profiles API](https://apis.io/apis/f5/f5-networks-profiles-api/) — Manage profiles that define traffic handling behavior for virtual servers, including HTTP, TCP, UDP, client SSL, and persistence profiles.
+- [F5 Networks Virtual Servers API](https://apis.io/apis/f5/f5-networks-virtual-servers-api/) — Manage virtual servers that direct client traffic to appropriate server pools based on configured rules and profiles.
+- [F5 Application Management API](https://apis.io/apis/f5/f5-application-management-api/) — The Application Management API from F5 — 3 operation(s) for application management.
+- [F5 Configuration API](https://apis.io/apis/f5/f5-configuration-api/) — The Configuration API from F5 — 7 operation(s) for configuration.
+- [F5 Connections API](https://apis.io/apis/f5/f5-connections-api/) — The Connections API from F5 — 1 operation(s) for connections.
+- [F5 FAST Extension API](https://apis.io/apis/f5/f5-fast-extension-api/) — The FAST Extension API from F5 — 3 operation(s) for fast extension.
+- [F5 General Info API](https://apis.io/apis/f5/f5-general-info-api/) — The General Info API from F5 — 2 operation(s) for general info.
+- [F5 HTTP API](https://apis.io/apis/f5/f5-http-api/) — The HTTP API from F5 — 1 operation(s) for http.
+- [F5 HTTP Caches API](https://apis.io/apis/f5/f5-http-caches-api/) — The HTTP Caches API from F5 — 2 operation(s) for http caches.
+- [F5 HTTP Keyvals API](https://apis.io/apis/f5/f5-http-keyvals-api/) — The HTTP Keyvals API from F5 — 2 operation(s) for http keyvals.
+- [F5 HTTP Limit Conns API](https://apis.io/apis/f5/f5-http-limit-conns-api/) — The HTTP Limit Conns API from F5 — 2 operation(s) for http limit conns.
+- [F5 HTTP Limit Reqs API](https://apis.io/apis/f5/f5-http-limit-reqs-api/) — The HTTP Limit Reqs API from F5 — 2 operation(s) for http limit reqs.
+- [F5 HTTP Location Zones API](https://apis.io/apis/f5/f5-http-location-zones-api/) — The HTTP Location Zones API from F5 — 2 operation(s) for http location zones.
+- [F5 HTTP Requests API](https://apis.io/apis/f5/f5-http-requests-api/) — The HTTP Requests API from F5 — 1 operation(s) for http requests.
+- [F5 HTTP Server Zones API](https://apis.io/apis/f5/f5-http-server-zones-api/) — The HTTP Server Zones API from F5 — 2 operation(s) for http server zones.
+- [F5 HTTP Upstreams API](https://apis.io/apis/f5/f5-http-upstreams-api/) — The HTTP Upstreams API from F5 — 4 operation(s) for http upstreams.
+- [F5 Information API](https://apis.io/apis/f5/f5-information-api/) — The Information API from F5 — 1 operation(s) for information.
+- [F5 Inspect API](https://apis.io/apis/f5/f5-inspect-api/) — The Inspect API from F5 — 1 operation(s) for inspect.
+- [F5 License API](https://apis.io/apis/f5/f5-license-api/) — The License API from F5 — 1 operation(s) for license.
+- [F5 Offbox Templatesets Management API](https://apis.io/apis/f5/f5-offbox-templatesets-management-api/) — The Offbox Templatesets Management API from F5 — 1 operation(s) for offbox templatesets management.
+- [F5 Processes API](https://apis.io/apis/f5/f5-processes-api/) — The Processes API from F5 — 1 operation(s) for processes.
+- [F5 Resolvers API](https://apis.io/apis/f5/f5-resolvers-api/) — The Resolvers API from F5 — 2 operation(s) for resolvers.
+- [F5 Settings API](https://apis.io/apis/f5/f5-settings-api/) — The Settings API from F5 — 1 operation(s) for settings.
+- [F5 Slabs API](https://apis.io/apis/f5/f5-slabs-api/) — The Slabs API from F5 — 2 operation(s) for slabs.
+- [F5 SSL API](https://apis.io/apis/f5/f5-ssl-api/) — The SSL API from F5 — 1 operation(s) for ssl.
+- [F5 Stream API](https://apis.io/apis/f5/f5-stream-api/) — The Stream API from F5 — 1 operation(s) for stream.
+- [F5 Stream Keyvals API](https://apis.io/apis/f5/f5-stream-keyvals-api/) — The Stream Keyvals API from F5 — 2 operation(s) for stream keyvals.
+- [F5 Stream Limit Conns API](https://apis.io/apis/f5/f5-stream-limit-conns-api/) — The Stream Limit Conns API from F5 — 2 operation(s) for stream limit conns.
+- [F5 Stream Server Zones API](https://apis.io/apis/f5/f5-stream-server-zones-api/) — The Stream Server Zones API from F5 — 2 operation(s) for stream server zones.
+- [F5 Stream Upstreams API](https://apis.io/apis/f5/f5-stream-upstreams-api/) — The Stream Upstreams API from F5 — 4 operation(s) for stream upstreams.
+- [F5 Stream Zone Sync API](https://apis.io/apis/f5/f5-stream-zone-sync-api/) — The Stream Zone Sync API from F5 — 1 operation(s) for stream zone sync.
+- [F5 Task API](https://apis.io/apis/f5/f5-task-api/) — The Task API from F5 — 2 operation(s) for task.
+- [F5 Task Tracking API](https://apis.io/apis/f5/f5-task-tracking-api/) — The Task Tracking API from F5 — 2 operation(s) for task tracking.
+- [F5 Template Management API](https://apis.io/apis/f5/f5-template-management-api/) — The Template Management API from F5 — 4 operation(s) for template management.
+- [F5 Workers API](https://apis.io/apis/f5/f5-workers-api/) — The Workers API from F5 — 2 operation(s) for workers.
 
-## Timestamps
+### Published properties
 
-- **Created:** 2025-02-12
-- **Modified:** 2026-04-28
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-## APIs
+#### AsyncAPI (1)
 
-### F5 BIG-IP
+Event-driven and webhook contracts.
 
-BIG-IP delivers high-performance application and API delivery with load balancing, API gateway, DNS, and security services. The platform exposes programmable APIs including iControlREST for configuration and service management, iControl SOAP for legacy automation, iRules and iRulesLX for data-plane traffic manipulation, and TMSH scripting for control-plane automation. BIG-IQ provides centralized management for BIG-IP devices through its own well-documented REST API.
+- [F5 Event Surface](https://apis.io/asyncapis/f5/f5-event-surface/)
 
-- **Human URL:** [https://clouddocs.f5.com/api/](https://clouddocs.f5.com/api/)
+#### MCP servers (1)
 
-#### Tags
+Model Context Protocol servers that expose the API to agents.
 
-- Applications
-- Security
-- Load Balancing
-- BIG-IP
+- [f5-mcp.yml](https://apis.io/servers/f5/f5-mcp-yml/)
 
-#### Properties
+#### Agentic access (1)
 
-- [Documentation](https://clouddocs.f5.com/api/)
-- [i Control R E S T](https://clouddocs.f5.com/api/icontrol-rest/)
-- [B I G- I Q  Management  A P I](https://clouddocs.f5.com/products/big-iq/mgmt-api/v0.0/)
-- [i Rules](https://clouddocs.f5.com/api/irules/)
-- [i Apps](https://clouddocs.f5.com/api/iapps/)
-- [Postman Collection](collections/f5.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/f5.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+Which operations an agent can call, which act, and which need a human in the loop.
 
-### F5 NGINX
+- [F5 Agentic Access](https://apis.io/agentic-access/f5/f5-agentic-access/)
 
-NGINX provides cloud-native delivery and security for modern applications, Kubernetes, and APIs. The NGINX product line includes NGINX Plus, NGINX One, NGINX Ingress Controller, and NGINX App Protect, with management and automation capabilities exposed through REST APIs for instance management, configuration, and observability across distributed deployments.
+#### JSON Schema (1)
 
-- **Human URL:** [https://docs.nginx.com/](https://docs.nginx.com/)
+The data models the API reads and writes.
 
-#### Tags
+- [F5 BIG-IP Virtual Server](https://apis.io/schemas/f5/f5-virtual-server/)
 
-- Applications
-- Kubernetes
-- Cloud Native
-- NGINX
+#### JSON-LD (2)
 
-#### Properties
+Linked-data contexts for the provider's vocabulary.
 
-- [Documentation](https://docs.nginx.com/)
-- [N G I N X  Plus  A P I](https://docs.nginx.com/nginx/admin-guide/monitoring/live-activity-monitoring/)
-- [N G I N X  One  Console](https://docs.nginx.com/nginx-one/)
-- [N G I N X  Management  Suite](https://docs.nginx.com/nginx-management-suite/)
-- [Postman Collection](collections/f5.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/f5.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+- [Bigip Icontrol Rest Context](https://apis.io/jsonld/f5/bigip-icontrol-rest-context/)
+- [F5 Context](https://apis.io/jsonld/f5/f5-context/)
 
-### F5 Distributed Cloud Services
+#### Collections (2)
 
-F5 Distributed Cloud Services delivers SaaS-based application delivery, security, and networking across multicloud and edge environments. The platform exposes a comprehensive REST API for managing tenants, virtual sites, load balancers, WAF policies, bot defense, API security, DDoS protection, and CDN configurations from a single control plane.
+Postman and Open Collection request collections.
 
-- **Human URL:** [https://docs.cloud.f5.com/docs-v2/api/](https://docs.cloud.f5.com/docs-v2/api/)
+- [F5 BIG-IP iControl REST API](https://apis.io/collections/f5/open-f5/)
+- [F5 BIG-IP iControl REST Mgmt API](https://apis.io/collections/f5/open-f5-mgmt-api/)
 
-#### Tags
+#### Overlays (4)
 
-- Multicloud
-- Edge
-- Security
-- SaaS
+OpenAPI overlays, including conversational phrasing for each operation.
 
-#### Properties
+- [F5 Big Ip As3 Overlay](https://apis.io/overlays/f5/f5-big-ip-as3-overlay/)
+- [F5 Big Ip Declarative Onboarding Overlay](https://apis.io/overlays/f5/f5-big-ip-declarative-onboarding-overlay/)
+- [F5 Big Ip Fast Overlay](https://apis.io/overlays/f5/f5-big-ip-fast-overlay/)
+- [F5 Nginx Plus Api Overlay](https://apis.io/overlays/f5/f5-nginx-plus-api-overlay/)
 
-- [Documentation](https://docs.cloud.f5.com/docs-v2/api/)
-- [API Reference](https://docs.cloud.f5.com/docs-v2/api-reference)
-- [Getting Started](https://docs.cloud.f5.com/docs-v2/platform/concepts)
-- [Postman Collection](collections/f5.postman_collection.json) — [Postman Collection 2.1](https://schema.getpostman.com/json/collection/v2.1.0/collection.json)
-- [Open Collection](collections/f5.opencollection.json) — [Open Collection 1.0](https://schema.opencollection.com/opencollection/v1.0.0.json)
+#### Security (4)
 
-## Common Properties
+Authentication, trust centre, and vulnerability disclosure.
 
-- [LinkedIn](https://www.linkedin.com/company/f5)
+- [F5 Authentication](https://apis.io/security/f5/f5-authentication/)
+- [F5 Domain Security](https://apis.io/security/f5/f5-domain-security/)
+- [F5 Trust Center](https://apis.io/security/f5/f5-trust-center/)
+- [F5 Vulnerability Disclosure](https://apis.io/security/f5/f5-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [F5 Plans Pricing](https://apis.io/plans/f5/f5-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [F5 Rate Limits](https://apis.io/rate-limits/f5/f5-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [F5 Finops](https://apis.io/finops/f5/f5-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
 - [Website](https://www.f5.com)
-- [Products](https://www.f5.com/products)
-- [Developer  Portal](https://clouddocs.f5.com/)
-- [Git Hub](https://github.com/F5Networks)
-- [Blog](https://www.f5.com/company/blog)
+- [Documentation](https://docs.nginx.com/)
+- [Getting started](https://docs.cloud.f5.com/docs-v2/platform/concepts)
+- [API reference](https://docs.cloud.f5.com/docs-v2/api)
+- [Pricing](https://www.f5.com/products/get-f5)
+- [Sign up](https://console.ves.volterra.io/signup/account)
 - [Support](https://www.f5.com/services/support)
-- [Community](https://community.f5.com/)
+- [Blog](https://www.f5.com/company/blog)
+- [Terms of service](https://www.f5.com/company/policies/terms-of-use)
+- [Privacy policy](https://www.f5.com/company/policies/privacy-notice)
+- [GitHub](https://github.com/F5Networks)
+- [Status](https://www.f5cloudstatus.com/)
 
-## Maintainers
+## API Evangelist rating
 
-**FN:** Kin Lane
-**Email:** kin@apievangelist.com
+**Kin Score 65.1** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 78.6 |
+| Contract quality | 62.6 |
+| Contract governance | 18.2 |
+| Operational transparency | 55.3 |
+| Developer ergonomics | 78.0 |
+| Access clarity | 60.5 |
+
+**Agent readiness 47.4** — agent-ready (gated down from agent-native)
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | documented (partial credit) |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | mostly |
+
+**Regulatory alignment 35.3** — Horizontal (data, software, accessibility, platform)
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/f5/](https://apis.io/providers/f5/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for F5: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/f5/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
