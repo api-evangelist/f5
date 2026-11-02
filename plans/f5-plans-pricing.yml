@@ -1,0 +1,77 @@
+# Pricing transcribed from the provider's own page — see provenance. Numbers are quoted, not derived.
+generated: '2026-10-28'
+method: searched
+source: https://www.f5.com/products/get-f5
+sources:
+- https://www.f5.com/products/get-f5
+provenance:
+  tool: engine/economics/harvest_pricing.py
+  run: 20261028T141238
+  grounding: every price_text was found verbatim in the fetched page text
+audience: business-product
+pricing_basis: negotiated
+delivery:
+  delivery: managed+licensed
+  method: page
+  read: '2026-10-28'
+  evidence: Perpetual Licensing Choose the services you need, determine the number of instances, and set
+    up a licensing agreement.
+published: false
+note: No numeric price is published on the pricing page; Buying-options page listing subscription, perpetual
+  licensing, flex consumption, and reseller routes with no numeric prices; only a free 30-day trial is
+  mentioned.
+plan_count: 4
+plans:
+- name: Subscriptions
+  price_text: Get a subscription ›
+  period: none
+  included_quota: 1-, 2-, or 3-year term; includes maintenance and support
+- name: Perpetual Licensing
+  price_text: Start a licensing agreement ›
+  period: none
+  included_quota: Licenses extend for the lifetime of the product, by individual service or in bundles
+- name: Flex Consumption Program
+  price_text: Learn more about the F5 Flex Consumption Program ›
+  period: none
+  included_quota: 3- or 5-year annual spending commitment, adjusted annually based on actual usage
+- name: Free trial
+  price_text: Get a free 30-day trial
+  price: 30
+  period: none
+  unit: 30-day trial
+x-canonical:
+  generated: '2026-11-01'
+  vocabulary: engine/economics/plans-canonical.yml
+  models:
+  - subscription
+  units: []
+  plans:
+  - name: Subscriptions
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Perpetual Licensing
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Flex Consumption Program
+    access: other
+    model: unstated
+    model_how: derived
+    units: []
+    periods:
+    - none
+  - name: Free trial
+    access: other
+    model: subscription
+    model_how: derived
+    units:
+    - other
+    periods:
+    - none
