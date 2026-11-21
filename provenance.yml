@@ -89,7 +89,7 @@ artifacts:
   kin/checks-2026-10-23T222754.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
-  kin/checks-2026-11-06T143934.yml:
+  kin/checks-2026-11-13T214628.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-09-23T000603.yml:
@@ -156,6 +156,9 @@ artifacts:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   kin/score-2026-11-06T143934.yml:
+    method: generated
+    evidence: Kin Score snapshot written by score.rb
+  kin/score-2026-11-13T214628.yml:
     method: generated
     evidence: Kin Score snapshot written by score.rb
   lifecycle/f5-lifecycle.yml:
@@ -316,6 +319,9 @@ artifacts:
   openapi/f5-workers-api-openapi.yml:
     method: derived
     evidence: paths are a subset of openapi/_original/ (split from the harvested spec)
+  overlays/f5-application-management-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/f5-big-ip-as3-overlay.yaml:
     method: derived
     evidence: an API Evangelist overlay (title) over the provider's contract
@@ -325,9 +331,123 @@ artifacts:
   overlays/f5-big-ip-fast-overlay.yaml:
     method: derived
     evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/f5-configuration-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-connections-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-fast-extension-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-general-info-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-caches-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-keyvals-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-limit-conns-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-limit-reqs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-location-zones-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-requests-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-server-zones-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-http-upstreams-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-information-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-inspect-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-license-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-mgmt-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   overlays/f5-nginx-plus-api-overlay.yaml:
     method: derived
     evidence: an API Evangelist overlay (title) over the provider's contract
+  overlays/f5-nodes-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-offbox-templatesets-management-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-pool-members-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-pools-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-processes-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-profiles-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-resolvers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-settings-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-slabs-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-ssl-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-keyvals-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-limit-conns-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-server-zones-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-upstreams-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-stream-zone-sync-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-task-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-task-tracking-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-template-management-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-virtual-servers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
+  overlays/f5-workers-api-phrasing-overlay.yaml:
+    method: generated
+    evidence: declared in the artifact
   packages/f5-packages.yml:
     method: searched
     evidence: declared in the artifact
@@ -368,9 +488,6 @@ artifacts:
     method: generated
     evidence: declared in the artifact
   skills/f5-nginx-scale-upstream.md:
-    method: generated
-    evidence: declared in the artifact
-  sla/f5-sla.yml:
     method: generated
     evidence: declared in the artifact
   terms/f5-terms-of-service.yml:
